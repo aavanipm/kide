@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/guess/GuessingGame6.dart';
 import 'package:game/category1/game1/guess/levelsection.dart';
 
 class GuessingGame5 extends StatefulWidget {
@@ -40,7 +39,7 @@ class _GuessingGame5State extends State<GuessingGame5> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('level 5'),
+        title: const Text('Level 5'),
         backgroundColor: Colors.blue.shade200,
         actions: [
           IconButton(
@@ -124,9 +123,9 @@ class _GuessingGame5State extends State<GuessingGame5> {
               },
               child: const Text('OK'),
             ),
-            TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame6()));
-            }, child: Text('Next level'))
+            // TextButton(onPressed: (){
+            //   Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame6()));
+            // }, child: Text('Next level'))
           ],
         );
       },

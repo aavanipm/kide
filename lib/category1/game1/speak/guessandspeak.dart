@@ -73,13 +73,13 @@ class _GuessandSpeakGameState extends State<GuessandSpeakGame> {
               ),
             ),
 
-            ElevatedButton(
-              onPressed: () {
-                _speech.stop();
-                _checkAnswer(animals[currentIndex].name);
-              },
-              child: const Text('Check Answer'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     _speech.stop();
+            //     _checkAnswer(animals[currentIndex].name);
+            //   },
+            //   child: const Text('Check Answer'),
+            // ),
             const SizedBox(height: 20),
             Text('Score: $score'),
           ],
@@ -104,13 +104,20 @@ class _GuessandSpeakGameState extends State<GuessandSpeakGame> {
   void _nextAnimal() {
     setState(() {
       currentIndex = (currentIndex + 1) % animals.length;
-      spokenWord = '';
+      Text(
+        spokenWord.isEmpty ? spokenWord : spokenWord,
+        style: TextStyle(
+          fontSize: 20,
+          color: spokenWord.toLowerCase() == animals[currentIndex].name.toLowerCase() && spokenWord.isNotEmpty ? Colors.blue : Colors.black,
+        ),
+      );
+     // spokenWord = '';
     });
   }
 
   void _checkAnswer(String guessedAnimal) {
     String correctAnimalName = animals[currentIndex].name.toLowerCase();
-    String spokenWordLower = spokenWord.toLowerCase();
+    String spokenWordLower = guessedAnimal.toLowerCase();
 
     // Remove any leading or trailing whitespace
     guessedAnimal = guessedAnimal.trim();
@@ -119,11 +126,18 @@ class _GuessandSpeakGameState extends State<GuessandSpeakGame> {
     if (spokenWordLower == correctAnimalName || _isSimilar(spokenWordLower, correctAnimalName)) {
       setState(() {
         score++;
+        // Text(
+        //   spokenWord,
+        //   style: TextStyle(
+        //     fontSize: 20,
+        //     color: spokenWord.toLowerCase() == animals[currentIndex].name.toLowerCase() && spokenWord.isNotEmpty ? Colors.blue : Colors.black,
+        //   ),
+        // );
         _nextAnimal();
       });
-    } else {
     }
   }
+
 
   bool _isSimilar(String a, String b) {
 
@@ -139,11 +153,12 @@ class _GuessandSpeakGameState extends State<GuessandSpeakGame> {
           setState(() {
             spokenWord = result.recognizedWords;
           });
-          _checkAnswer(result.recognizedWords);
+          _checkAnswer(result.recognizedWords); // Move this line to _checkAnswer method
         }
       },
     );
   }
+
 }
 
 class AnimalItem {

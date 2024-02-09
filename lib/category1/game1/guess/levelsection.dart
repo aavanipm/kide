@@ -31,7 +31,7 @@ class LevelSelection extends StatelessWidget {
                 mainAxisSpacing: 20.0,
                 crossAxisSpacing: 20.0,
                 children: List.generate(
-                  10, // Number of levels
+                  5, // Number of levels
                       (index) {
                     int levelNumber = index + 1;
                     bool isLocked = levelNumber > 5; // Lock levels 6-10

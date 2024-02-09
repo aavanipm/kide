@@ -39,7 +39,7 @@ class _GuessingGame6State extends State<GuessingGame6> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Guess Name'),
+        title: const Text('Level 6'),
         backgroundColor: Colors.blue.shade200,
         actions: [
           IconButton(
@@ -114,7 +114,7 @@ class _GuessingGame6State extends State<GuessingGame6> {
       builder: (context) {
         totalPoints += score;
         return AlertDialog(
-          title: const Text('Level 5 Completed'),
+          title: const Text('Level 6 Completed'),
           //content: Text('Congratulations! You completed the matching game. Your total score: $totalPoints'),
           actions: [
             TextButton(
@@ -123,9 +123,9 @@ class _GuessingGame6State extends State<GuessingGame6> {
               },
               child: const Text('OK'),
             ),
-            TextButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame6()));
-            }, child: Text('Next level'))
+            // TextButton(onPressed: (){
+            //   Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame6()));
+            // }, child: Text('Next level'))
           ],
         );
       },

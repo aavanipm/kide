@@ -17,12 +17,12 @@ class _Match1State extends State<Match1> {
       Animal(name: "lion", imagePath: 'assets/animals/lion.png'),
 
     ],
-    [
-      Animal(name: 'dog', imagePath: 'assets/animals/dog.png'),
-      Animal(name: 'fox', imagePath: 'assets/animals/fox.png'),
-      Animal(name: 'zebra', imagePath: 'assets/animals/zebra.png'),
-      Animal(name: "lion", imagePath: 'assets/animals/lion.png'),
-    ],
+    // [
+    //   Animal(name: 'dog', imagePath: 'assets/animals/dog.png'),
+    //   Animal(name: 'fox', imagePath: 'assets/animals/fox.png'),
+    //   Animal(name: 'zebra', imagePath: 'assets/animals/zebra.png'),
+    //   Animal(name: "lion", imagePath: 'assets/animals/lion.png'),
+    // ],
     // Add more sets as needed
   ];
 

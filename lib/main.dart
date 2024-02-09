@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Home1(username: 'pp', email: 'pp@gmail.com'),
+        home: Home1(username: 'pp', email: 'pp@gmil.com'),
 
       ),
     );

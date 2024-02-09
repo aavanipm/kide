@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:game/category1/game1/guess/GuessingGame5.dart';
 import 'package:game/category1/game1/guess/levelsection.dart';
 
-class GuessingGame3 extends StatefulWidget {
-  const GuessingGame3({Key? key}) : super(key: key);
+class GuessingGame4 extends StatefulWidget {
+  const GuessingGame4({Key? key}) : super(key: key);
 
   @override
-  _GuessingGame3State createState() => _GuessingGame3State();
+  _GuessingGame4State createState() => _GuessingGame4State();
 }
 
-class _GuessingGame3State extends State<GuessingGame3> {
+class _GuessingGame4State extends State<GuessingGame4> {
   int score = 0;
   int totalPoints = 0;
 

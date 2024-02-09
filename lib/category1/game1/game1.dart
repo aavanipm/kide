@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/fillblanks/fill.dart';
+import 'package:game/category1/game1/fillblanks/filldemo.dart';
 import 'package:game/category1/game1/guess/levelsection.dart';
 import 'package:game/category1/game1/match/match.dart';
+import 'package:game/category1/game1/scramble.dart';
+import 'package:game/category1/game1/scramble3.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
 
 
@@ -16,6 +18,7 @@ class Game1 extends StatefulWidget {
     Games(imagepath: "assets/images/img1.png", name: "Guess"),
     Games(imagepath: "assets/images/img1.png", name: "Match"),
     Games(imagepath: "assets/images/img1.png", name: "Speak"),
+    Games(imagepath: "assets/images/img1.png", name: "scramble"),
   ];
 }
 
@@ -50,7 +53,7 @@ Widget gamecard(BuildContext context, Games val){
       onTap: (){
         switch(val.name){
           case 'Fill':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Fill()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>FillName()));
             break;
 
           case 'Guess':
@@ -62,8 +65,11 @@ Widget gamecard(BuildContext context, Games val){
             break;
 
           case 'Speak':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessandSpeakGame()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble3()));
             break;
+
+          case 'scramble':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scrambleone()));
 
           default:
             break;

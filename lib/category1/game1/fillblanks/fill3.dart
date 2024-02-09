@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/fillblanks/fill3.dart';
 
-class Fill extends StatefulWidget {
-  const Fill({Key? key});
+class Fill3 extends StatefulWidget {
+  const Fill3({Key? key});
 
   @override
-  State<Fill> createState() => _FillState();
+  State<Fill3> createState() => _Fill3State();
 }
 
-class _FillState extends State<Fill> {
+class _Fill3State extends State<Fill3> {
   List<AnimalId> animals = [
     AnimalId(name: 'Cat', image: 'assets/animals/cat.png'),
     AnimalId(name: 'Dog', image: 'assets/animals/dog.png'),
@@ -28,7 +29,7 @@ class _FillState extends State<Fill> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Fill letters"),
+        title: const Text("Level 3"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -91,6 +92,9 @@ class _FillState extends State<Fill> {
               },
               child: const Text('OK'),
             ),
+            // TextButton(onPressed: (){
+            //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Fill3()));
+            // }, child: Text("Next Level"))
           ],
         );
       },
@@ -169,7 +173,7 @@ class _AnimalCardState extends State<AnimalCard> {
               TextField(
                 onChanged: (value) {
                   setState(() {
-                    typedName = value.toLowerCase();
+                    typedName = value.trim().toLowerCase();
                     maskedName = _generateMaskedName(widget.animal.name);
                     if (typedName == widget.animal.name.toLowerCase()) {
                       widget.onMatched();
@@ -185,6 +189,7 @@ class _AnimalCardState extends State<AnimalCard> {
                 },
                 child: const Text("Done"),
               ),
+
             ],
           ),
         );
@@ -193,6 +198,10 @@ class _AnimalCardState extends State<AnimalCard> {
   }
 
   String _generateMaskedName(String name) {
+    if (typedName.trim().toLowerCase() == name.toLowerCase()) {
+      return name; // Return full name if typed name matches
+    }
+
     String maskedName = '';
     for (int i = 0; i < name.length; i++) {
       if (name[i] == ' ') {
