@@ -1,29 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/fillblanks/filldemo.dart';
-import 'package:game/category1/game1/guess/levelsection.dart';
+import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
+import 'package:game/category1/game1/fillblanks/Fills.dart';
+import 'package:game/category1/game1/flashcard/flashcardlevels.dart';
+import 'package:game/category1/game1/guess/levelguess.dart';
 import 'package:game/category1/game1/match/match.dart';
-import 'package:game/category1/game1/scramble.dart';
-import 'package:game/category1/game1/scramble3.dart';
+import 'package:game/category1/game1/opposite/oppositelevels.dart';
+import 'package:game/category1/game1/past%20tense/levels.dart';
+import 'package:game/category1/game1/search/searchlevels.dart';
+import 'package:game/category1/game1/sentencecompletion/Sentencelevels.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
-
-
+import 'package:game/category1/game1/synonym/Synonymlevels.dart';
 
 class Game1 extends StatefulWidget {
-  Game1({super.key});
+  final String username;
+  final String email;
+  final String age;
+
+  Game1({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
 
   @override
   State<Game1> createState() => _Game1State();
   List<Games> values = [
-    Games(imagepath: "assets/images/img1.png", name: "Fill"),
-    Games(imagepath: "assets/images/img1.png", name: "Guess"),
-    Games(imagepath: "assets/images/img1.png", name: "Match"),
-    Games(imagepath: "assets/images/img1.png", name: "Speak"),
-    Games(imagepath: "assets/images/img1.png", name: "scramble"),
+    Games(imagepath: "assets/game/fill.png", name: "Fill"),
+    Games(imagepath: "assets/game/guess.png", name: "Guess"),
+    Games(imagepath: "assets/game/match.png", name: "Match"),
+    Games(imagepath: "assets/game/say.png", name: "Speak"),
+    Games(imagepath: "assets/game/scramble.png", name: "scramble"),
+    Games(imagepath: "assets/game/pair.png", name: "opposite"),
+    Games(imagepath: "assets/game/synonym.png", name: "synonym"),
+    Games(imagepath: "assets/game/spell.png", name: "flash"),
+    Games(imagepath: "assets/game/sentence.png", name: "sentence"),
+    Games(imagepath: "assets/game/word.png", name: "Search"),
+    Games(imagepath: "assets/images/img1.png", name: "past"),
   ];
 }
 
 class _Game1State extends State<Game1> {
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -38,9 +52,9 @@ class _Game1State extends State<Game1> {
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),
-          itemCount: widget.values.length, // Accessing values through widget
-          itemBuilder: (context, index) {
-            return gamecard(context, widget.values[index]); // Adjusted function call
+            itemCount: widget.values.length, // Accessing values through widget
+            itemBuilder: (context, index) {
+            return gamecard(context, widget.values[index], widget.username, widget.email, widget.age);
           },
         ),
       ),
@@ -48,28 +62,62 @@ class _Game1State extends State<Game1> {
   }
 }
 
-Widget gamecard(BuildContext context, Games val){
+Widget gamecard(BuildContext context, Games val, String username, String email, String age) {
   return GestureDetector(
       onTap: (){
         switch(val.name){
           case 'Fill':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>FillName()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Fills(
+                  username: username, email: email, age: age,
+                ),
+              ),
+            );
             break;
 
           case 'Guess':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelSelection()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelGuess(
+              username: username, email: email, age: age,
+            )));
             break;
 
           case 'Match':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Match()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Match(
+              username: username, email: email, age: age,
+            )));
             break;
 
           case 'Speak':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble3()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
+                username: username, email: email, age: age)));
             break;
 
           case 'scramble':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scrambleone()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramblelevel()));
+            break;
+
+          case 'opposite':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Oppositelevels()));
+            break;
+
+          case 'synonym':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Synonymlevels()));
+            break;
+
+          case 'flash':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>FlashCardLevels()));
+            break;
+
+          case 'sentence':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels()));
+            break;
+
+          case 'Search':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel()));
+            break;
+
+          case 'past':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelSelection1()));
+            break;
 
           default:
             break;

@@ -1,21 +1,30 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/save1.dart';
 import 'package:game/category1/game1/game1.dart';
 import 'package:game/category1/learn1/learn1.dart';
+import 'package:game/category2/learn2/learn2.dart';
+import 'package:game/category3/learn3/Story/Story1.dart';
+import 'package:game/category3/learn3/Story/Story2.dart';
 import 'package:game/learn/Numbers.dart';
 import 'package:game/learn//flowers.dart';
-import 'package:game/Home/logout.dart';
+import 'package:game/learn/Stories/storysection.dart';
+import 'package:game/learn/capital.dart';
+import 'package:game/learn/small.dart';
+import 'dart:io';
 
 class Home1 extends StatefulWidget {
   final String username;
   final String email;
-  const Home1({super.key, required this.username, required this.email});
+  final String age;
+  const Home1({super.key, required this.username, required this.email, required this.age});
 
   @override
   State<Home1> createState() => _Home1State();
 }
 
 class _Home1State extends State<Home1> {
+  final TextEditingController _emailController = TextEditingController();
   int currentindex = 0;
   List myPages = [Flowers(), Numbers()];
   @override
@@ -23,6 +32,12 @@ class _Home1State extends State<Home1> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Home"), backgroundColor: Colors.blue.shade100,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(Icons.notifications),
+            ),
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -41,7 +56,11 @@ class _Home1State extends State<Home1> {
               ListTile(
                 title: Text("Logout"), leading: Icon(Icons.logout),
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Logout()));
+                  //
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage1(
+                      username: widget.username, useremail: widget.email, userage: widget.age)
+                  )
+                  );
                 },
               ),
             ],
@@ -60,64 +79,185 @@ class _Home1State extends State<Home1> {
             BottomNavigationBarItem(icon: Icon(Icons.access_alarm_outlined),label: "new" )],
         ),
 
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 20,),
-
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-
-                child: Text("Categories", style: TextStyle(fontSize: 25),),
-              ),
-              SizedBox(height: 10,),
-
-
-              CarouselSlider(items: [
-                Card(
-                  child: Image.asset("assets/images/img1.png", ),
+        body: ListView(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                   children: [
+                     SizedBox(height: 20,),
+                     Text("Hello, " + widget.username,
+                       style: TextStyle(
+                         fontFamily: 'Balsamiq Sans',
+                         fontWeight: FontWeight.bold,
+                         fontSize: 30,
+                      ),
+                     ),
+                     SizedBox(height: 10,),
+                     // Text(
+                     //   "Let's Learn And Play ENGLISH",
+                     //   style: TextStyle(
+                     //     fontFamily: 'Balsamiq Sans',
+                     //     fontWeight: FontWeight.bold,
+                     //     fontSize: 30,
+                     //   ),
+                     // ),
+                     SizedBox(height: 10,),
+                   ],
+                  ),
                 ),
-                Card(
-                  child: Image.asset("assets/images/img2.png",),
-                )
-              ], options: CarouselOptions(autoPlay: true, viewportFraction: 16/9)
-              ),
 
-              SizedBox(height: 30,),
+                // card
+                // CarouselSlider(items: [
+                //   Card(
+                //     child: GestureDetector(
+                //       onTap: (){
+                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>CapitalLetter()));
+                //       },
+                //       child: Column(
+                //         children: [
+                //           Image.asset("assets/home/capital.png",height: 212.90, width: 300,),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                //
+                //   Card(
+                //     child: GestureDetector(
+                //       onTap: (){
+                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>SmallLetter()));
+                //       },
+                //       child: Column(
+                //         children: [
+                //           Image.asset("assets/home/small.png", height: 212.90, width: 300,),
+                //         ],
+                //       ),
+                //     ),
+                //     //child: Image.asset("assets/images/img1.png", ),
+                //   ),
+                // ], options: CarouselOptions(autoPlay: true, viewportFraction: 16/9)
+                // ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Learn1()));
-                    },
+
+                CarouselSlider(
+                  items: [
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>CapitalLetter()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.asset(
+                          "assets/home/capital.png",
+                          // height: 212.90,
+                          // width: 300,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SmallLetter()));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.asset(
+                          "assets/home/small.png",
+                          // height: 212.90,
+                          // width: 300,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    viewportFraction: 1, // Adjust this value to fit your layout
+                  ),
+                ),
+
+
+                SizedBox(height: 50,),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Learn1()));
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset("assets/home/learn1.png", fit: BoxFit.contain, height: 150, width: 150,),
+                          Text("Learn", style: TextStyle(fontSize: 20),),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 40,),
+
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Game1(
+                          username: widget.username, email: widget.email, age: widget.age,)));
+                      },
+                      child: Column(
+                        children: [
+                          Image.asset("assets/home/games1.png", fit: BoxFit.contain, height: 150, width: 150,),
+                          Text("Games", style: TextStyle(fontSize: 20),),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Image.asset("assets/home/learn1.png", fit: BoxFit.contain, height: 150, width: 150,),
-                        Text("Learn", style: TextStyle(fontSize: 20),),
+                        SizedBox(height: 30,),
+                        Text("Hear the stories...",
+                          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 30,),
+                        Card(
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>FirstStory()));
+                            },
+                            child: Column(
+                              children: [
+                                Image.asset("assets/story/foxstory.png", height: 200, width: 300,),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20,),
+                        Card(
+                          child: GestureDetector(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>SecondStory()));
+                            },
+                            child: Column(
+                              children: [
+                                Image.asset("assets/story/proudrose.png", height: 200, width: 300,),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                        TextButton(onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>StorySection()));
+                        }, child: Text("Go to stories"))
                       ],
                     ),
                   ),
-                  SizedBox(width: 40,),
-                  
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Game1()));
-                    },
-                    child: Column(
-                      children: [
-                        Image.asset("assets/home/games1.png", fit: BoxFit.contain, height: 150, width: 150,),
-                        Text("Games", style: TextStyle(fontSize: 20),),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
+                )
+              ],
+            ),
+          ],
         )
     );
   }

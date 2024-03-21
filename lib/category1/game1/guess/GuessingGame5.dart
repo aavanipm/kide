@@ -1,58 +1,58 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/guess/levelsection.dart';
+import 'package:game/category1/game1/game1.dart';
+import 'package:game/category1/game1/guess/GuessingGame6.dart';
+import 'package:game/category1/home1.dart';
 
 class GuessingGame5 extends StatefulWidget {
-  const GuessingGame5({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
 
+  GuessingGame5({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
   @override
   _GuessingGame5State createState() => _GuessingGame5State();
 }
 
 class _GuessingGame5State extends State<GuessingGame5> {
   int score = 0;
-  int totalPoints = 0;
-
-
-
-  List<Animal> fruits = [
-    Animal(name: 'Apple', imagePath: 'assets/images/apple.png', points: 1),
-    Animal(name: 'Orange', imagePath: 'assets/images/orange.png', points: 1),
-    Animal(name: 'Banana', imagePath: 'assets/images/banana.png', points: 1),
-    //  Animal(name: 'Grapes', imagePath: 'assets/images/grapes.png', points: 1),
+  List<Animal> animals = [
+    Animal(name: 'Ant', imagePath: 'assets/animals/ant.png'),
+    Animal(name: 'Duck', imagePath: 'assets/Birds/duck.png'),
   ];
 
-
-  List<Animal> shuffledAnimals = [];
-
   List<List<Animal>> allAnimalCategories = [];
-
-  int currentCategoryIndex = 0;
+  bool showNextLevelButton = false;
 
   @override
   void initState() {
     super.initState();
-    allAnimalCategories.add(fruits);
-    shuffledAnimals = List.from(allAnimalCategories[currentCategoryIndex])..shuffle();
+    allAnimalCategories.add(animals);
+    _getStoredScore();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Level 5'),
-        backgroundColor: Colors.blue.shade200,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _shuffleAnimals,
-          ),
-          // IconButton(
-          //   icon: const Icon(Icons.calculate),
-          //   onPressed: () {
-          //     _showTotalPoints();
-          //   },
-          // ),
-        ],
+        backgroundColor: Colors.blue.shade100,
+        title: Row(
+          children: [
+            Text("Level 5"),
+            SizedBox(width: 110,),
+            IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                    username: widget.username, email: widget.email, age: widget.age)));
+              },
+              icon: Icon(Icons.home), // Home button on the right side
+            ),
+            SizedBox(width: 5),
+            Text("Score: $score"),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -67,29 +67,42 @@ class _GuessingGame5State extends State<GuessingGame5> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 16,
                 ),
-                itemCount: shuffledAnimals.length,
+                itemCount: animals.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return AnimalCard(
-                    animal: shuffledAnimals[index],
+                    animal: animals[index],
                     onMatched: () {
                       setState(() {
-                        score += shuffledAnimals[index].points!;
-                        totalPoints += shuffledAnimals[index].points!;
-                        shuffledAnimals[index].matched = true;
-
-                        // Check if all animals are matched
-                        if (shuffledAnimals.every((animal) => animal.matched)) {
-                          _showGameCompletedDialog();
-                        }
+                        animals[index].matched = true;
+                        // // Check if all animals are matched
+                        // if (animals.every((animal) => animal.matched)) {
+                        //   _showGameCompletedDialog();
+                        // }
                       });
                     },
                   );
                 },
               ),
-              SizedBox(height: 50,),
-              Text('Score: $score', style: const TextStyle(fontSize: 30)),
+              const SizedBox(height: 100),
+              ElevatedButton(
+                onPressed: _submitGuesses,
+                child: const Text('Submit'),
+              ),
+              SizedBox(height: 10,),
+              if (showNextLevelButton)
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GuessingGame6(
+                        username: widget.username, email: widget.email, age: widget.age,
+                      )),
+                    );
+                  },
+                  child: const Text("Next Level"),
+                ),
             ],
           ),
         ),
@@ -97,59 +110,83 @@ class _GuessingGame5State extends State<GuessingGame5> {
     );
   }
 
-  void _shuffleAnimals() {
+  void _submitGuesses() {
+    bool allMatched = true;
+    bool anyCorrectGuess = false; // To track if any correct guess is made
+
+    // Loop through animals to check each guess
+    for (var animal in animals) {
+      if (animal.matched == false && animal.name.toLowerCase() == animal.typedName.trim().toLowerCase()) {
+        animal.matched = true;
+        anyCorrectGuess = true; // At least one correct guess is made
+        if(score==4 || score==5){
+          score = score + 1; // Increment score by 1 for each correct guess
+          _updateScoreInFirebase();
+        }
+      }
+      // Check if any animal is not matched
+      if (!animal.matched) {
+        allMatched = false;
+      }
+    }
+
+    // Show snackbar based on matching results
+    if (anyCorrectGuess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Correct!'),
+          backgroundColor: Colors.green,
+          duration: Duration(milliseconds: 700),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Incorrect!'),
+          backgroundColor: Colors.red,
+          duration: Duration(milliseconds: 700),
+        ),
+      );
+    }
+
+    // Update state based on matching results
     setState(() {
-      // Increment the category index, and loop back to 0 if it exceeds the length
-      currentCategoryIndex = (currentCategoryIndex + 1) % allAnimalCategories.length;
-      // Shuffle the animals of the current category
-      shuffledAnimals = List.from(allAnimalCategories[currentCategoryIndex])..shuffle();
-      // Reset the score
-      score = 0;
+      if (allMatched) {
+        showNextLevelButton = true; // Show Next Level button if all animals are matched
+      }
     });
   }
 
-  void _showGameCompletedDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        totalPoints += score;
-        return AlertDialog(
-          title: const Text('Level 5 Completed'),
-          //content: Text('Congratulations! You completed the matching game. Your total score: $totalPoints'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelSelection()));
-              },
-              child: const Text('OK'),
-            ),
-            // TextButton(onPressed: (){
-            //   Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame6()));
-            // }, child: Text('Next level'))
-          ],
-        );
-      },
-    );
+  void _updateScoreInFirebase() async {
+    // Only update score if level is completed
+    if (score == 6) {
+      await Firebase.initializeApp();
+      final DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection(widget.username)
+          .doc('guessing');
+
+      // Create a new document or update the existing one
+      await userDocRef.set({
+        'animal': {'score': score}, // Nested data for animal category and score
+      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+    }
   }
 
-  void _showTotalPoints() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Total Points'),
-          content: Text("Your total points: $totalPoints"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('guessing');
+
+    final DocumentSnapshot snapshot = await userDocRef.get();
+    if (snapshot.exists) {
+      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      if (data.containsKey('animal')) {
+        setState(() {
+          score = data['animal']['score'];
+        });
+      }
+    }
   }
 }
 
@@ -157,6 +194,7 @@ class Animal {
   final String name;
   final String imagePath;
   final int? points;
+  String typedName = ''; // Store the typed name for each animal
   bool matched;
 
   Animal({
@@ -179,107 +217,46 @@ class AnimalCard extends StatefulWidget {
 
 class _AnimalCardState extends State<AnimalCard> {
   TextEditingController textEditingController = TextEditingController();
-  String typedName = '';
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (!widget.animal.matched) {
-          _showAnimalNameDialog(context);
-        }
-      },
-      child: Card(
-        elevation: 3,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                widget.animal.matched ? widget.animal.imagePath : widget.animal.imagePath,
-                height: 100,
-                width: 80,
-              ),
-            ),
-            if (typedName.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$typedName',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-          ],
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            widget.animal.matched ? widget.animal.imagePath : widget.animal.imagePath,
+            height: 105,
+            width: 300,
+          ),
         ),
-      ),
-    );
-  }
-
-  void _showAnimalNameDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Padding(
-            padding: const EdgeInsets.all(26.0),
-            child: const Text('Guess the animal?'),
-          ),
-          content: Column(
-            children: [
-              const SizedBox(height: 20),
-              TextField(
-                controller: textEditingController,
-                onChanged: (value) {
-                  setState(() {
-                    typedName = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Type the animal name',
-                ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: TextField(
+            enabled: !widget.animal.matched, // Disable TextField if animal is matched
+            textAlign: TextAlign.center,
+            controller: textEditingController,
+            textCapitalization: TextCapitalization.characters, // Convert input to uppercase
+            onChanged: (value) {
+              setState(() {
+                widget.animal.typedName = value.toUpperCase(); // Store the typed name for each animal
+              });
+            },
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            decoration: const InputDecoration(
+              hintText: 'Type the animal name',
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  String enteredName = typedName.trim();
-                  if (enteredName.isNotEmpty &&
-                      enteredName.toLowerCase() == widget.animal.name.toLowerCase()) {
-                    Navigator.pop(context);
-                    widget.onMatched();
-                  } else {
-                    // Show incorrect guess message
-                    _showIncorrectGuessDialog(context);
-                  }
-                },
-                child: const Text('Match'),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.blue),
               ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-
-  void _showIncorrectGuessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Wrong Guess'),
-          content: const Text('Incorrect guess! Please try again.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 }

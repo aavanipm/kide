@@ -1,59 +1,73 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/match/match2.dart';
+import 'package:game/category1/home1.dart';
 
 class Match1 extends StatefulWidget {
-  const Match1({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  const Match1({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
 
   @override
   _Match1State createState() => _Match1State();
 }
 
 class _Match1State extends State<Match1> {
+
   List<List<Animal>> animalSets = [
     [
-
+      Animal(name: 'crow', imagePath: 'assets/Birds/crow.png'),
       Animal(name: 'dog', imagePath: 'assets/animals/dog.png'),
-      Animal(name: 'fox', imagePath: 'assets/animals/fox.png'),
-      Animal(name: 'zebra', imagePath: 'assets/animals/zebra.png'),
-      Animal(name: "lion", imagePath: 'assets/animals/lion.png'),
-
+      Animal(name: 'apple', imagePath: 'assets/Fruits/apple.png'),
+      Animal(name: 'cat', imagePath: 'assets/animals/cat.png')
     ],
-    // [
-    //   Animal(name: 'dog', imagePath: 'assets/animals/dog.png'),
-    //   Animal(name: 'fox', imagePath: 'assets/animals/fox.png'),
-    //   Animal(name: 'zebra', imagePath: 'assets/animals/zebra.png'),
-    //   Animal(name: "lion", imagePath: 'assets/animals/lion.png'),
-    // ],
-    // Add more sets as needed
   ];
 
   int currentSetIndex = 0;
-  late List<Animal> currentAnimals;
+  late List<Animal> currentAnimals; // Original animal list
+  late List<String> shuffledNames; // Shuffled list of animal names
   Map<String, GlobalKey> imageKeys = {};
   Map<String, GlobalKey> nameKeys = {};
   Map<String, bool> answerStatus = {};
-  int totalPoints = 0;
+  bool gameCompleted = false; // Add this variable to track game completion status
+  int score = 0;
 
   @override
   void initState() {
     super.initState();
     currentAnimals = animalSets[currentSetIndex];
+    shuffledNames = currentAnimals.map((animal) => animal.name).toList()..shuffle();
+    _getStoredScore();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Match'),
+        title: const Text('Level 1'),
         backgroundColor: Colors.blue.shade200,
         actions: [
+          IconButton(onPressed: (){
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context)=>Home1(
+                username: widget.username, email: widget.email, age: widget.age))
+            );
+          }, icon: Icon(Icons.home)),
+          // IconButton(
+          //   icon: const Icon(Icons.refresh),
+          //   onPressed: () {
+          //     setState(() {
+          //       shuffledNames.shuffle(); // Shuffle names only
+          //       answerStatus.clear(); // Reset answer status on shuffle
+          //     });
+          //   },
+          // ),
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _shuffleNames,
-          ),
-          IconButton(
-            icon: const Icon(Icons.calculate),
+            icon: const Icon(Icons.star),
             onPressed: () {
-              _showTotalPoints(totalPoints);
+              _showTotalPoints(score);
             },
           ),
         ],
@@ -63,25 +77,32 @@ class _Match1State extends State<Match1> {
         child: Column(
           children: [
             Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: buildAnimalList(),
-                  ),
-                  Expanded(
-                    child: buildAnimalNamesList(),
-                  ),
-                ],
+              child: ListView.builder(
+                itemCount: currentAnimals.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Animal animal = currentAnimals[index];
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: buildAnimal(animal),
+                      ),
+                      Expanded(
+                        child: buildAnimalName(shuffledNames[index]),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(68.0),
               child: ElevatedButton(
                 onPressed: () {
-                  _checkAnswers();
+                  _checkAnswers(); // Call _checkAnswers here
                 },
-                child: const Text('Check Answers'),
+                child: const Text('Submit'),
               ),
+
             ),
           ],
         ),
@@ -89,99 +110,109 @@ class _Match1State extends State<Match1> {
     );
   }
 
-  Widget buildAnimalList() {
-    return ListView(
-      children: currentAnimals.map((animal) {
-        imageKeys[animal.name] = GlobalKey();
-        bool isDropped = answerStatus[animal.name] ?? false;
-
-        return DragTarget<String>(
-          onWillAccept: (data) => true,
-          onAccept: (data) {
-            setState(() {
-              answerStatus[animal.name] = data == animal.name;
-            });
-          },
-          builder: (context, candidateData, rejectedData) {
-            return isDropped
-                ? Container()
-                : Draggable(
-              data: animal.name,
-              feedback: Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Image.asset(
-                    animal.imagePath,
-                    height: 80,
-                    width: 100,
+  Widget buildAnimal(Animal animal) {
+    return DragTarget<String>(
+      onWillAccept: (data) => true,
+      onAccept: (data) {
+        setState(() {
+          answerStatus[animal.name] = data == animal.name;
+        });
+      },
+      builder: (context, candidateData, rejectedData) {
+        return Stack(
+          children: [
+            Container(
+              key: imageKeys[animal.name],
+              padding: const EdgeInsets.all(8.0),
+              child: Material(
+                color: Colors.transparent,
+                child: Image.asset(
+                  animal.imagePath,
+                  height: 100,
+                  width: 120,
+                ),
+              ),
+            ),
+            if (answerStatus[animal.name] == true)
+              Positioned.fill(
+                child: Center(
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.green,
                   ),
                 ),
               ),
-              childWhenDragging: Container(),
-              child: Container(
-                key: imageKeys[animal.name],
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  color: Colors.transparent,
-                  child: Image.asset(
-                    animal.imagePath,
-                    height: 100,
-                    width: 120,
-                  ),
-                ),
-              ),
-            );
-          },
+          ],
         );
-      }).toList(),
+      },
     );
   }
 
-  Widget buildAnimalNamesList() {
-    List<String> shuffledNames =
-    currentAnimals.map((animal) => animal.name).toList()..shuffle();
-
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: ListView(
-        children: shuffledNames.map((name) {
-          nameKeys[name] = GlobalKey();
-          bool isCorrect = answerStatus[name] ?? false;
-          Color color = isCorrect ? Colors.green : Colors.transparent;
-
-          return DragTarget<String>(
-            onWillAccept: (data) => true,
-            onAccept: (data) {
-              setState(() {
-                answerStatus[name] = data == name;
-              });
-            },
-            builder: (context, candidateData, rejectedData) {
-              return Container(
-                key: nameKeys[name],
-                padding: const EdgeInsets.all(8.0),
-                color: color,
-                child: Text(
-                  name,
-                  style: const TextStyle(fontSize: 29),
-                ),
-              );
-            },
-          );
-        }).toList(),
+  Widget buildAnimalName(String name) {
+    return Draggable<String>(
+      data: name,
+      child: Container(
+        key: nameKeys[name] ?? GlobalKey(),
+        padding: const EdgeInsets.all(8.0),
+        color: answerStatus[name] ?? false ? Colors.green : Colors.transparent,
+        child: Text(
+          name,
+          style: const TextStyle(fontSize: 29),
+        ),
+      ),
+      onDragCompleted: () {
+        _checkAnswers(); // Call _checkAnswers when dragging is completed
+      },
+      childWhenDragging: Container(
+        color: Colors.transparent, // Make invisible while dragging
+      ),
+      feedback: Text(
+        name,
+        style: TextStyle(
+          fontSize: 29,
+          color: Colors.grey.shade700, // Faded color while dragging
+        ),
       ),
     );
   }
 
   void _checkAnswers() {
-    int correctAnswers =
-        answerStatus.values.where((element) => element).length;
-    int pointsEarned = (correctAnswers / currentAnimals.length * 4).toInt();
-    totalPoints += pointsEarned;
-    _showGameCompletedDialog(
-        "Congratulations! You earned $pointsEarned points in this game.");
+    int correctAnswers = 0;
+
+    // Iterate through each animal in the current set
+    for (Animal animal in currentAnimals) {
+      String animalName = animal.name;
+      String imageName = animal.imagePath.split('/').last.split('.').first;
+
+      // Check if both the animal name and the image name are matched correctly
+      if (answerStatus[animalName] == true && animalName == imageName) {
+        correctAnswers++;
+      }
+
+      // Check if both the image name and the animal name are matched correctly
+      if (answerStatus[imageName] == true && imageName == animalName) {
+        correctAnswers++;
+      }
+    }
+
+    // Calculate the total number of possible correct answers
+    int totalCorrectAnswers = currentAnimals.length * 2;
+
+    // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
+    if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
+      if (score == 0){
+        score = 4;// Set score to 3 directly
+        _updateScoreInFirebase(); // Update score in Firebase
+      }
+      gameCompleted = true; // Set gameCompleted flag to true
+    }
+
+    // If the game is completed, show the game completion dialog
+    if (gameCompleted){
+      _showGameCompletedDialog("Congratulations! You completed this level.");
+    }
   }
+
 
   void _showGameCompletedDialog(String message) {
     showDialog(
@@ -193,7 +224,14 @@ class _Match1State extends State<Match1> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // Close the dialog
+                _proceedToNextLevel(); // Proceed to the next level
+              },
+              child: const Text('Next Level'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
               },
               child: const Text('OK'),
             ),
@@ -203,13 +241,20 @@ class _Match1State extends State<Match1> {
     );
   }
 
+
+  void _proceedToNextLevel() {
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>Match2(
+      username: widget.username, email: widget.email, age: widget.age,
+    )));
+  }
+
   void _showTotalPoints(int points) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Total Points'),
-          content: Text("Your total points: $points"),
+          content: Text("Your total points: $score"),
           actions: [
             TextButton(
               onPressed: () {
@@ -223,18 +268,31 @@ class _Match1State extends State<Match1> {
     );
   }
 
-  void _shuffleNames() {
-    setState(() {
-      currentSetIndex = (currentSetIndex + 1) % animalSets.length;
-      currentAnimals = animalSets[currentSetIndex];
-      answerStatus.clear();
-    });
+  void _updateScoreInFirebase() async {
+    // Only update score if level 1 is completed
+    if (score==4) {
+      await Firebase.initializeApp();
+      final DocumentReference documentReference =
+      FirebaseFirestore.instance.collection(widget.username).doc('matching');
+      await documentReference.set({'score': score});
+    }
+  }
+
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection(widget.username).doc('matching');
+    final DocumentSnapshot snapshot = await documentReference.get();
+    if (snapshot.exists) {
+      setState(() {
+        score = (snapshot.data() as Map<String, dynamic>)['score'];
+      });
+    }
   }
 }
 
 class Animal {
-  final String name;
+  String name;
   final String imagePath;
-
   Animal({required this.name, required this.imagePath});
 }

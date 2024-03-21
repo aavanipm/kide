@@ -2,8 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/Home/home.dart';
 import 'package:game/category1/home1.dart';
-import 'package:game/category2/home2.dart';
-import 'package:game/category3/home3.dart';
 import 'package:game/firebase_options.dart';
 import 'package:game/auth/login.dart';
 
@@ -25,12 +23,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-      
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Home1(username: 'pp', email: 'pp@gmil.com'),
-
+        // home: Home1(username: "kk", email: "kkk", age: "2",),
+        home: Login(),
       ),
     );
   }
