@@ -15,6 +15,7 @@ class _RegisterState extends State<Register> {
   final TextEditingController _unameController = TextEditingController();
   String? _selectedAgeCategory;
   bool _isPasswordVisible = false;
+  String _subscribedCategory = 'none';
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +146,12 @@ class _RegisterState extends State<Register> {
         // Save user data
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(userCredential.user!.uid)
+            .doc(_unameController.text)
             .set({
           'username': _unameController.text,
           'email': _emailController.text,
           'selectedAgeCategory': _selectedAgeCategory,
+          'subscribedCategory': _subscribedCategory,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(

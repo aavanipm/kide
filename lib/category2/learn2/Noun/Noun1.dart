@@ -1,88 +1,27 @@
-// import 'package:flutter/material.dart';
-//
-// class Noun1 extends StatelessWidget {
-//   const Noun1({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text(
-//           "🌟 Let's Explore Nouns! 🌟",
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               "Hello!",
-//               style: TextStyle(
-//                 fontSize: 32.0,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.deepOrange,
-//               ),
-//             ),
-//             const SizedBox(height: 30.0),
-//             Text(
-//               "Nouns are special words that name people, places, things, or ideas.",
-//               style: TextStyle(fontSize: 24.0, color: Colors.blue),
-//             ),
-//             const SizedBox(height: 30.0),
-//             Text(
-//               "For example, think about things you see: dog, school, ball, love!",
-//               style: TextStyle(fontSize: 24.0, color: Colors.green),
-//             ),
-//             const SizedBox(height: 30.0),
-//             Text(
-//               "Nouns help us talk about the world around us and express our thoughts and feelings!",
-//               style: TextStyle(fontSize: 24.0, color: Colors.deepOrange),
-//             ),
-//             const SizedBox(height: 30.0),
-//             Text(
-//               "Here are some examples of nouns:",
-//               style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 10.0),
-//             Text(
-//               "1. Person: Sarah, teacher",
-//               style: TextStyle(fontSize: 20.0, color: Colors.deepPurple),
-//             ),
-//             Text(
-//               "2. Place: park, beach",
-//               style: TextStyle(fontSize: 20.0, color: Colors.deepPurple),
-//             ),
-//             Text(
-//               "3. Thing: book, toy",
-//               style: TextStyle(fontSize: 20.0, color: Colors.deepPurple),
-//             ),
-//             Text(
-//               "4. Idea: happiness, friendship",
-//               style: TextStyle(fontSize: 20.0, color: Colors.deepPurple),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
-class Noun1 extends StatelessWidget {
+class Noun1 extends StatefulWidget {
+  Noun1({Key? key});
+
+  @override
+  State<Noun1> createState() => _Noun1State();
+}
+
+class _Noun1State extends State<Noun1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Nouns", style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
+        title: Text(
+          "Nouns",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.purple.shade100,
       ),
       body: Swiper(
-        itemCount: 5,
+        itemCount: 4, // Changed itemCount to 4
         loop: false,
         itemBuilder: (BuildContext context, int index) {
           switch (index) {
@@ -91,11 +30,9 @@ class Noun1 extends StatelessWidget {
             case 1:
               return NounDefinitionPage();
             case 2:
-              return NounExamplePage();
-            case 3:
               return NounTypesDefinitionPage();
-            case 4:
-              return NounTypesExamplePage();
+            case 3: // Additional page
+              return NounFunFactsPage();
             default:
               return Container();
           }
@@ -110,16 +47,16 @@ class NounIntroductionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Colors.purple.shade50,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "🌟 Let's Learn Nouns! 🌟",
-                style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold,),
+                style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -133,36 +70,40 @@ class NounIntroductionPage extends StatelessWidget {
 class NounDefinitionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
           children: [
-            SizedBox(height: 30,),
+            SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("What are ",
+                Text(
+                  "What are ",
                   style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w500),
                 ),
-                Text("NOUNS",
-                  style: TextStyle(fontSize: 35.0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.lightBlue,
+                Text(
+                  "NOUNS",
+                  style: TextStyle(
+                    fontSize: 35.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.lightBlue,
                   ),
                 ),
-                Text("?",
+                Text(
+                  "?",
                   style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             Text(
               "Nouns are words used to name people, places, things, or ideas.",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.black),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 50,),
+            SizedBox(height: 50),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -172,48 +113,14 @@ class NounDefinitionPage extends StatelessWidget {
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20.0),
-                Text(" - Sarah", style: TextStyle(
-                  fontSize: 20,
-                ),),
-                SizedBox(height: 10,),
-                Text(" - School", style: TextStyle(
-                  fontSize: 20,),
-                ),
-                SizedBox(height: 10,),
-                Text(" - Cat", style: TextStyle(
-                  fontSize: 20),
-                ),
-                SizedBox(height: 10,),
-                Text(" - Happiness", style: TextStyle(
-                  fontSize: 20),
-                ),
+                Text(" - Sarah", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10),
+                Text(" - School", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10),
+                Text(" - Cat", style: TextStyle(fontSize: 20)),
+                SizedBox(height: 10),
+                Text(" - Happiness", style: TextStyle(fontSize: 20)),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NounExamplePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Here are some examples of nouns:",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "Sarah, school, book, table, cat, happiness",
-              style: TextStyle(fontSize: 20.0),
-              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -226,16 +133,137 @@ class NounTypesDefinitionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
           children: [
-          Text("Types of Nouns",),
-          Text(
+            SizedBox(height: 20),
+            Text(
+              "Types of Nouns",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
               "Nouns can be categorized into different types based on what they name.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Examples of Noun Types",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 40),
+            Expanded(
+              child: Swiper(
+                itemCount: 4,
+                loop: false,
+                itemBuilder: (BuildContext context, int index) {
+                  switch (index) {
+                    case 0:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Person: ",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "Sarah, Teacher",
+                                style: TextStyle(fontSize: 20.0, color: Colors.blueAccent),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
+                        ],
+                      );
+                    case 1:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Place: ",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "park, beach, school ",
+                                style: TextStyle(fontSize: 20.0, color: Colors.lightBlueAccent),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
+                        ],
+                      );
+                    case 2:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Thing: ",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "book, toy, car",
+                                style: TextStyle(fontSize: 20.0),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    case 3:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Idea: ",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "happiness, courage",
+                                style: TextStyle(fontSize: 20.0),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "Do you know?",
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Nouns help us understand the world around us! They can be fun to learn and use in sentences.",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ],
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+                pagination: SwiperPagination(),
+                control: SwiperControl(), // Add control for navigation icons
+              ),
             ),
           ],
         ),
@@ -244,26 +272,70 @@ class NounTypesDefinitionPage extends StatelessWidget {
   }
 }
 
-class NounTypesExamplePage extends StatelessWidget {
+// Additional page for fun facts about nouns
+class NounFunFactsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple.shade50,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Examples of Noun Types",),
+            SizedBox(height: 20),
             Text(
-              "Here are examples of different types of nouns:",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+              "Fun Facts About Nouns",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.left,
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 20),
             Text(
-              "Person: Sarah, teacher, doctor\nPlace: park, beach, school\nThing: book, toy, car\nIdea: happiness, courage",
-              style: TextStyle(fontSize: 20.0),
-              textAlign: TextAlign.center,
+              "1. There are many types of nouns, including common nouns, proper nouns, and abstract nouns.",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "2. Nouns can be singular or plural. Singular nouns refer to one person, place, thing, or idea, while plural nouns refer to more than one.",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "3. Proper nouns always begin with a capital letter. They name specific people, places, or things.",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "4. Abstract nouns name ideas, qualities, or feelings that cannot be seen or touched, such as love, courage, or happiness.",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "5. Learning about nouns can help you become a better writer and communicator!",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Example:",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Sarah (proper noun) went to the beach (common noun) and built a sandcastle (common noun) while feeling joy (abstract noun).",
+              style: TextStyle(fontSize: 18.0),
+              textAlign: TextAlign.left,
             ),
           ],
         ),

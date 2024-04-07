@@ -5,7 +5,12 @@ import 'package:game/category1/game1/sentencecompletion/sentence1.dart';
 import 'package:game/category1/game1/sentencecompletion/sentencecomplete.dart';
 
 class SentenceLevels extends StatefulWidget {
-  const SentenceLevels({super.key});
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const SentenceLevels({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   State<SentenceLevels> createState() => _SentenceLevelsState();
@@ -40,15 +45,21 @@ class _SentenceLevelsState extends State<SentenceLevels> {
       onTap: (){
         switch(val.name){
           case '1':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence1()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence1(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case '2':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence2()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence2(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case '3':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence3()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence3(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case '4':

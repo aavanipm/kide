@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-class ThirdStory extends StatelessWidget {
-  const ThirdStory({super.key});
+class ThirdStory extends StatefulWidget {
+  @override
+  _ThirdStoryState createState() => _ThirdStoryState();
+}
+
+class _ThirdStoryState extends State<ThirdStory> {
+  final FlutterTts flutterTts = FlutterTts();
+  bool _playAudio = true; // Flag to control audio playback
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +43,16 @@ class ThirdStory extends StatelessWidget {
           }
         },
         pagination: SwiperPagination(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(_playAudio ? Icons.volume_up : Icons.volume_off),
+        onPressed: () {
+          setState(() {
+            _playAudio = !_playAudio;
+            // Stop any ongoing speech when switching audio mode
+            flutterTts.stop();
+          });
+        },
       ),
     );
   }

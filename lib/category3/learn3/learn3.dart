@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:game/category3/learn3/learn3.dart';
 
 class Learn3 extends StatefulWidget {
-  const Learn3({super.key});
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Learn3({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory
+  }) : super(key: key);
 
   @override
   State<Learn3> createState() => _Learn3State();

@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/category1/game1/fillblanks/VegetableLevels/Vegelevel.dart';
 import 'package:game/category1/game1/fillblanks/VegetableLevels/veg5.dart';
-import 'package:game/category1/home1.dart';
 
 class Veg4 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Veg4({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Veg4({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
 
   @override
   State<Veg4> createState() => _Veg4State();
 }
 
 class _Veg4State extends State<Veg4> {
-  TextEditingController _controller = TextEditingController();
-  String _answer = '';
+  String _selectedOption = '';
   bool _answeredCorrectly = false;
-  int score = 0; // Initial score for level 2
+  int score = 0;
+  String _word = "P _ T A T O"; // Initial word with underscore
 
   @override
   void initState() {
     super.initState();
     _getStoredScore();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -39,6 +41,14 @@ class _Veg4State extends State<Veg4> {
         title: Text("Level 4"),
         backgroundColor: Colors.lightBlue.shade100,
         actions: [
+          SizedBox(width: 110,),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>VegeLevel(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
           IconButton(
             onPressed: () {
               _showScoreDialog();
@@ -47,123 +57,131 @@ class _Veg4State extends State<Veg4> {
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/Vegetables/potato.png", // Change the image path for level 2
-              height: 200,
-              width: 200,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              "Select the correct letter",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "P",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  width: 30,
-                  child: TextField(
-                    controller: _controller,
-                    onChanged: (value) {
-                      setState(() {
-                        _answer = value.toUpperCase(); // Convert to uppercase
-                        _controller.value = TextEditingValue(
-                          text: _answer,
-                          selection: TextSelection.fromPosition(
-                            TextPosition(offset: _answer.length),
-                          ),
-                        );
-                      });
-                    },
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/Vegetables/potato.png",
+                    height: 200,
+                    width: 200,
                   ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "A",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "T",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            _answeredCorrectly
-                ? Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
+                  SizedBox(height: 20),
+                  Text(
+                    _word, // Display the word dynamically
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('O');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'O' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.orange[300], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('O'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('A');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'A' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.orange[300], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('A'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('M');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'M' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.orange[300], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('M'),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+                  _answeredCorrectly ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => Veg5(
-                            username: widget.username, email: widget.email, age: widget.age)));
-                    // Proceed to next level logic
-                  },
-                  child: Text('Next Level'),
-                ),
-              ],
-            )
-                : ElevatedButton(
-              onPressed: () {
-                if (!_answeredCorrectly && _answer == 'T') {
-                  setState(() {
-                    _answeredCorrectly = true;
-                    if (score == 3){
-                      score = 4; // Score becomes 1 on correct answer
-                      _updateScoreInFirebase();
-                    }
-                  });
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Correct!'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                } else if (!_answeredCorrectly) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incorrect! Try again.'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                }
-              },
-              child: Text('Submit'),
+                        MaterialPageRoute(
+                          builder: (context) => Veg5(
+                            username: widget.username,
+                            email: widget.email,
+                            age: widget.age,
+                            subscribedCategory: widget.subscribedCategory,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Next Level'),
+                  ) : SizedBox(), // Show or hide based on _answeredCorrectly
+                ],
+              ),
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home1(
-                  username: widget.username, email: widget.email, age: widget.age,
-                )));
-              },
-              child: Text('Go Back to Home'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _selectOption(String option) {
+    setState(() {
+      if (_answeredCorrectly) return; // If already answered correctly, do nothing
+      _selectedOption = option;
+      _word = "P $_selectedOption T A T O"; // Update the word with selected option
+      if (_selectedOption == 'O') {
+        _answeredCorrectly = true;
+        if (score == 3) {
+          score = 4; // Score becomes 1 on correct answer
+          _updateScoreInFirebase();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Correct!',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        _answeredCorrectly = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Incorrect! Try again.',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      }
+    });
   }
 
   void _showScoreDialog() {

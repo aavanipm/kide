@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/category1/game1/synonym/Synonymlevels.dart';
-import 'package:game/category1/game1/synonym/synonym3.dart';
 
 class Synonym2 extends StatefulWidget {
-  const Synonym2({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Synonym2({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _Synonym2State createState() => _Synonym2State();
@@ -11,24 +17,24 @@ class Synonym2 extends StatefulWidget {
 
 class _Synonym2State extends State<Synonym2> {
   final Map<String, List<String>> wordSynonyms = {
-    'sad': ['sad', 'angry', 'unhappy', 'fine', 'great', 'gloomy', 'tough'],
+    'sad': ['sad', 'angry', 'unhappy', 'gloomy', 'tough'],
   };
 
   final Map<String, List<String>> wordNotSimilar = {
-    'sad': ['joyful', 'blissful', 'cheerful', 'content', 'delighted', 'ecstatic', 'elated', 'glad'],
+    'sad': ['joyful', 'blissful', 'cheerful', 'delighted', 'glad'],
   };
 
   List<String> displayedOptions = [];
   String currentWord = '';
   List<String> correctSynonyms = [];
   bool showCorrectSynonyms = false;
-
   int score = 0;
 
   @override
   void initState() {
     super.initState();
     _nextWord();
+    _getStoredScore();
   }
 
   void _nextWord() {
@@ -37,13 +43,11 @@ class _Synonym2State extends State<Synonym2> {
       currentWord = 'sad';
       displayedOptions.addAll(wordSynonyms[currentWord]!);
       displayedOptions.addAll(wordNotSimilar[currentWord]!);
-      displayedOptions.shuffle();
       correctSynonyms = wordSynonyms[currentWord]!;
       showCorrectSynonyms = false;
     });
   }
 
-  //
   void _checkAnswer(String selectedWord) {
     setState(() {
       if (wordSynonyms[currentWord]!.contains(selectedWord)) {
@@ -51,6 +55,7 @@ class _Synonym2State extends State<Synonym2> {
         displayedOptions.remove(selectedWord);
         correctSynonyms.remove(selectedWord);
         showCorrectSynonyms = true;
+        _updateScoreInFirebase();
       }
       if (correctSynonyms.isEmpty) {
         _showAllCorrectMessage();
@@ -71,7 +76,9 @@ class _Synonym2State extends State<Synonym2> {
             TextButton(
                 onPressed: (){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>Synonymlevels()));
+                      MaterialPageRoute(builder: (context)=>Synonymlevels(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                      )));
                 }, child: Text("Home")),
             TextButton(
               onPressed: () {
@@ -83,7 +90,9 @@ class _Synonym2State extends State<Synonym2> {
             TextButton(
                 onPressed: (){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>Synonym3()));
+                      MaterialPageRoute(builder: (context)=>Synonym2(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                      )));
                 }, child: Text("Next level")),
           ],
         );
@@ -91,24 +100,46 @@ class _Synonym2State extends State<Synonym2> {
     );
   }
 
-  void _showSynonymsDialog() {
+  void _showTotalPoints(int points) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          title: Text('Synonyms for $currentWord'),
-          content: Text(correctSynonyms.isNotEmpty ? correctSynonyms.join(', ') : 'No synonyms found.'),
-          actions: <Widget>[
+          title: const Text('Total Points'),
+          content: Text("Your total points: $score"),
+          actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _updateScoreInFirebase() async {
+    // Only update score if level 1 is completed
+    if (score==15) {
+      await Firebase.initializeApp();
+      final DocumentReference documentReference =
+      FirebaseFirestore.instance.collection(widget.username).doc('synonym');
+      await documentReference.set({'score': score});
+    }
+  }
+
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection(widget.username).doc('synonym');
+    final DocumentSnapshot snapshot = await documentReference.get();
+    if (snapshot.exists) {
+      setState(() {
+        score = (snapshot.data() as Map<String, dynamic>)['score'];
+      });
+    }
   }
 
   @override
@@ -118,10 +149,18 @@ class _Synonym2State extends State<Synonym2> {
         title: const Text('Synonym Finder'),
         backgroundColor: Colors.blue,
         actions: [
-          IconButton(onPressed: (){
-            _showSynonymsDialog();
-          }, icon: Icon(Icons.question_answer_outlined))
-
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.home),
+          ),
+          IconButton(
+            onPressed: () {
+              _showTotalPoints(score);
+            },
+            icon: Icon(Icons.star),
+          ),
         ],
       ),
       body: Padding(

@@ -5,7 +5,12 @@ import 'package:game/category1/game1/synonym/synonym2.dart';
 import 'package:game/category1/game1/synonym/Synonymlevels.dart';
 
 class Synonym1 extends StatefulWidget {
-  const Synonym1({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Synonym1({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _Synonym1State createState() => _Synonym1State();
@@ -13,11 +18,11 @@ class Synonym1 extends StatefulWidget {
 
 class _Synonym1State extends State<Synonym1> {
   final Map<String, List<String>> wordSynonyms = {
-    'happy': ['joyful', 'blissful', 'cheerful', 'content', 'delighted', 'ecstatic', 'elated', 'glad'],
+    'happy': ['joyful', 'blissful', 'cheerful', 'delighted', 'glad'],
   };
 
   final Map<String, List<String>> wordNotSimilar = {
-    'happy': ['sad', 'angry', 'unhappy', 'fine', 'great', 'gloomy', 'tough'],
+    'happy': ['sad', 'angry', 'unhappy', 'gloomy', 'tough'],
   };
 
   List<String> displayedOptions = [];
@@ -39,7 +44,6 @@ class _Synonym1State extends State<Synonym1> {
       currentWord = 'happy';
       displayedOptions.addAll(wordSynonyms[currentWord]!);
       displayedOptions.addAll(wordNotSimilar[currentWord]!);
-      displayedOptions.shuffle();
       correctSynonyms = wordSynonyms[currentWord]!;
       showCorrectSynonyms = false;
     });
@@ -73,7 +77,9 @@ class _Synonym1State extends State<Synonym1> {
             TextButton(
                 onPressed: (){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>Synonymlevels()));
+                      MaterialPageRoute(builder: (context)=>Synonymlevels(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                      )));
             }, child: Text("Home")),
             TextButton(
               onPressed: () {
@@ -85,7 +91,9 @@ class _Synonym1State extends State<Synonym1> {
             TextButton(
                 onPressed: (){
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>Synonym2()));
+                      MaterialPageRoute(builder: (context)=>Synonym2(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                      )));
             }, child: Text("Next level")),
           ],
         );
@@ -93,19 +101,19 @@ class _Synonym1State extends State<Synonym1> {
     );
   }
 
-  void _showSynonymsDialog() {
+  void _showTotalPoints(int points) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
-          title: Text('Synonyms for $currentWord'),
-          content: Text(correctSynonyms.isNotEmpty ? correctSynonyms.join(', ') : 'No synonyms found.'),
-          actions: <Widget>[
+          title: const Text('Total Points'),
+          content: Text("Your total points: $score"),
+          actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -115,10 +123,10 @@ class _Synonym1State extends State<Synonym1> {
 
   void _updateScoreInFirebase() async {
     // Only update score if level 1 is completed
-    if (score==14) {
+    if (score==8) {
       await Firebase.initializeApp();
       final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection('synonym').doc('userScore');
+      FirebaseFirestore.instance.collection(widget.username).doc('synonym');
       await documentReference.set({'score': score});
     }
   }
@@ -126,7 +134,7 @@ class _Synonym1State extends State<Synonym1> {
   void _getStoredScore() async {
     await Firebase.initializeApp();
     final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection('synonym').doc('userScore');
+    FirebaseFirestore.instance.collection(widget.username).doc('synonym');
     final DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
       setState(() {
@@ -142,10 +150,18 @@ class _Synonym1State extends State<Synonym1> {
         title: const Text('Synonym Finder'),
         backgroundColor: Colors.blue,
         actions: [
-          IconButton(onPressed: (){
-            _showSynonymsDialog();
-          }, icon: Icon(Icons.question_answer_outlined))
-
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.home),
+          ),
+          IconButton(
+            onPressed: () {
+              _showTotalPoints(score);
+            },
+            icon: Icon(Icons.star),
+          ),
         ],
       ),
       body: Padding(

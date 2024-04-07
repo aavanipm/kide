@@ -5,19 +5,25 @@ import 'package:game/category1/game1/Scramble/Scramble5.dart';
 import 'package:game/category1/game1/Scramble/Scramble6.dart';
 import 'package:game/category1/game1/Scramble/Scramble7.dart';
 import 'package:game/category1/game1/Scramble/scarmble1.dart';
-import 'package:game/category1/game1/Scramble/scramble%20demo.dart';
 import 'package:game/category1/game1/Scramble/scramble4.dart';
 import 'package:game/category1/game1/Scramble/scrambles.dart';
-import 'package:game/category1/game1/scramblecat3.dart';
+import 'package:game/category1/home1.dart';
 
-class Scramblelevel extends StatefulWidget {
-  const Scramblelevel({super.key});
+class ScrambleLevel extends StatefulWidget {
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const ScrambleLevel(
+      {Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}
+      ) : super(key: key);
 
   @override
-  State<Scramblelevel> createState() => _ScramblelevelState();
+  State<ScrambleLevel> createState() => _ScrambleLevelState();
 }
 
-class _ScramblelevelState extends State<Scramblelevel> {
+class _ScrambleLevelState extends State<ScrambleLevel> {
   List<Scrambled> values = [
 
     Scrambled(name: "ANIMALS"),
@@ -27,14 +33,21 @@ class _ScramblelevelState extends State<Scramblelevel> {
     Scrambled(name: "COLOURS"),
     Scrambled(name: "NUMBERS"),
     Scrambled(name: "VEGETABLES"),
-    Scrambled(name: "8"),
-    Scrambled(name: "9"),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Levels"), backgroundColor: Colors.blue.shade100,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -53,43 +66,50 @@ class _ScramblelevelState extends State<Scramblelevel> {
       onTap: (){
         switch(val.name){
           case 'ANIMALS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble1()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble1(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'BIRDS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble2()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble2(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'FRUITS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble3()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble3(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'FLOWERS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble4()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble4(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'COLOURS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble5()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble5(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'NUMBERS':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble6()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble6(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case 'VEGETABLES':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble7()));
-            break;
-
-          case '8':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>ScramblePage()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramble7(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
             break;
 
           case '9':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramblecat3()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scrambles()));
             break;
-
-          // case '10':
-          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>))
 
             default:
             break;

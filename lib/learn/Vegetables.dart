@@ -16,10 +16,14 @@ class _VegetablesState extends State<Vegetables> {
     Vegetable(name: "BROCCOLI", image: "assets/Vegetables/broccoli.png"),
     Vegetable(name: "CARROT", image: "assets/Vegetables/carrot.png"),
     Vegetable(name: "CAULIFLOWER", image: "assets/Vegetables/cauliflower.png"),
+    Vegetable(name: "BEETROOT", image: "assets/Vegetables/beetroot.png"),
     Vegetable(name: "CUCUMBER", image: "assets/Vegetables/cucumber.png"),
     Vegetable(name: "POTATO", image: "assets/Vegetables/potato.png"),
     Vegetable(name: "PUMPKIN", image: "assets/Vegetables/pumpkin.png"),
     Vegetable(name: "TOMATO", image: "assets/Vegetables/tomato.png"),
+    Vegetable(name: "CABBAGE", image: "assets/Vegetables/cabbage.png"),
+    Vegetable(name: "LADYFINGER", image: "assets/Vegetables/ladyfinger.png"),
+    Vegetable(name: "BITTER GOURD", image: "assets/Vegetables/bittergourd.png"),
 
     // Add more birds as needed
   ];

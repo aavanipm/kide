@@ -1,34 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/fillblanks/BirdLevels/BirdLevel.dart';
+import 'package:game/category1/game1/fillblanks/BirdLevels/bird19.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/bird20.dart';
-import 'package:game/category1/home1.dart';
 
 class Bird19 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Bird19({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Bird19({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
+
   @override
   State<Bird19> createState() => _Bird19State();
 }
 
 class _Bird19State extends State<Bird19> {
-  TextEditingController _controller = TextEditingController();
-  String _answer = '';
+  String _selectedOption = '';
   bool _answeredCorrectly = false;
   int score = 0;
+  String _word ="K I N G F I S H _ R"; // Initial word with underscore
 
   @override
   void initState() {
     super.initState();
     _getStoredScore();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -40,148 +45,192 @@ class _Bird19State extends State<Bird19> {
         actions: [
           IconButton(
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BirdLevel(
+                    username: widget.username,
+                    email: widget.email,
+                    age: widget.age,
+                    subscribedCategory: widget.subscribedCategory,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+          IconButton(
+            onPressed: () {
               _showScoreDialog();
             },
             icon: Icon(Icons.star),
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/Birds/woodpecker.png",
-              height: 200,
-              width: 200,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              "Select the correct letter",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "W",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "D",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "P",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  width: 30,
-                  child: TextField(
-                    controller: _controller,
-                    onChanged: (value) {
-                      setState(() {
-                        _answer = value.toUpperCase();
-                        _controller.value = TextEditingValue(
-                          text: _answer,
-                          selection: TextSelection.fromPosition(
-                            TextPosition(offset: _answer.length),
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/Birds/kingfisher.png",
+                    height: 200,
+                    width: 200,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    _word, // Display the word dynamically
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('P');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'P' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.tealAccent[100], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('P'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('D');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'D' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.tealAccent[100], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('D'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('U');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'U' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.tealAccent[100], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('U'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('E');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'E' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.tealAccent[100], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('E'),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+                  _answeredCorrectly ? ElevatedButton(
+                    onPressed: () {
+                      if (widget.subscribedCategory == 'premium') {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context)=> Bird20(
+                            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                          ),
                           ),
                         );
-                      });
+                      } else {
+                        _showSubscribeMessage();
+                      }
                     },
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "C",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "K",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "E",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "R",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
+                    child: Text('Next Level'),
+                  ) : SizedBox(), // Show or hide based on _answeredCorrectly
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            _answeredCorrectly
-                ? Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context)=> Bird20(
-                          username: widget.username, email: widget.email, age: widget.age),
-                      ),
-                    );
-                  },
-                  child: Text('Next Level'),
-                ),
-              ],
-            )
-                : ElevatedButton(
-              onPressed: () {
-                if (!_answeredCorrectly && _answer == 'E') {
-                  setState(() {
-                    _answeredCorrectly = true;
-                    if (score == 18){
-                      score = 19; // Score becomes 1 on correct answer
-                      _updateScoreInFirebase();
-                    }
-                  });
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Correct!'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                } else if (!_answeredCorrectly) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incorrect! Try again.'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                }
-              },
-              child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _selectOption(String option) {
+    setState(() {
+      if (_answeredCorrectly) return; // If already answered correctly, do nothing
+      _selectedOption = option;
+      _word = "K I N G F I S H $_selectedOption R"; // Update the word with selected option
+      if (_selectedOption == 'E') {
+        _answeredCorrectly = true;
+        if (score == 18) {
+          score = 19; // Score becomes 1 on correct answer
+          _updateScoreInFirebase();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Correct!',
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        _answeredCorrectly = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Incorrect! Try again.',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      }
+    });
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username, email: widget.email, age: widget.age)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
               },
-              child: Text('Go Back to Home'),
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -215,7 +264,7 @@ class _Bird19State extends State<Bird19> {
 
       // Create a new document or update the existing one
       await userDocRef.set({
-        'bird': {'score': score}, // Nested data for animal category and score
+        'bird': {'score': score}, // Nested data for bird category and score
       }, SetOptions(merge: true)); // Merge to avoid overwriting other data
     }
   }

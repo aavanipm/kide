@@ -1,16 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/game1.dart';
 import 'package:game/category1/game1/guess/GuessingGame2.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:game/category1/home1.dart';
+import 'package:game/category1/game1/guess/levelguess.dart';
 
 class GuessingGame1 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
-  GuessingGame1({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  GuessingGame1({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
   @override
   State<GuessingGame1> createState() => _GuessingGame1State();
 }
@@ -41,8 +41,8 @@ class _GuessingGame1State extends State<GuessingGame1> {
             SizedBox(width: 110,),
             IconButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
-                    username: widget.username, email: widget.email, age: widget.age)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelGuess(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               },
               icon: Icon(Icons.home), // Home button on the right side
             ),
@@ -131,7 +131,7 @@ class _GuessingGame1State extends State<GuessingGame1> {
 
   void _goToNextLevel() {
     Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame2(
-        username: widget.username, email: widget.email, age: widget.age)));
+        username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
   }
 
   void _updateScoreInFirebase() async {
@@ -143,26 +143,19 @@ class _GuessingGame1State extends State<GuessingGame1> {
           .doc('guessing');
 
       // Create a new document or update the existing one
-      await userDocRef.set({
-        'animal': {'score': score}, // Nested data for animal category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      await userDocRef.set({'score': score}); // Change documentReference to userDocRef
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('guessing');
-
-    final DocumentSnapshot snapshot = await userDocRef.get();
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection(widget.username).doc('guessing');
+    final DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('animal')) {
-        setState(() {
-          score = data['animal']['score'];
-        });
-      }
+      setState(() {
+        score = (snapshot.data() as Map<String, dynamic>)['score'];
+      });
     }
   }
 }

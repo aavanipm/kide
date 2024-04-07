@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/match/match5.dart';
 import 'package:game/category1/home1.dart';
 
@@ -9,7 +10,9 @@ class Match4 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Match4({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Match4({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _Match4State createState() => _Match4State();
@@ -63,8 +66,9 @@ class _Match4State extends State<Match4> {
             icon: const Icon(Icons.home),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context)=>Home1(
-                  username: widget.username, email: widget.email, age: widget.age))
+                  context, MaterialPageRoute(builder: (context)=>Match(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              ))
               );
             },
           ),
@@ -241,8 +245,8 @@ class _Match4State extends State<Match4> {
 
 
   void _proceedToNextLevel() {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>Match5(
-      username: widget.username, email: widget.email, age: widget.age,
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Match5(
+      username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
     )));
   }
 

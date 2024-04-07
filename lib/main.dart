@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/Home/home.dart';
@@ -23,11 +24,18 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
         // home: Home1(username: "kk", email: "kkk", age: "2",),
-        home: Login(),
+        // home: Login(),
+        home: AnimatedSplashScreen(
+          duration: 3000,
+          splash: Image.asset("assets/home/icon.png"),
+          nextScreen: Login(),
+          splashTransition: SplashTransition.fadeTransition,
+          backgroundColor: Colors.yellowAccent.shade100,
+        ),
       ),
     );
   }

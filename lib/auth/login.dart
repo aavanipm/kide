@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game/auth/register.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
 import 'package:game/category3/home3.dart';
@@ -23,7 +24,8 @@ class _LoginState extends State<Login> {
   Future<void> login() async {
     if (formkey.currentState!.validate()) {
       try {
-        QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore.instance
+        QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance
             .collection('users')
             .where('username', isEqualTo: username.text)
             .get();
@@ -35,48 +37,61 @@ class _LoginState extends State<Login> {
             email: userdata['email'],
             password: password.text,
           );
+
           DocumentSnapshot userDoc = await FirebaseFirestore.instance
               .collection('users')
-              .doc(userCredential.user!.uid)
+              .doc(username.text)
               .get();
+
           Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
 
-          if (userData != null && userData.containsKey("selectedAgeCategory")) {
+          if (userData != null && userData.containsKey("selectedAgeCategory") && userData.containsKey("subscribedCategory")) {
             String selectedAge = userData["selectedAgeCategory"];
+            String subscribedCategory = userData["subscribedCategory"];
 
-            switch (selectedAge) {
-              case '2':
-              case '3':
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home1(
-                  username: userDoc['username'],
-                  email: userdata['email'],
-                  age: selectedAge,
-                )));
-                break;
-              case '4':
-              case '5':
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home2(
-                  username: userDoc['username'],
-                  email: userdata['email'],
-                  age: selectedAge,
-                )));
-                break;
-              case '6':
-              case '7':
-              case '8':
-              case '9':
-              case '10':
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home3(
-                  username: userDoc['username'],
-                  email: userdata['email'],
-                  age: selectedAge,
-                )));
-                break;
-              default:
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Invalid age category")));
-                break;
+            Widget homePage;
+            if (selectedAge == '2' || selectedAge == '3') {
+              homePage = Home1(username: userDoc['username'], email: userdata['email'], age: selectedAge, subscribedCategory: subscribedCategory);
+            } else if (selectedAge == '4' || selectedAge == '5') {
+              homePage = Home2(username: userDoc['username'], email: userdata['email'], age: selectedAge, subscribedCategory: subscribedCategory);
+            } else {
+              homePage = Home3(username: userDoc['username'], email: userdata['email'], age: selectedAge, subscribedCategory: subscribedCategory);
             }
+
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => homePage));
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Need a subscription"),
+                  content: Text("Need a plan"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SubscriptionDemoPage(
+                              username: userDoc['username'],
+                              email: userdata['email'],
+                              age: selectedAge,
+                              subscribedCategory: subscribedCategory,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text("Go to subscription"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Cancel"),
+                    ),
+                  ],
+                );
+              },
+            );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("User data missing selected age category")));
           }

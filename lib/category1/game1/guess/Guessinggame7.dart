@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/game1.dart';
 import 'package:game/category1/game1/guess/guessinggame8.dart';
+import 'package:game/category1/game1/guess/levelguess.dart';
 import 'package:game/category1/home1.dart';
 
 class GuessingGame7 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
-  GuessingGame7({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  GuessingGame7({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
   @override
   _GuessingGame7State createState() => _GuessingGame7State();
 }
@@ -44,8 +47,8 @@ class _GuessingGame7State extends State<GuessingGame7> {
             SizedBox(width: 110,),
             IconButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
-                    username: widget.username, email: widget.email, age: widget.age)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelGuess(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               },
               icon: Icon(Icons.home), // Home button on the right side
             ),
@@ -90,19 +93,54 @@ class _GuessingGame7State extends State<GuessingGame7> {
               if (showNextLevelButton)
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => GuessingGame8(
-                        username: widget.username, email: widget.email, age: widget.age,
-                      )),
-                    );
+                    if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'premium' || widget.subscribedCategory == 'standard') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GuessingGame8(
+                          username: widget.username,
+                          email: widget.email,
+                          age: widget.age,
+                          subscribedCategory: widget.subscribedCategory,
+                        )),
+                      );
+                    } else {
+                      _showSubscribeMessage(); // Shows subscribe message if conditions not met
+                    }
                   },
-                  child: const Text("Next Level"),
+                  child: const Text("Next Level"), // Text displayed on the button
                 ),
             ],
           ),
         ),
       ),
+    );
+  }
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -162,26 +200,19 @@ class _GuessingGame7State extends State<GuessingGame7> {
           .doc('guessing');
 
       // Create a new document or update the existing one
-      await userDocRef.set({
-        'animal': {'score': score}, // Nested data for animal category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      await userDocRef.set({'score': score}); // Change documentReference to userDocRef
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('guessing');
-
-    final DocumentSnapshot snapshot = await userDocRef.get();
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection(widget.username).doc('guessing');
+    final DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('animal')) {
-        setState(() {
-          score = data['animal']['score'];
-        });
-      }
+      setState(() {
+        score = (snapshot.data() as Map<String, dynamic>)['score'];
+      });
     }
   }
 }

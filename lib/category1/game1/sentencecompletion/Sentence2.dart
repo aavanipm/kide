@@ -6,7 +6,12 @@ import 'package:game/category1/home1.dart';
 import 'package:game/category3/home3.dart';
 
 class Sentence2 extends StatelessWidget {
-  const Sentence2({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Sentence2({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class Sentence2 extends StatelessWidget {
         title: const Text('Sentence Completion'),
         backgroundColor: Colors.blue,
       ),
-      body: const Padding(
+      body: Padding( // Removed const here
         padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
@@ -28,9 +33,13 @@ class Sentence2 extends StatelessWidget {
               ),
               SizedBox(height: 40),
               SentenceCompletionItem(
-                sentence: '* I like to eat __________.',
-                options: ['pizza', 'ice cream', 'juice'],
-                correctAnswer: 'pizza',
+                sentence: '* We wear a hat on our __________.',
+                options: ['feet', 'head', 'arm'],
+                correctAnswer: 'head',
+                username: username,
+                email: email,
+                age: age,
+                subscribedCategory: subscribedCategory,
               ),
             ],
           ),
@@ -44,11 +53,19 @@ class SentenceCompletionItem extends StatefulWidget {
   final String sentence;
   final List<String> options;
   final String correctAnswer;
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
 
   const SentenceCompletionItem({
     required this.sentence,
     required this.options,
     required this.correctAnswer,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
   });
 
   @override
@@ -69,7 +86,7 @@ class _SentenceCompletionItemState extends State<SentenceCompletionItem> {
             text: TextSpan(
               style: const TextStyle(fontSize: 18, color: Colors.black),
               children: [
-                TextSpan(text: 'I like to eat '),
+                TextSpan(text: 'We wear a hat on our '),
                 TextSpan(
                   text: selectedOption != null ? selectedOption! : '______',
                   style: TextStyle(
@@ -136,15 +153,18 @@ class _SentenceCompletionItemState extends State<SentenceCompletionItem> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Home3(
-                            username: '', email: '', age: '',)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                        )));
                       },
                       child: Text('Go to Home'),
                     ),
                     SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence3()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Sentence3(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                        )));
                       },
                       child: Text('Next Level'),
                     ),

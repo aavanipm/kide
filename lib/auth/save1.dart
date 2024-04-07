@@ -4,15 +4,17 @@ import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
 import 'package:game/category3/home3.dart';
 
-class LoginPage1 extends StatelessWidget {
+class Save1 extends StatelessWidget {
   final String username;
   final String useremail;
   final String userage;
+  final String subscribedCategory;
 
-  LoginPage1({
+  Save1({
     required this.username,
     required this.useremail,
     required this.userage,
+    required this.subscribedCategory,
   });
 
   @override
@@ -76,7 +78,7 @@ class LoginPage1 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Home1(username: username, email: useremail, age: userage),
+            builder: (context) => Home1(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
           ),
         );
         break;
@@ -85,7 +87,7 @@ class LoginPage1 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Home2(username: username, email: useremail, age: userage),
+            builder: (context) => Home2(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
           ),
         );
         break;
@@ -97,7 +99,7 @@ class LoginPage1 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Home3(username: username, email: useremail, age: userage,),
+            builder: (context) => Home3(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
           ),
         );
         break;

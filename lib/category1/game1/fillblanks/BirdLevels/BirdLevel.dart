@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/Bird10.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/Bird11.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/Bird12.dart';
@@ -23,13 +23,15 @@ import 'package:game/category1/game1/fillblanks/BirdLevels/bird6.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/bird7.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/bird8.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/bird9.dart';
+import 'package:game/category1/home1.dart';
 
 class BirdLevel extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
-  const BirdLevel({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  const BirdLevel({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   State<BirdLevel> createState() => _BirdLevelState();
@@ -88,7 +90,17 @@ class _BirdLevelState extends State<BirdLevel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
@@ -108,116 +120,120 @@ class _BirdLevelState extends State<BirdLevel> {
   }
 
   Widget fillcard(BuildContext context, Bird val) {
-    bool isUnlocked = val.name == "1" || int.parse(val.name) <= score+1; // Level 1 or score high enough
-    Color? cardColor = isUnlocked ? Colors.blue.shade100 : Colors.grey.shade100;
-    Text(
-      val.name,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 25,
-        color: isUnlocked ? Colors.black : Colors.grey, // Text color based on unlocked status
-      ),
-    );
+    bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
+    if (widget.subscribedCategory == "basic") {
+      isUnlocked = int.parse(val.name) <= 10; // Unlock levels 1-10 for basic subscription
+    } else if (widget.subscribedCategory == "standard") {
+      isUnlocked = int.parse(val.name) <= 15; // Unlock levels 1-15 for standard subscription
+    } else if (widget.subscribedCategory == "premium") {
+      isUnlocked = int.parse(val.name) <= 20; // Unlock all levels for premium subscription
+    }
+
+    // Check if the level is unlocked and the previous level is completed
+    bool canPlay = isUnlocked && (int.parse(val.name) == 1 || int.parse(val.name) <= score + 1);
+
+    Color? cardColor = canPlay ? Colors.blue.shade100 : Colors.grey.shade100;
+
     return GestureDetector(
       onTap: () {
-        if (isUnlocked) {
+        if (canPlay) {
           // Navigate to the level screen based on val.name
           switch (val.name) {
             case '1':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird1(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '2':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird2(
-                username: widget.username, email: widget.email, age: widget.age,)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '3':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird3(
-                username: widget.username, email: widget.email, age: widget.age,)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '4':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird4(
-                  username: widget.username, email: widget.email, age: widget.age
+          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '5':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird5(
-                  username: widget.username, email: widget.email, age: widget.age
+          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '6':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird6(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '7':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird7(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '8':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird8(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '9':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird9(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '10':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird10(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '11':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird11(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '12':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird12(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '13':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird13(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '14':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird14(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '15':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird15(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '16':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird16(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '17':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird17(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '18':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird18(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '19':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird19(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '20':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird20(
-                  username: widget.username, email: widget.email, age: widget.age
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
             case '21':
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird21()));
@@ -226,19 +242,42 @@ class _BirdLevelState extends State<BirdLevel> {
               break;
           }
         } else {
-          // Show a dialog indicating the level is locked
+          // Show a dialog indicating the level is locked or subscription needed
+          String message;
+          if (int.parse(val.name) > score + 1) {
+            message = 'Complete the previous level to unlock this one.';
+          } else {
+            message = 'Subscribe to access more levels.';
+          }
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Level Locked'),
-                content: Text('This level is locked. You need to complete previous level to unlock it.'),
+                content: Text(message),
                 actions: [
+                  if (int.parse(val.name) > score + 1)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  if (int.parse(val.name) <= score + 1)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                        )));
+                        // Navigate to subscription page
+                      },
+                      child: Text('Subscribe'),
+                    ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('OK'),
+                    child: Text('Cancel'),
                   ),
                 ],
               );

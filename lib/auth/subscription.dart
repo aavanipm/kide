@@ -1,105 +1,161 @@
-// subscription page                                                                                                                                                     import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/basic plan.dart';
+import 'package:game/auth/premium plan.dart';
+import 'package:game/auth/standard plan.dart';
 
 class SubscriptionDemoPage extends StatelessWidget {
-  const SubscriptionDemoPage({super.key});
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory; // New field to store subscribed category
+
+  const SubscriptionDemoPage({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    bool basicAvailable = false;
+    bool standardAvailable = false;
+    bool premiumAvailable = false;
+
+    // Use nested if statements to correctly set availability flags
+    if (subscribedCategory == "premium") {
+      basicAvailable = false;
+      standardAvailable = false;
+      premiumAvailable = false;
+    }
+    else if (subscribedCategory == "basic") {
+      standardAvailable = true;
+      premiumAvailable = true;
+    } else if (subscribedCategory == "standard") {
+      premiumAvailable = true;
+    } else {
+      basicAvailable = true;
+      standardAvailable = true;
+      premiumAvailable = true;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Subscription'),
+        title: Text(subscribedCategory),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Choose a Subscription Plan',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,color: Colors.blue),
+            SubscriptionCard(
+              title: 'Basic Plan',
+              price: '₹50',
+              description: 'Access to basic features and levels',
+              color: subscribedCategory == "basic" ? Colors.yellow.shade500 : (basicAvailable ? null : Colors.grey),
+              onPressed: basicAvailable ? () {
+                _navigateToPlan(context, BasicPlan(
+                  username: username,
+                  email: email,
+                  age: age,
+                  subscribedCategory: subscribedCategory,
+                ));
+              } : null,
             ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SubscriptionPlanCard(
-                      price: '₹50',
-                      details: 'Unlock some levels',
-                      onPressed: () {
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    SubscriptionPlanCard(
-                      price: '₹100',
-                      details: 'Unlock all levels',
-                      onPressed: () {
-                      },
-                    ),
-                    SubscriptionPlanCard(
-                        price: '₹150',
-                        details: 'Unlock all levels',
-                        onPressed: (){
-
-                        })
-                  ],
-                ),
-              ),
+            SizedBox(height: 20),
+            SubscriptionCard(
+              title: 'Standard Plan',
+              price: '₹100',
+              description: 'Access to standard features and levels',
+              color: subscribedCategory == "standard" ? Colors.yellow.shade500 : (standardAvailable ? null : Colors.grey),
+              onPressed: standardAvailable ? () {
+                _navigateToPlan(context, StandardPlan(
+                  username: username,
+                  email: email,
+                  age: age,
+                  subscribedCategory: subscribedCategory,
+                ));
+              } : null,
+            ),
+            SizedBox(height: 20),
+            SubscriptionCard(
+              title: 'Premium Plan',
+              price: '₹150',
+              description: 'Access to premium features and all levels',
+              color: subscribedCategory == "premium" ? Colors.yellow.shade500 : (premiumAvailable ? null : Colors.grey),
+              onPressed: premiumAvailable ? () {
+                _navigateToPlan(context, PremiumPlan(
+                  username: username,
+                  email: email,
+                  age: age,
+                  subscribedCategory: subscribedCategory,
+                ));
+              } : null,
             ),
           ],
         ),
       ),
     );
   }
+
+  void _navigateToPlan(BuildContext context, Widget planWidget) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => planWidget),
+    );
+  }
 }
 
-class SubscriptionPlanCard extends StatelessWidget {
+class SubscriptionCard extends StatelessWidget {
+  final String title;
   final String price;
-  final String details;
-  final VoidCallback onPressed;
+  final String description;
+  final VoidCallback? onPressed; // Make onPressed nullable
+  final Color? color; // New field for specifying the color
 
-  const SubscriptionPlanCard({
+  const SubscriptionCard({
+    required this.title,
     required this.price,
-    required this.details,
+    required this.description,
     required this.onPressed,
-    Key? key,
-  }) : super(key: key);
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              const SizedBox(height: 10),
-              Text(
-                'Price: $price',
-                style: TextStyle(fontSize: 16),
+    return Card(
+      elevation: 3,
+      color: color, // Apply the specified color
+      child: InkWell(
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListTile(
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 10),
-              Text(
-                'Details:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              description,
+              style: TextStyle(
+                fontSize: 16,
               ),
-              const SizedBox(height: 10),
-              Text(
-                details,
-                style: TextStyle(fontSize: 14),
+            ),
+            trailing: Text(
+              price,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
               ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: onPressed,
-                child: const Text('Subscribe Now'),
-              ),
-            ],
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

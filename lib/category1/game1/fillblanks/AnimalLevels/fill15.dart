@@ -1,34 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/fillblanks/AnimalLevels/fill16.dart';
-import 'package:game/category1/home1.dart';
+import 'package:game/category1/game1/fillblanks/AnimalLevels/levelsfill.dart';
 
 class Fill15 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Fill15({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Fill15({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
+
   @override
   State<Fill15> createState() => _Fill15State();
 }
 
 class _Fill15State extends State<Fill15> {
-  TextEditingController _controller = TextEditingController();
-  String _answer = '';
+  String _selectedOption = '';
   bool _answeredCorrectly = false;
   int score = 0;
+  String _word = "M O N _ E Y"; // Initial word with underscore
 
   @override
   void initState() {
     super.initState();
     _getStoredScore();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -40,130 +44,195 @@ class _Fill15State extends State<Fill15> {
         actions: [
           IconButton(
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LevelFill(
+                    username: widget.username,
+                    email: widget.email,
+                    age: widget.age,
+                    subscribedCategory: widget.subscribedCategory,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+          IconButton(
+            onPressed: () {
               _showScoreDialog();
             },
             icon: Icon(Icons.star),
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/animals/monkey.png",
-              height: 200,
-              width: 200,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              "Select the correct letter",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "M",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "N",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Container(
-                  width: 30,
-                  child: TextField(
-                    controller: _controller,
-                    onChanged: (value) {
-                      setState(() {
-                        _answer = value.toUpperCase();
-                        _controller.value = TextEditingValue(
-                          text: _answer,
-                          selection: TextSelection.fromPosition(
-                            TextPosition(offset: _answer.length),
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/animals/monkey.png",
+                    height: 200,
+                    width: 200,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    _word, // Display the word dynamically
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('A');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'A' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('A'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('K');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'K' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('K'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('T');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'T' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('T'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('I');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'I' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('I'),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  _answeredCorrectly ? ElevatedButton(
+                    onPressed: () {
+                      if (widget.subscribedCategory == 'premium') {
+                        Navigator.pushReplacement(
+                          context, MaterialPageRoute(
+                            builder: (context) => Fill16(
+                              username: widget.username,
+                              email: widget.email,
+                              age: widget.age,
+                              subscribedCategory: widget.subscribedCategory,
+                            ),
                           ),
                         );
-                      });
+                      } else {
+                        _showSubscribeMessage();
+                      }
                     },
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "E",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10,),
-                Text(
-                  "Y",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
+                    child: Text('Next Level'),
+                  ) : SizedBox(), // Show or hide based on _answeredCorrectly
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            _answeredCorrectly
-                ? Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context)=> Fill16(
-                          username: widget.username, email: widget.email, age: widget.age
-                      ),
-                      ),
-                    );
-                  },
-                  child: Text('Next Level'),
-                ),
-              ],
-            )
-                : ElevatedButton(
-              onPressed: () {
-                if (!_answeredCorrectly && _answer == 'K') {
-                  setState(() {
-                    _answeredCorrectly = true;
-                    if (score == 14){
-                      score = 15; // Score becomes 1 on correct answer
-                      _updateScoreInFirebase();
-                    }
-                  });
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Correct!'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                } else if (!_answeredCorrectly) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incorrect! Try again.'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                }
-              },
-              child: Text('Submit'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _selectOption(String option) {
+    setState(() {
+      if (_answeredCorrectly) return; // If already answered correctly, do nothing
+      _selectedOption = option;
+      _word = "M O N $_selectedOption E Y"; // Update the word with selected option
+      if (_selectedOption == 'K') {
+        _answeredCorrectly = true;
+        if (score == 14) {
+          score = 15; // Score becomes 7 on correct answer
+          _updateScoreInFirebase();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Correct!',
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        _answeredCorrectly = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Incorrect! Try again.',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      }
+    });
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
               onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username, email: widget.email, age: widget.age
-                )));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
               },
-              child: Text('Go Back to Home'),
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -196,9 +265,12 @@ class _Fill15State extends State<Fill15> {
           .doc('fillblanks');
 
       // Create a new document or update the existing one
-      await userDocRef.set({
-        'animal': {'score': score}, // Nested data for animal category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      await userDocRef.set(
+        {
+          'animal': {'score': score}, // Nested data for animal category and score
+        },
+        SetOptions(merge: true), // Merge to avoid overwriting other data
+      );
     }
   }
 
@@ -210,7 +282,8 @@ class _Fill15State extends State<Fill15> {
 
     final DocumentSnapshot snapshot = await userDocRef.get();
     if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+      snapshot.data() as Map<String, dynamic>;
       if (data.containsKey('animal')) {
         setState(() {
           score = data['animal']['score'];

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/match/match15.dart';
 import 'package:game/category1/game1/match/match17.dart';
+import 'package:game/category1/game1/match/matchlast.dart';
 import 'package:game/category1/home1.dart';
 
 class Match16 extends StatefulWidget {
@@ -10,7 +13,9 @@ class Match16 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Match16({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Match16({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _Match16State createState() => _Match16State();
@@ -56,8 +61,9 @@ class _Match16State extends State<Match16> {
             icon: const Icon(Icons.home),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context)=>Home1(
-                  username: widget.username, email: widget.email, age: widget.age))
+                  context, MaterialPageRoute(builder: (context)=>Match(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              ))
               );
             },
           ),
@@ -238,9 +244,45 @@ class _Match16State extends State<Match16> {
     );
   }
 
-
   void _proceedToNextLevel() {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>Match17()));
+    if (widget.subscribedCategory == 'premium') {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+          MatchLast(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+          )
+      ));
+    } else {
+      _showSubscribeMessage(); // Shows subscribe message if conditions not met
+    }
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showTotalPoints(int points) {

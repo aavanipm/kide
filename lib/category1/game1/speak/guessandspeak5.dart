@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category1/game1/speak/guessandspeak6.dart';
-import 'package:game/category1/home1.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class GuessandSpeak5 extends StatefulWidget {
@@ -11,8 +11,10 @@ class GuessandSpeak5 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const GuessandSpeak5({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
 
+  const GuessandSpeak5({Key? key, required this.username, required this.email,
+    required this.age, required this.subscribedCategory}) : super(key: key);
   @override
   _GuessandSpeak5State createState() => _GuessandSpeak5State();
 }
@@ -47,8 +49,9 @@ class _GuessandSpeak5State extends State<GuessandSpeak5> {
             Text("Level 5"),
             SizedBox(width: 120,),
             IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
-                  username: widget.username, email: widget.email, age: widget.age)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
             }, icon: Icon(Icons.home)),
             Text("Score: $score"),
           ],
@@ -106,7 +109,7 @@ class _GuessandSpeak5State extends State<GuessandSpeak5> {
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => GuessandSpeak6(
-                username: widget.username, email: widget.email, age: widget.age
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
             )));
       });
     } else {

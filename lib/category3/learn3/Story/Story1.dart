@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-class FirstStory extends StatelessWidget {
-  const FirstStory({super.key});
+class FirstStory extends StatefulWidget {
+  @override
+  _FirstStoryState createState() => _FirstStoryState();
+}
+
+class _FirstStoryState extends State<FirstStory> {
+  final FlutterTts flutterTts = FlutterTts();
+  bool _playAudio = true; // Flag to control audio playback
 
   @override
   Widget build(BuildContext context) {
@@ -17,37 +24,61 @@ class FirstStory extends StatelessWidget {
         itemCount: 5,
         loop: false,
         itemBuilder: (BuildContext context, int index) {
-          switch(index){
+          switch (index) {
             case 0:
-              return FirstStory1();
+              return FirstStory1(flutterTts: flutterTts, playAudio: _playAudio);
             case 1:
-              return FirstStory2();
+              return FirstStory2(flutterTts: flutterTts, playAudio: _playAudio);
             case 2:
-              return FirstStory3();
+              return FirstStory3(flutterTts: flutterTts, playAudio: _playAudio);
             case 3:
-              return FirstStory4();
+              return FirstStory4(flutterTts: flutterTts, playAudio: _playAudio);
             case 4:
-              return FirstStoryMoral();
+              return FirstStoryMoral(flutterTts: flutterTts);
             default:
               return Container();
           }
         },
         pagination: SwiperPagination(),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(_playAudio ? Icons.volume_up : Icons.volume_off),
+        onPressed: () {
+          setState(() {
+            _playAudio = !_playAudio;
+            // Stop any ongoing speech when switching audio mode
+            flutterTts.stop();
+          });
+        },
+      ),
     );
   }
 }
 
 class FirstStory1 extends StatelessWidget {
-  const FirstStory1({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
+
+  const FirstStory1({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak(
+                      "Once there was a hungry fox who was searching for food. He looked everywhere but couldn't find anything to eat.");
+                },
+                child: Text('Click Here To Hear The Story'),
+              ),
+            SizedBox(height: 20),
             Text(
               "Once there was a hungry fox who was searching for food. He looked everywhere but couldn't find anything to eat.",
               style: TextStyle(
@@ -59,20 +90,33 @@ class FirstStory1 extends StatelessWidget {
           ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class FirstStory2 extends StatelessWidget {
-  const FirstStory2({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const FirstStory2({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           children: [
+            if (playAudio)
+              ElevatedButton(
+              onPressed: () async {
+                await flutterTts.setSpeechRate(0.3);
+                await flutterTts.speak("Then, he came across a farmer's wall where he saw some big, purple, juicy grapes hanging.",);
+              },
+              child: Text('Click Here To Hear The Story'),
+            ),
+            SizedBox(height: 20,),
             Text(
               "Then, he came across a farmer's wall where he saw some big, purple, juicy grapes hanging.",
               style: TextStyle(
@@ -80,24 +124,38 @@ class FirstStory2 extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
               ),
-            )
+            ),
           ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class FirstStory3 extends StatelessWidget {
-  const FirstStory3({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const FirstStory3({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           children: [
+            if (playAudio)
+              ElevatedButton(
+              onPressed: () async {
+                await flutterTts.setSpeechRate(0.3);
+                await flutterTts.speak("The fox tried jumping to reach the grapes, but no matter how hard he tried, he couldn't reach them."
+                );
+              },
+              child: Text('Click Here To Hear The Story'),
+            ),
+            SizedBox(height: 20,),
             Text(
               "The fox tried jumping to reach the grapes, but no matter how hard he tried, he couldn't reach them.",
               style: TextStyle(
@@ -105,24 +163,38 @@ class FirstStory3 extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
               ),
-            )
+            ),
           ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class FirstStory4 extends StatelessWidget {
-  const FirstStory4({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const FirstStory4({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           children: [
+            if (playAudio)
+            ElevatedButton(
+              onPressed: () async {
+                await flutterTts.setSpeechRate(0.3);
+                await flutterTts.speak("After many attempts, he gave up and went back home. On the way, he told himself that the grapes must have been sour anyway."
+                );
+              },
+              child: Text('Click Here To Hear The Story'),
+            ),
+            SizedBox(height: 20,),
             Text(
               "After many attempts, he gave up and went back home. On the way, he told himself that the grapes must have been sour anyway.",
               style: TextStyle(
@@ -130,16 +202,19 @@ class FirstStory4 extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
               ),
-            )
+            ),
           ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class FirstStoryMoral extends StatelessWidget {
-  const FirstStoryMoral({Key? key});
+  final FlutterTts flutterTts;
+
+  const FirstStoryMoral({Key? key, required this.flutterTts}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +225,15 @@ class FirstStoryMoral extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Align contents vertically at the center
             children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("Moral: Don't give up too easily. Keep trying, and you might find a way to overcome challenges."
+                  );
+                },
+                child: Text('Click Here To Hear The Moral'),
+              ),
+              SizedBox(height: 20,),
               Text(
                 "Moral: Don't give up too easily. Keep trying, and you might find a way to overcome challenges.",
                 style: TextStyle(
@@ -172,6 +256,7 @@ class FirstStoryMoral extends StatelessWidget {
           ),
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }

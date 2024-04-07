@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/match/match1.dart';
 import 'package:game/category1/game1/match/match10.dart';
 import 'package:game/category1/game1/match/match11.dart';
@@ -18,13 +19,17 @@ import 'package:game/category1/game1/match/match6.dart';
 import 'package:game/category1/game1/match/match7.dart';
 import 'package:game/category1/game1/match/match8.dart';
 import 'package:game/category1/game1/match/match9.dart';
+import 'package:game/category1/game1/picturequiz%20game.dart';
+import 'package:game/category1/home1.dart';
 
 class Match extends StatefulWidget {
 
   final String username;
   final String email;
   final String age;
-  const Match({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Match({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   State<Match> createState() => _MatchState();
@@ -51,7 +56,6 @@ class _MatchState extends State<Match> {
     }
   }
 
-
   List<Matching> values = [
     Matching(name: "1"),
     Matching(name: "2"),
@@ -77,6 +81,15 @@ class _MatchState extends State<Match> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Levels"), backgroundColor: Colors.blue.shade100,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -117,110 +130,118 @@ class _MatchState extends State<Match> {
       "17": 70,
     };
 
+    bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
+    if (widget.subscribedCategory == "basic") {
+      isUnlocked = int.parse(val.name) <= 10; // Unlock levels 1-10 for basic subscription
+    } else if (widget.subscribedCategory == "standard") {
+      isUnlocked = int.parse(val.name) <= 15; // Unlock levels 1-15 for standard subscription
+    } else if (widget.subscribedCategory == "premium") {
+      isUnlocked = int.parse(val.name) <= 20; // Unlock all levels for premium subscription
+    }
     // Check if the level is unlocked based on the current score
-    bool isUnlocked = val.name == "1" || score >= levelScores[val.name]!;
+    bool canPlay = isUnlocked && (int.parse(val.name) == 1 || score >= levelScores[val.name]!);
 
-    Color? cardColor = isUnlocked ? Colors.blue.shade100 : Colors.grey.shade100;
+    Color? cardColor = canPlay ? Colors.blue.shade100 : Colors.grey.shade100;
 
     return GestureDetector(
       onTap: () {
-        if (isUnlocked) {
+        if (canPlay) {
           // Navigation logic remains the same
           switch (val.name) {
             case '1':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match1(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '2':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match2(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '3':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match3(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '4':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match4(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '5':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match5(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '6':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match6(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '7':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match7(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '8':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match8(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '9':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match9(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '10':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match10(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '11':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match11(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '12':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match12(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '13':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match13(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '14':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match14(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '15':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match15(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '16':
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Match16(
-                username: widget.username, email: widget.email, age: widget.age,
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '15':
@@ -229,23 +250,43 @@ class _MatchState extends State<Match> {
               break;
             default:
               break;
-
           }
         } else {
-          // Show a dialog indicating the level is locked
+          String message;
+          if (score >= levelScores[val.name]!) {
+            message = 'Subscribe to access more levels.';
+          } else {
+            message = 'Complete the previous level to unlock this one.';
+          }
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Level Locked'),
-                content: Text(
-                    'This level is locked. You need to complete previous level to unlock it.'),
+                content: Text(message),
                 actions: [
+                  if (score >= levelScores[val.name]!)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  if (score <= levelScores[val.name]!)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                        )));
+                        // Navigate to subscription page
+                      },
+                      child: Text('Subscribe'),
+                    ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('OK'),
+                    child: Text('Cancel'),
                   ),
                 ],
               );

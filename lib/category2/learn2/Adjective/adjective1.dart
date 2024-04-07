@@ -1,32 +1,3 @@
-//
-// Here are some examples of adjectives:
-// Shape: round, square, oval
-//
-// Example: The square box.
-// Texture: smooth, rough, soft
-//
-// Example: The soft blanket.
-// Age: old, young, ancient
-//
-// Example: The old man.
-// Temperature: hot, cold, warm
-//
-// Example: The warm sun.
-// Personality: friendly, mean, kind
-//
-// Example: The friendly dog.
-// Origin: French, Japanese, American
-//
-// Example: The French cuisine.
-// Material: wooden, metallic, cotton
-//
-// Example: The wooden table.
-// Purpose: cooking, gardening, sleeping
-//
-// Example: The gardening tools.
-// Adjectives can be used before or after the noun they describe, depending on the sentence structure. They make writing more descriptive and engaging by providing details that help readers visualize and understand the nouns better.
-//
-
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
@@ -38,9 +9,10 @@ class Adjective1 extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Adjective"),
+        backgroundColor: Colors.orange.shade100,
       ),
       body: Swiper(
-        itemCount: 4,
+        itemCount: 7,
         itemBuilder: (BuildContext context, int index) {
           switch (index){
             case 0:
@@ -51,6 +23,12 @@ class Adjective1 extends StatelessWidget {
               return AdjectiveExample1();
             case 3:
               return AdjectiveExample2();
+            case 4:
+              return AdjectiveExample3();
+            case 5:
+              return AdjectiveExample4();
+            case 6:
+              return AdjectiveExample5();
             default:
               return Container();
           }
@@ -61,112 +39,64 @@ class Adjective1 extends StatelessWidget {
   }
 }
 
-class AdjectiveIntroduction extends StatefulWidget {
+class AdjectiveIntroduction extends StatelessWidget {
   const AdjectiveIntroduction({super.key});
 
   @override
-  State<AdjectiveIntroduction> createState() => _AdjectiveIntroductionState();
-}
-
-class _AdjectiveIntroductionState extends State<AdjectiveIntroduction> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Center(
-          child: Text(
-            "Let's Learn Adjectives",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+      backgroundColor: Colors.orange.shade50,
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "🌟 Let's Learn Adjective! 🌟",
+                style: TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
-      );
-  }
-}
-
-// class AdjectiveDefinition extends StatelessWidget {
-//   const AdjectiveDefinition({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Text(
-//           "Adjectives are describing words that provide more information about nouns."
-//               "They add detail and specificity to nouns by describing their qualities, characteristics, or attributes. "
-//               "Adjectives can answer questions like What kind? Which one? or How many?"
-//               " They help make sentences more interesting and colorful by painting a clearer picture of the noun they modify.",
-//           textAlign: TextAlign.center,
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class AdjectiveExample1 extends StatelessWidget {
-  const AdjectiveExample1({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Color: red, blue, green.",
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "The red apple.",
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
       ),
     );
   }
 }
-
-class AdjectiveExample2 extends StatelessWidget {
-  const AdjectiveExample2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Size: big, small, tiny.",
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              "The large elephant.",
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-
-      ),
-    );
-  }
-}
-
 
 class AdjectiveDefinition extends StatelessWidget {
-  const AdjectiveDefinition({Key? key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange.shade50,
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "What are ",
+                  style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "ADJECTIVES",
+                  style: TextStyle(
+                    fontSize: 35.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.lightBlue,
+                  ),
+                ),
+                Text(
+                  "?",
+                  style: TextStyle(fontSize: 35.0, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -179,12 +109,52 @@ class AdjectiveDefinition extends StatelessWidget {
                 Expanded(
                   child: Text(
                     "Adjectives are describing words that tell us more about nouns.",
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.bubble_chart,
+                  size: 30,
+                  color: Colors.blue,
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Adjectives can answer questions like ",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        " 'What kind?' ",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        " 'Which one?'",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 20,),
+                      Text(
+                        " 'How many?'",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -196,47 +166,186 @@ class AdjectiveDefinition extends StatelessWidget {
                 SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    "They make sentences more interesting by adding details and colors.",
-                    style: TextStyle(fontSize: 18),
+                    "Adjectives can be used before or after the noun they describe, depending on the sentence structure.",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdjectiveExample1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50,),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.bubble_chart,
-                  size: 30,
-                  color: Colors.blue,
+                Text("Color: ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    "Adjectives can answer questions like 'What kind?' 'Which one?' or 'How many?'",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                Text("red, ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.red),
+                ),
+                Text("blue, ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.blue),
+                ),
+                Text("green",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.green),
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20,),
+            Text("The red apple.",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdjectiveExample2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50,),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.bubble_chart,
-                  size: 30,
-                  color: Colors.blue,
+                Text("Size: ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    "They help us create vivid pictures in our minds.",
-                    style: TextStyle(fontSize: 18),
-                  ),
+                Text("tiny, ",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.red),
+                ),
+                Text("small, ",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blue),
+                ),
+                Text("big",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.green),
                 ),
               ],
+            ),
+            SizedBox(height: 20,),
+            Text("The large elephant.",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Add these classes along with the existing ones
+
+class AdjectiveExample3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Comparative Form: ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                ),
+                Text("bigger",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.blue),
+                ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Text("The bigger balloon.",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AdjectiveExample4 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Demonstrative Form: ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                ),
+                Text("this",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.green),
+                ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Text("This beautiful flower.",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class AdjectiveExample5 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            SizedBox(height: 50,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Possessive Form: ",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                ),
+                Text("my",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.purple),
+                ),
+              ],
+            ),
+            SizedBox(height: 20,),
+            Text("My favorite toy.",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
           ],
         ),

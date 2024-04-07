@@ -1,256 +1,17 @@
-//scramble old
-// import 'package:flutter/material.dart';
-//
-// class Scramble1 extends StatefulWidget {
-//   const Scramble1({super.key});
-//
-//   @override
-//   _Scramble1State createState() => _Scramble1State();
-// }
-//
-// class _Scramble1State extends State<Scramble1> {
-//   late List<String> letters;
-//   String currentWord = '';
-//   List<String> playedWords = [];
-//   List<String> foundWords = []; // Maintain a list of found words
-//   int totalPoints = 0;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initializeGame();
-//   }
-//
-//   void _initializeGame() {
-//     letters = List.generate(26, (index) => String.fromCharCode('A'.codeUnitAt(0) + index));
-//     currentWord = '';
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return PopScope(
-//       canPop: true,
-//       // onWillPop: _onWillPop,
-//       child: Scaffold(
-//         appBar: AppBar(
-//           title: const Text('Scramble Animals'),
-//           backgroundColor: Colors.blue.shade100,
-//           actions: [
-//             IconButton(onPressed: (){
-//               _showTotalPointsDialog(context);
-//             }, icon: const Icon(Icons.star)),
-//
-//             IconButton(onPressed: (){
-//               _showFoundWordsDialog(context);
-//             }, icon: Icon(Icons.abc_rounded)),
-//           ],
-//         ),
-//         body: Padding(
-//           padding: const EdgeInsets.all(12.0),
-//           child: Column(
-//             children: [
-//
-//               const SizedBox(height: 20,),
-//               const Text("Build words from letters",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
-//               const SizedBox(height: 20,),
-//
-//               _buildDraggableGrid(),
-//
-//               const SizedBox(height: 30,),
-//               Padding(
-//                 padding: const EdgeInsets.only(left: 224),
-//                 child: _buildRefreshButton(),
-//               ),
-//               const SizedBox(height: 10,),
-//
-//               _buildDraggableSpace(),
-//
-//               Padding(
-//                 padding: const EdgeInsets.all(8.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                    // Text('Played Words: ${playedWords.join(', ')}'),
-//                     Text('Points: $totalPoints'),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildDraggableGrid() {
-//     return GridView.builder(
-//       shrinkWrap: true,
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 5,
-//         crossAxisSpacing: 8,
-//         mainAxisSpacing: 8,
-//       ),
-//       itemCount: letters.length,
-//       itemBuilder: (context, index) {
-//         String tile = letters[index];
-//         return _buildTileDraggable(tile);
-//       },
-//     );
-//   }
-//
-//   Widget _buildDraggableSpace() {
-//     return DragTarget<String>(
-//       builder: (context, candidateData, rejectedData) {
-//         return Container(
-//           margin: const EdgeInsets.all(8.0),
-//           padding: const EdgeInsets.all(18.0),
-//           color: Colors.yellow.shade200,
-//           child: Center(
-//             child: Text(currentWord, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
-//           ),
-//         );
-//       },
-//       onWillAcceptWithDetails: (data) {
-//         return true;
-//       },
-//       onAccept: (data) {
-//         _handleLetterDrop(data);
-//       },
-//       onLeave: (data) {
-//         _clearCurrentWord();
-//       },
-//     );
-//   }
-//
-//   void _clearCurrentWord() {
-//     setState(() {
-//       currentWord = '';
-//     });
-//   }
-//
-//   Widget _buildRefreshButton() {
-//     return ElevatedButton(
-//       onPressed: () {
-//         _clearCurrentWord();
-//       },
-//       child: const Text('Refresh'),
-//     );
-//   }
-//
-//
-//   Widget _buildTileDraggable(String tile) {
-//     return Draggable<String>(
-//       data: tile,
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(30) ,
-//         child: Container(
-//           // margin: const EdgeInsets.all(8.0),
-//           // padding: const EdgeInsets.all(8.0),
-//           color: Colors.green.shade100,
-//
-//           child: Center(
-//             child: Text(tile, style: TextStyle(
-//               fontSize: 20,
-//               fontWeight: FontWeight.bold,
-//
-//             ),),
-//           ),
-//         ),
-//       ),
-//       feedback: Container(
-//         margin: const EdgeInsets.all(8.0),
-//         padding: const EdgeInsets.all(8.0),
-//         color: Colors.blue.withOpacity(0.7),
-//         child: Text(tile),
-//       ),
-//       childWhenDragging: Container(),
-//     );
-//   }
-//
-//   void _handleLetterDrop(String letter) {
-//     setState(() {
-//       currentWord += letter;
-//     });
-//     _checkWord();
-//   }
-//
-//   void _checkWord() {
-//     if (currentWord.isNotEmpty && _isValidWord(currentWord)) {
-//       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-//         content: Text('Congratulations! 1 point for $currentWord'),
-//       ));
-//
-//       setState(() {
-//         playedWords.add(currentWord);
-//         foundWords.add(currentWord); // Add the found word to the list
-//
-//         totalPoints += 1; // 1 point for each valid word
-//         _initializeGame(); // Start a new round
-//       });
-//     }
-//   }
-//
-//   bool _isValidWord(String word) {
-//     List<String> validWords = [
-//       'CAT', 'DOG', 'RABBIT', 'MOUSE', 'HORSE', 'COW', 'SHEEP', 'MONKEY', 'ELEPHANT', 'TIGER', 'LION',
-//       'BEAR', 'DEER', 'FOX', 'WOLF', 'PIG', 'GOAT', 'GIRAFFE', 'KANGAROO', 'KOALA', 'PANDA', 'SLOTH',
-//       'ZEBRA', 'OTTER', 'HIPPO', 'RHINO', 'GORILLA', 'CROCODILE', 'SQUIRREL', 'ALLIGATOR', 'RACCOON',
-//       'HEDGEHOG', 'LEMUR', 'MEERKAT', 'CHIMPANZEE', 'POLAR BEAR', 'JAGUAR', 'LEOPARD', 'PANTHER',
-//       'MOOSE', 'BUFFALO', 'CAMEL', 'MULE', 'DONKEY', 'LLAMA', 'ANTELOPE', 'ARMADILLO', 'BISON', 'ECHIDNA',
-//       'FERRET', 'KOALA', 'PANGOLIN', 'PLATYPUS', 'PORCUPINE', 'TAPIR', 'WALRUS', 'WOMBAT', 'YAK'
-//     ];
-//     return validWords.contains(word.toUpperCase());
-//   }
-//
-//
-//   void _showTotalPointsDialog(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         title: const Text('Total Points'),
-//         content: Text('You scored a total of $totalPoints points.'),
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Navigator.push(context, MaterialPageRoute(builder: (context)=>const Scramble1()));
-//             },
-//             child: const Text('OK'),
-//           ),
-//         ],
-//       ),
-//     ).then((value) {
-//       Navigator.of(context).pop();
-//     });
-//   }
-//
-//   void _showFoundWordsDialog(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (context) => AlertDialog(
-//         title: const Text('Found Words'),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: foundWords.map((word) => Text(word)).toList(), // Display each found word
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () {
-//               Navigator.pop(context);
-//             },
-//             child: const Text('Close'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-//
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
 
 class Scramble1 extends StatefulWidget {
-  const Scramble1({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Scramble1(
+      {Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}
+      ) : super(key: key);
 
   @override
   _Scramble1State createState() => _Scramble1State();
@@ -259,14 +20,15 @@ class Scramble1 extends StatefulWidget {
 class _Scramble1State extends State<Scramble1> {
   late List<String> letters;
   String currentWord = '';
-  List<String> playedWords = [];
-  List<String> foundWords = [];
-  int totalPoints = 0;
+  Set<String> playedWords = {};
+  List<String> foundWords = []; // Maintain a list of found words
+  int score = 0;
 
   @override
   void initState() {
     super.initState();
     _initializeGame();
+    _getStoredScore();
   }
 
   void _initializeGame() {
@@ -276,61 +38,65 @@ class _Scramble1State extends State<Scramble1> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: true,
-      // onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Scramble Animals'),
-          backgroundColor: Colors.blue.shade100,
-          actions: [
-            IconButton(
-              onPressed: () {
-                _showTotalPointsDialog(context);
-              },
-              icon: const Icon(Icons.star),
-            ),
-            IconButton(
-              onPressed: () {
-                _showFoundWordsDialog(context);
-              },
-              icon: Icon(Icons.abc_rounded),
-            ),
-            IconButton(
-              onPressed: () {
-                _refreshGame();
-              },
-              icon: Icon(Icons.refresh),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 20,),
-                const Text("Build words from letters",style: TextStyle(fontSize: 26,fontWeight: FontWeight.bold),),
-                const SizedBox(height: 20,),
-                _buildDraggableGrid(),
-                const SizedBox(height: 30,),
-                Padding(
-                  padding: const EdgeInsets.only(left: 224),
-                  child: _buildRefreshButton(),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Scramble Animals'),
+        backgroundColor: Colors.blue.shade400,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+          IconButton(
+            onPressed: _showTotalPointsDialog,
+            icon: const Icon(Icons.star),
+          ),
+          IconButton(onPressed: (){
+            _showFoundWordsDialog(context);
+          }, icon: Icon(Icons.abc_rounded)),
+          IconButton(
+            onPressed: () {
+              _refreshGame();
+            },
+            icon: Icon(Icons.refresh),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                "Build words from letters",
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildDraggableGrid(),
+              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              _buildDraggableSpace(),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Points: $score', style: const TextStyle(fontSize: 18)),
+                    SizedBox(width: 30,),
+                    _buildRefreshButton(),
+                    ElevatedButton(
+                      onPressed: _submitWord,
+                      child: const Text('Submit'),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10,),
-                _buildDraggableSpace(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Points: $totalPoints'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -386,9 +152,13 @@ class _Scramble1State extends State<Scramble1> {
   Widget _buildRefreshButton() {
     return ElevatedButton(
       onPressed: () {
-        _refreshGame();
+        if (currentWord.isNotEmpty) {
+          setState(() {
+            currentWord = currentWord.substring(0, currentWord.length - 1); // Remove the last letter
+          });
+        }
       },
-      child: const Text('Refresh'),
+      child: const Text('Clear'),
     );
   }
 
@@ -398,12 +168,11 @@ class _Scramble1State extends State<Scramble1> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(30),
         child: Container(
+          // margin: const EdgeInsets.all(8.0),
+          // padding: const EdgeInsets.all(8.0),
           color: Colors.green.shade100,
-          child: Center(
-            child: Text(tile, style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),),
+          child: Center
+            (child: Text(tile, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)
           ),
         ),
       ),
@@ -421,27 +190,6 @@ class _Scramble1State extends State<Scramble1> {
     setState(() {
       currentWord += letter;
     });
-    _checkWord();
-  }
-
-  void _checkWord() {
-    if (currentWord.isNotEmpty && _isValidWord(currentWord) && !playedWords.contains(currentWord)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Congratulations! 1 point for $currentWord'),
-      ));
-
-      setState(() {
-        playedWords.add(currentWord);
-        foundWords.add(currentWord); // Add the found word to the list
-
-        totalPoints += 1; // 1 point for each valid word
-        _initializeGame(); // Start a new round
-      });
-    } else if (playedWords.contains(currentWord)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('$currentWord was already typed.'),
-      ));
-    }
   }
 
   bool _isValidWord(String word) {
@@ -456,16 +204,20 @@ class _Scramble1State extends State<Scramble1> {
     return validWords.contains(word.toUpperCase());
   }
 
-  void _showTotalPointsDialog(BuildContext context) {
+  bool _isWordAlreadyPlayed(String word) {
+    return playedWords.contains(word.toUpperCase());
+  }
+
+  void _showTotalPointsDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Total Points'),
-        content: Text('You scored a total of $totalPoints points.'),
+        content: Text('You scored a total of $score points.'),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop();
             },
             child: const Text('OK'),
           ),
@@ -505,10 +257,11 @@ class _Scramble1State extends State<Scramble1> {
         actions: [
           TextButton(
             onPressed: () {
+              _deleteScoreAndWordsFromDatabase();
               setState(() {
                 playedWords.clear();
                 foundWords.clear();
-                totalPoints = 0;
+                score = 0;
                 _initializeGame();
               });
               Navigator.pop(context);
@@ -524,5 +277,82 @@ class _Scramble1State extends State<Scramble1> {
         ],
       ),
     );
+  }
+
+  void _submitWord() {
+    if(currentWord.isNotEmpty && _isValidWord(currentWord)) {
+      if(_isWordAlreadyPlayed(currentWord)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$currentWord was already typed.'),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('1 point awarded!'),
+          ),
+        );
+        setState(() {
+          playedWords.add(currentWord.toUpperCase());
+          foundWords.add(currentWord); // Add the found word to the list
+          score += 1;
+          _updateScoreAndPlayedWordsInFirebase(currentWord);
+          _clearCurrentWord();
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invalid word.'),
+          duration: Duration(milliseconds: 700),
+        ),
+      );
+    }
+  }
+
+  void _deleteScoreAndWordsFromDatabase() async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    await userDocRef.delete();
+  }
+
+  void _updateScoreAndPlayedWordsInFirebase(String newWord) async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    // Create a new document or update the existing one
+    await userDocRef.set(
+      {
+        'animal': {
+          'score': score,
+          'foundWords': FieldValue.arrayUnion([newWord]), // Add only new word
+        },
+      },
+      SetOptions(merge: true), // Merge to avoid overwriting other data
+    );
+  }
+
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    final DocumentSnapshot snapshot = await userDocRef.get();
+    if (snapshot.exists) {
+      final Map<String, dynamic> data =
+      snapshot.data() as Map<String, dynamic>;
+      if (data.containsKey('animal')) {
+        setState(() {
+          score = data['animal']['score'];
+          foundWords = List<String>.from(data['animal']['foundWords']);
+          playedWords = Set<String>.from(data['animal']['foundWords']); // Update playedWords
+        });
+      }
+    }
   }
 }

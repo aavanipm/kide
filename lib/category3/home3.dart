@@ -1,10 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/agepage.dart';
 import 'package:game/auth/save1.dart';
-import 'package:game/category1/game1/game1.dart';
-import 'package:game/category2/learn2/learn2.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category3/game3/game3.dart';
 import 'package:game/category3/learn3/Story/Story1.dart';
 import 'package:game/category3/learn3/Story/Story2.dart';
+import 'package:game/category3/learn3/learn3.dart';
 import 'package:game/learn/Numbers.dart';
 import 'package:game/learn//flowers.dart';
 import 'package:game/learn/Stories/storysection.dart';
@@ -16,7 +18,9 @@ class Home3 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Home3({super.key, required this.username, required this.email, required this.age});
+  final String subscribedCategory;
+
+  const Home3({super.key, required this.username, required this.email, required this.age, required this.subscribedCategory});
 
   @override
   State<Home3> createState() => _Home3State();
@@ -49,33 +53,36 @@ class _Home3State extends State<Home3> {
                     //        Navigator.of(context).pop();
                   }
               ),
+
               ListTile(
-                title: Text("Games"), leading: Icon(Icons.games),
+                  title: Text("Subscription"),leading: Icon(Icons.subscriptions),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                      username: widget.username, email: widget.email,
+                      age: widget.age, subscribedCategory: widget.subscribedCategory,)));
+                  }
+              ),
+
+              ListTile(
+                title: Text("Age"), leading: Icon(Icons.change_circle),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AgePage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                  )));
+                },
               ),
               ListTile(
                 title: Text("Logout"), leading: Icon(Icons.logout),
                 onTap: (){
-                  //
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage1(
-                      username: widget.username, useremail: widget.email, userage: widget.age)
-                  )
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Save1(
+                      username: widget.username, useremail: widget.email,
+                      userage: widget.age, subscribedCategory: widget.subscribedCategory,)
+                    )
                   );
                 },
               ),
             ],
           ),
-        ),
-
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: (index){
-            setState(() {
-              currentindex = index;
-            });
-          },
-          currentIndex: currentindex,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.abc), label: "pp"),
-            BottomNavigationBarItem(icon: Icon(Icons.access_alarm_outlined),label: "new" )],
         ),
 
         body: ListView(
@@ -96,50 +103,10 @@ class _Home3State extends State<Home3> {
                         ),
                       ),
                       SizedBox(height: 10,),
-                      // Text(
-                      //   "Let's Learn And Play ENGLISH",
-                      //   style: TextStyle(
-                      //     fontFamily: 'Balsamiq Sans',
-                      //     fontWeight: FontWeight.bold,
-                      //     fontSize: 30,
-                      //   ),
-                      // ),
                       SizedBox(height: 10,),
                     ],
                   ),
                 ),
-
-                // card
-                // CarouselSlider(items: [
-                //   Card(
-                //     child: GestureDetector(
-                //       onTap: (){
-                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>CapitalLetter()));
-                //       },
-                //       child: Column(
-                //         children: [
-                //           Image.asset("assets/home/capital.png",height: 212.90, width: 300,),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                //
-                //   Card(
-                //     child: GestureDetector(
-                //       onTap: (){
-                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>SmallLetter()));
-                //       },
-                //       child: Column(
-                //         children: [
-                //           Image.asset("assets/home/small.png", height: 212.90, width: 300,),
-                //         ],
-                //       ),
-                //     ),
-                //     //child: Image.asset("assets/images/img1.png", ),
-                //   ),
-                // ], options: CarouselOptions(autoPlay: true, viewportFraction: 16/9)
-                // ),
-
 
                 CarouselSlider(
                   items: [
@@ -186,7 +153,9 @@ class _Home3State extends State<Home3> {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Learn2()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Learn3(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                        )));
                       },
                       child: Column(
                         children: [
@@ -199,8 +168,9 @@ class _Home3State extends State<Home3> {
 
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Game1(
-                          username: widget.username, email: widget.email, age: widget.age,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Game3(
+                          username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                        )));
                       },
                       child: Column(
                         children: [

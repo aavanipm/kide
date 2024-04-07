@@ -2,34 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game/category1/game1/fillblanks/AnimalLevels/fill4.dart';
-import 'package:game/category1/home1.dart';
+import 'package:game/category1/game1/fillblanks/AnimalLevels/levelsfill.dart';
 
 class Fill3 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Fill3({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Fill3({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
 
   @override
   State<Fill3> createState() => _Fill3State();
 }
 
 class _Fill3State extends State<Fill3> {
-  TextEditingController _controller = TextEditingController();
-  String _answer = '';
+  String _selectedOption = '';
   bool _answeredCorrectly = false;
-  int score = 0; // Initial score for level 2
+  int score = 0;
+  String _word = "F O _"; // Initial word with underscore
 
   @override
   void initState() {
     super.initState();
     _getStoredScore();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -41,115 +43,152 @@ class _Fill3State extends State<Fill3> {
         actions: [
           IconButton(
             onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => LevelFill(
+                    username: widget.username,
+                    email: widget.email,
+                    age: widget.age,
+                    subscribedCategory: widget.subscribedCategory,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+          IconButton(
+            onPressed: () {
               _showScoreDialog();
             },
             icon: Icon(Icons.star),
           )
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              "assets/animals/fox.png", // Change the image path for level 2
-              height: 200,
-              width: 200,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              "Select the correct letter",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "F",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "O",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-
-                SizedBox(width: 10),
-                Container(
-                  width: 30,
-                  child: TextField(
-                    controller: _controller,
-                    onChanged: (value) {
-                      setState(() {
-                        _answer = value.toUpperCase(); // Convert to uppercase
-                        _controller.value = TextEditingValue(
-                          text: _answer,
-                          selection: TextSelection.fromPosition(
-                            TextPosition(offset: _answer.length),
-                          ),
-                        );
-                      });
-                    },
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/animals/fox.png",
+                    height: 200,
+                    width: 200,
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  Text(
+                    _word, // Display the word dynamically
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                  ),
+
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('O');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'O' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('O'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('X');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'X' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('X'),
+                      ),
+                      SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: _answeredCorrectly ? null : () {
+                          _selectOption('B');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'B' ? Colors.black : Colors.grey),
+                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.yellow[200], // Adjust color based on _answeredCorrectly
+                        ),
+                        child: Text('B'),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+                  _answeredCorrectly ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context, MaterialPageRoute(
+                          builder: (context) => Fill4(
+                            username: widget.username,
+                            email: widget.email,
+                            age: widget.age,
+                            subscribedCategory: widget.subscribedCategory,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Next Level'),
+                  ) : SizedBox(), // Show or hide based on _answeredCorrectly
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            _answeredCorrectly
-                ? Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Fill4(
-                            username: widget.username, email: widget.email, age: widget.age
-                        )));
-                    // Proceed to next level logic
-                  },
-                  child: Text('Next Level'),
-                ),
-              ],
-            )
-                : ElevatedButton(
-              onPressed: () {
-                if (!_answeredCorrectly && _answer == 'X') {
-                  setState(() {
-                    _answeredCorrectly = true;
-                    if (score == 2){
-                      score = 3; // Score becomes 1 on correct answer
-                      _updateScoreInFirebase();
-                    }
-                  });
-                  FocusScope.of(context).unfocus();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Correct!'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                } else if (!_answeredCorrectly) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Incorrect! Try again.'),
-                      duration: Duration(milliseconds: 700),
-                    ),
-                  );
-                }
-              },
-              child: Text('Submit'),
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username, email: widget.email, age: widget.age,)));
-              },
-              child: Text('Go Back to Home'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _selectOption(String option) {
+    setState(() {
+      if (_answeredCorrectly) return; // If already answered correctly, do nothing
+      _selectedOption = option;
+      _word = "F O $_selectedOption"; // Update the word with selected option
+      if (_selectedOption == 'X') {
+        _answeredCorrectly = true;
+        if (score == 2) {
+          score = 3; // Score becomes 3 on correct answer
+          _updateScoreInFirebase();
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Correct!',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        _answeredCorrectly = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Incorrect! Try again.',
+            ),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      }
+    });
   }
 
   void _showScoreDialog() {
@@ -181,9 +220,12 @@ class _Fill3State extends State<Fill3> {
           .doc('fillblanks');
 
       // Create a new document or update the existing one
-      await userDocRef.set({
-        'animal': {'score': score}, // Nested data for animal category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      await userDocRef.set(
+        {
+          'animal': {'score': score}, // Nested data for animal category and score
+        },
+        SetOptions(merge: true), // Merge to avoid overwriting other data
+      );
     }
   }
 
@@ -195,7 +237,8 @@ class _Fill3State extends State<Fill3> {
 
     final DocumentSnapshot snapshot = await userDocRef.get();
     if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+      snapshot.data() as Map<String, dynamic>;
       if (data.containsKey('animal')) {
         setState(() {
           score = data['animal']['score'];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/guess/GuessingGame1.dart';
 import 'package:game/category1/game1/guess/GuessingGame2.dart';
 import 'package:game/category1/game1/guess/GuessingGame3.dart';
@@ -17,13 +18,21 @@ import 'package:game/category1/game1/guess/Guessinggame10.dart';
 import 'package:game/category1/game1/guess/Guessinggame11.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/category1/home1.dart';
 
 class LevelGuess extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
-  LevelGuess({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  LevelGuess({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
 
   @override
   State<LevelGuess> createState() => _LevelGuessState();
@@ -38,21 +47,15 @@ class _LevelGuessState extends State<LevelGuess> {
     _getStoredScore();
   }
 
-
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('guessing');
-
-    final DocumentSnapshot snapshot = await userDocRef.get();
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection(widget.username).doc('guessing');
+    final DocumentSnapshot snapshot = await documentReference.get();
     if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('animal')) {
-        setState(() {
-          score = data['animal']['score'];
-        });
-      }
+      setState(() {
+        score = (snapshot.data() as Map<String, dynamic>)['score'];
+      });
     }
   }
 
@@ -78,16 +81,27 @@ class _LevelGuessState extends State<LevelGuess> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: GridView.builder(
               shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+              gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
               itemCount: values.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, index) {
                 return guesscard(context, values[index]);
               },
             ),
@@ -118,74 +132,81 @@ class _LevelGuessState extends State<LevelGuess> {
       "16": 40,
     };
 
-    bool isUnlocked = val.name == "1" || score >= levelScores[val.name]!;
-    Color? cardColor = isUnlocked ? Colors.blue.shade100 : Colors.grey.shade100;
+    bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
+    if (widget.subscribedCategory == "basic") {
+      isUnlocked = int.parse(val.name) <= 10; // Unlock levels 1-10 for basic subscription
+    } else if (widget.subscribedCategory == "standard") {
+      isUnlocked = int.parse(val.name) <= 15; // Unlock levels 1-15 for standard subscription
+    } else if (widget.subscribedCategory == "premium") {
+      isUnlocked = int.parse(val.name) <= 20; // Unlock all levels for premium subscription
+    }
+
+    bool canPlay = isUnlocked && (int.parse(val.name) == 1 || score >= levelScores[val.name]!);
+    Color? cardColor = canPlay ? Colors.blue.shade100 : Colors.grey.shade100;
 
     return GestureDetector(
       onTap: () {
-        if (isUnlocked) {
-          // Navigate to the level screen based on val.name
+        if (canPlay) {
           switch (val.name) {
-
             case '1':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame1(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '2':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame2(
-                username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '3':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame3(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '4':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame4(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '5':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame5(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '6':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame6(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '7':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame7(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '8':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame8(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '9':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame9(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '10':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame10(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '11':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame11(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '12':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame12(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '13':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame13(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '14':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame14(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case '15':
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessingGame15(
-                  username: widget.username, email: widget.email, age: widget.age)));
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
               break;
             case 16:
               Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessingGame16()));
@@ -194,19 +215,41 @@ class _LevelGuessState extends State<LevelGuess> {
               break;
           }
         } else {
-          // Show a dialog indicating the level is locked
+          String message;
+          if (score >= levelScores[val.name]!) {
+            message = 'Subscribe to access more levels.';
+          } else {
+            message = 'Complete the previous level to unlock this one.';
+          }
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text('Level Locked'),
-                content: Text('This level is locked. You need to complete previous level to unlock it.'),
+                content: Text(message),
                 actions: [
+                  if (score >= levelScores[val.name]!)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  if (score <= levelScores[val.name]!)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+                        )));
+                        // Navigate to subscription page
+                      },
+                      child: Text('Subscribe'),
+                    ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('OK'),
+                    child: Text('Cancel'),
                   ),
                 ],
               );
@@ -228,7 +271,7 @@ class _LevelGuessState extends State<LevelGuess> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
-                  color: isUnlocked ? Colors.black : Colors.grey, // Text color based on unlocked status
+                  color: isUnlocked ? Colors.black : Colors.grey,
                 ),
               ),
             ],
@@ -239,7 +282,7 @@ class _LevelGuessState extends State<LevelGuess> {
   }
 }
 
-class Guess{
+class Guess {
   final String name;
 
   Guess({required this.name});

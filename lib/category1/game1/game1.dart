@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
 import 'package:game/category1/game1/fillblanks/Fills.dart';
-import 'package:game/category1/game1/flashcard/flashcardlevels.dart';
 import 'package:game/category1/game1/guess/levelguess.dart';
 import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/opposite/oppositelevels.dart';
-import 'package:game/category1/game1/past%20tense/levels.dart';
 import 'package:game/category1/game1/search/searchlevels.dart';
 import 'package:game/category1/game1/sentencecompletion/Sentencelevels.dart';
+import 'package:game/category1/game1/soundspell/SoundSpellLevel.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category1/game1/synonym/Synonymlevels.dart';
 
@@ -15,8 +14,9 @@ class Game1 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
-  Game1({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  Game1({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   State<Game1> createState() => _Game1State();
@@ -31,7 +31,9 @@ class Game1 extends StatefulWidget {
     Games(imagepath: "assets/game/spell.png", name: "flash"),
     Games(imagepath: "assets/game/sentence.png", name: "sentence"),
     Games(imagepath: "assets/game/word.png", name: "Search"),
-    Games(imagepath: "assets/images/img1.png", name: "past"),
+    // Games(imagepath: "assets/images/img1.png", name: "SubDemo"),
+
+    // Games(imagepath: "assets/images/img1.png", name: "past"),
   ];
 }
 
@@ -54,7 +56,7 @@ class _Game1State extends State<Game1> {
           ),
             itemCount: widget.values.length, // Accessing values through widget
             itemBuilder: (context, index) {
-            return gamecard(context, widget.values[index], widget.username, widget.email, widget.age);
+            return gamecard(context, widget.values[index], widget.username, widget.email, widget.age, widget.subscribedCategory);
           },
         ),
       ),
@@ -62,13 +64,13 @@ class _Game1State extends State<Game1> {
   }
 }
 
-Widget gamecard(BuildContext context, Games val, String username, String email, String age) {
+Widget gamecard(BuildContext context, Games val, String username, String email, String age, String subscribedCategory) {
   return GestureDetector(
       onTap: (){
         switch(val.name){
           case 'Fill':
             Navigator.push(context, MaterialPageRoute(builder: (context) => Fills(
-                  username: username, email: email, age: age,
+                  username: username, email: email, age: age, subscribedCategory: subscribedCategory,
                 ),
               ),
             );
@@ -76,47 +78,54 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
 
           case 'Guess':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelGuess(
-              username: username, email: email, age: age,
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
             )));
             break;
 
           case 'Match':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>Match(
-              username: username, email: email, age: age,
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
             )));
             break;
 
           case 'Speak':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
-                username: username, email: email, age: age)));
+                username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           case 'scramble':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Scramblelevel()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           case 'opposite':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Oppositelevels()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Oppositelevels(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           case 'synonym':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Synonymlevels()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>Synonymlevels(
+                username: username, email: email, age: age, subscribedCategory: subscribedCategory
+            )));
             break;
 
           case 'flash':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>FlashCardLevels()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           case 'sentence':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels(
+                username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           case 'Search':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel()));
-            break;
-
-          case 'past':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelSelection1()));
             break;
 
           default:
@@ -128,7 +137,7 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
         child: Column(
           children: [
             Image.asset(val.imagepath, height: 150, width: 150,),
-            Text(val.name)
+            // Text(val.name)
           ],
         ),
       )

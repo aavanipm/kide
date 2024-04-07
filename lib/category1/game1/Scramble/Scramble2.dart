@@ -1,7 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
 
 class Scramble2 extends StatefulWidget {
-  const Scramble2({Key? key}) : super(key: key);
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Scramble2(
+      {Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}
+      ) : super(key: key);
 
   @override
   _Scramble2State createState() => _Scramble2State();
@@ -12,13 +22,13 @@ class _Scramble2State extends State<Scramble2> {
   String currentWord = '';
   Set<String> playedWords = {};
   List<String> foundWords = []; // Maintain a list of found words
-
-  int totalPoints = 0;
+  int score = 0;
 
   @override
   void initState() {
     super.initState();
     _initializeGame();
+    _getStoredScore();
   }
 
   void _initializeGame() {
@@ -33,6 +43,13 @@ class _Scramble2State extends State<Scramble2> {
         title: const Text('Scramble Birds'),
         backgroundColor: Colors.blue.shade400,
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+            },
+            icon: Icon(Icons.home), // Home button on the right side
+          ),
           IconButton(
             onPressed: _showTotalPointsDialog,
             icon: const Icon(Icons.star),
@@ -61,7 +78,6 @@ class _Scramble2State extends State<Scramble2> {
               const SizedBox(height: 20),
               _buildDraggableGrid(),
               const SizedBox(height: 20),
-
               const SizedBox(height: 10),
               _buildDraggableSpace(),
               const SizedBox(height: 10),
@@ -70,7 +86,7 @@ class _Scramble2State extends State<Scramble2> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Points: $totalPoints', style: const TextStyle(fontSize: 18)),
+                    Text('Points: $score', style: const TextStyle(fontSize: 18)),
                     SizedBox(width: 30,),
                     _buildRefreshButton(),
                     ElevatedButton(
@@ -80,11 +96,6 @@ class _Scramble2State extends State<Scramble2> {
                   ],
                 ),
               ),
-              // Column(
-              //   children: [
-              //     Text('${playedWords.join(', ')}', style: const TextStyle(fontSize: 10)),
-              //   ],
-              // ),
             ],
           ),
         ),
@@ -141,7 +152,11 @@ class _Scramble2State extends State<Scramble2> {
   Widget _buildRefreshButton() {
     return ElevatedButton(
       onPressed: () {
-        _clearCurrentWord();
+        if (currentWord.isNotEmpty) {
+          setState(() {
+            currentWord = currentWord.substring(0, currentWord.length - 1); // Remove the last letter
+          });
+        }
       },
       child: const Text('Clear'),
     );
@@ -177,31 +192,11 @@ class _Scramble2State extends State<Scramble2> {
     });
   }
 
-  void _submitWord() {
-    if (currentWord.isNotEmpty && !_isWordAlreadyPlayed(currentWord) && _isValidWord(currentWord)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('1 point awarded!'),
-        ),
-      );
-      setState(() {
-        playedWords.add(currentWord.toUpperCase());
-        foundWords.add(currentWord); // Add the found word to the list
-
-        totalPoints += 1;
-        _clearCurrentWord();
-      });
-    } else if (playedWords.contains(currentWord)) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('$currentWord was already typed.'),
-      ));
-    }
-  }
-
   bool _isValidWord(String word) {
     List<String> validWords = [
       'CROW', 'BLUE JAY', 'CARDINAL', 'ROBIN', 'STARLING', 'CANARY', 'BLACKBIRD', 'GOLDFINCH',
-      'SWALLOW', 'PIGEON', 'SWIFT', 'THRUSH', 'WARBLER', 'WREN', 'JAY', 'WOODCOCK', 'NIGHTINGALE',
+      'SWALLOW', 'PIGEON', 'SWIFT', 'THRUSH', 'WARBLER', 'WREN', 'JAY',
+      'WOODCOCK', 'NIGHTINGALE',
       'FINCH', 'TANAGER', 'PARAKEET', 'EAGLE', 'OWL', 'PARROT', 'OSTRICH', 'PEACOCK', 'HAWK',
       'FALCON', 'PENGUIN', 'SWAN', 'FLAMINGO', 'SPARROW', 'HUMMINGBIRD', 'PELICAN', 'WOODPECKER',
       'CRANE', 'SEAGULL', 'TURKEY', 'DUCK', 'GOOSE', 'HEN',
@@ -218,7 +213,7 @@ class _Scramble2State extends State<Scramble2> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Total Points'),
-        content: Text('You scored a total of $totalPoints points.'),
+        content: Text('You scored a total of $score points.'),
         actions: [
           TextButton(
             onPressed: () {
@@ -262,10 +257,11 @@ class _Scramble2State extends State<Scramble2> {
         actions: [
           TextButton(
             onPressed: () {
+              _deleteScoreAndWordsFromDatabase();
               setState(() {
                 playedWords.clear();
                 foundWords.clear();
-                totalPoints = 0;
+                score = 0;
                 _initializeGame();
               });
               Navigator.pop(context);
@@ -282,11 +278,81 @@ class _Scramble2State extends State<Scramble2> {
       ),
     );
   }
+
+  void _submitWord() {
+    if(currentWord.isNotEmpty && _isValidWord(currentWord)){
+      if(_isWordAlreadyPlayed(currentWord)){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$currentWord was already typed.'),
+            duration: Duration(milliseconds: 700),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('1 point awarded!'),
+          )
+        );
+        setState(() {
+          playedWords.add(currentWord.toUpperCase());
+          foundWords.add(currentWord);
+          score = score + 1;
+          _updateScoreAndPlayedWordsInFirebase(currentWord);
+          _clearCurrentWord();
+        });
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Invalid word."),
+          duration: Duration(milliseconds: 700),
+        )
+      );
+    }
+  }
+
+  void _deleteScoreAndWordsFromDatabase() async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    await userDocRef.delete();
+  }
+
+  void _updateScoreAndPlayedWordsInFirebase(String newWord) async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    // Create a new document or update the existing one
+    await userDocRef.set(
+      {
+        'bird': {
+          'score': score,
+          'foundWords': FieldValue.arrayUnion([newWord]), // Add only new word
+        },
+      },
+      SetOptions(merge: true), // Merge to avoid overwriting other data
+    );
+  }
+
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    final DocumentReference userDocRef = FirebaseFirestore.instance
+        .collection(widget.username)
+        .doc('scramble');
+    final DocumentSnapshot snapshot = await userDocRef.get();
+    if (snapshot.exists) {
+      final Map<String, dynamic> data =
+      snapshot.data() as Map<String, dynamic>;
+      if (data.containsKey('bird')) {
+        setState(() {
+          score = data['bird']['score'];
+          foundWords = List<String>.from(data['bird']['foundWords']);
+          playedWords = Set<String>.from(data['bird']['foundWords']); // Update playedWords
+        });
+      }
+    }
+  }
 }
-//
-// 'CROW', 'PIGEON', 'TURKEY', 'DUCK', 'HEN', 'EAGLE', 'OWL', 'PARROT', 'OSTRICH', 'PEACOCK',
-//   'ROBIN', 'CANARY', 'FLAMINGO', 'SPARROW', 'HUMMINGBIRD', 'WOODPECKER', 'NIGHTINGALE',
-//   'SEAGULL', 'FALCON', 'PENGUIN', 'SWAN',
-// 'SWALLOW', 'WREN', 'JAY', 'WOODCOCK',
-// 'FINCH', 'TANAGER', 'PARAKEET',  'HAWK',
-// 'CRANE',  'GOOSE',

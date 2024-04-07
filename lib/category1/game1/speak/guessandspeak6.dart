@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category1/game1/speak/guessandspeak7.dart';
 import 'package:game/category1/home1.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -10,12 +11,15 @@ class GuessandSpeak6 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
+  final String subscribedCategory;
 
   const GuessandSpeak6(
       {Key? key,
         required this.username,
         required this.email,
-        required this.age})
+        required this.age,
+        required this.subscribedCategory,
+      })
       : super(key: key);
 
   @override
@@ -49,8 +53,9 @@ class _GuessandSpeak6State extends State<GuessandSpeak6> {
             SizedBox(width: 120,),
             IconButton(
               onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username, email: widget.email, age: widget.age)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => GuessSpeakLevel(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                )));
               },
               icon: Icon(Icons.home),
             ),
@@ -96,7 +101,7 @@ class _GuessandSpeak6State extends State<GuessandSpeak6> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => GuessandSpeak7(
-              username: widget.username, email: widget.email, age: widget.age
+            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
           )),
         );
       });
@@ -104,7 +109,6 @@ class _GuessandSpeak6State extends State<GuessandSpeak6> {
       _showSnackbar('Incorrect answer!', false);
     }
   }
-
 
   void _showSnackbar(String message, bool isCorrect) {
     ScaffoldMessenger.of(context).showSnackBar(

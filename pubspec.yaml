@@ -37,13 +37,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.2.1
   flutter_tts: ^3.8.5
-  audioplayers: ^5.2.1
   firebase_core: ^2.25.2
   firebase_auth: ^4.17.2
   cloud_firestore: ^4.15.2
   speech_to_text: ^6.6.0
   shared_preferences: ^2.2.2
   flutter_swiper_view: ^1.1.8
+  audioplayers: ^6.0.0
+  animated_splash_screen: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,8 @@ flutter:
     - assets/Vegetables/
     - assets/home/
     - assets/learning/
+    - assets/learning/grammar/
+    - assets/learning/grammar/learn/
     - assets/images/
     - assets/Alphabets/
     - assets/Alphabets/capital/
@@ -87,6 +90,8 @@ flutter:
     - assets/Alphabets/letters/capital/
     - assets/game/
     - assets/story/
+    - assets/audio/
+    - assets/opposite/
 
   #   - images/a_dot_ham.jpeg
 

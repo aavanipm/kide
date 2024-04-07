@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class OppositeWordsGame extends StatefulWidget {
   OppositeWordsGame({Key? key}) : super(key: key);
 
@@ -32,18 +31,7 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
   void initState() {
     super.initState();
     firestore = FirebaseFirestore.instance;
-    // _loadScore();
   }
-
-  // void _loadScore() async {
-  //   DocumentSnapshot<Map<String, dynamic>> snapshot =
-  //   await firestore.collection('scores').doc('user_score').get();
-  //   if (snapshot.exists) {
-  //     setState(() {
-  //       score = snapshot.data()!['score'];
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +43,10 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
-              child: Text('Total Score: $score',style: const TextStyle(
-                  fontWeight: FontWeight.bold,fontSize: 15
-              ),),
+              child: Text('Total Score: $score', style: const TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 15
+              ),
+              ),
             ),
           ),
         ],
@@ -69,23 +58,22 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Text(
-                'Write the words inside box with their opposites:',
+                'Match the words inside box with their opposites:',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
-              const SizedBox(
-                height: 50,
-                width: 50,
-                child: Row(
-                  children: [
-                    Text(
-                      "Short, Slow, Cold, Sad",
-                      style: TextStyle(fontSize: 20, color: Colors.blue),
-                    ),
-                  ],
-                ),
+              Row(
+                children: [
+                  _buildDraggableWord('Short'),
+                  SizedBox(width: 10),
+                  _buildDraggableWord('Slow'),
+                  SizedBox(width: 10),
+                  _buildDraggableWord('Cold'),
+                  SizedBox(width: 10),
+                  _buildDraggableWord('Sad'),
+                ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -106,16 +94,43 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
                             const SizedBox(width: 20),
                             Expanded(
                               flex: 2,
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    pair.opposite = value;
-                                  });
+                              child: DragTarget<String>(
+                                builder: (context, candidateData, rejectedData) {
+                                  return pair.isMatched
+                                      ? Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      pair.opposite,
+                                      style: TextStyle(fontSize: 20, color: Colors.grey),
+                                    ),
+                                  )
+                                      : Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.blue),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      pair.opposite.isEmpty ? 'Drop here' : pair.opposite,
+                                      style: TextStyle(fontSize: 20, color: Colors.blue),
+                                    ),
+                                  );
+                                },
+                                onWillAccept: (data) => true,
+                                onAccept: (data) {
+                                  if (data == validOpposites[pair.word]) {
+                                    setState(() {
+                                      pair.opposite = data!;
+                                      pair.isMatched = true; // Set the matched flag to true
+                                      score++; // Increase the score
+                                    });
+                                  }
                                 },
                               ),
                             ),
@@ -127,12 +142,6 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _checkAnswer,
-                child: const Text('Check Answer'),
-              ),
-              SizedBox(height: 20),
             ],
           ),
         ),
@@ -140,38 +149,27 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
     );
   }
 
-  void _checkAnswer() async {
-    bool allCorrect = true;
-    for (var pair in wordPairs) {
-      if (pair.opposite.isEmpty ||
-          !_isValidOpposite(pair.word, pair.opposite)) {
-        allCorrect = false;
-        break;
-      }
-    }
-
-    if (allCorrect) {
-      setState(() {
-        score = wordPairs.length;
-      });
-      await firestore.collection('scores').doc('user_score').set({'score': score});
-      _showSnackBar('All answers are correct!');
-    } else {
-      _showSnackBar('Some answers are incorrect. Please try again.');
-    }
+  Widget _buildDraggableWord(String word) {
+    return Draggable<String>(
+      data: word,
+      child: _buildWordBox(word),
+      feedback: _buildWordBox(word),
+      childWhenDragging: Container(),
+    );
   }
 
-  bool _isValidOpposite(String word, String opposite) {
-    String validOpposite = validOpposites[word]?.toLowerCase() ?? '';
-    String enteredOpposite = opposite.toLowerCase();
-    return validOpposite == enteredOpposite;
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
+  Widget _buildWordBox(String word) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Center(
+        child: Text(
+          word,
+          style: TextStyle(fontSize: 20, color: Colors.blue),
+        ),
       ),
     );
   }
@@ -180,6 +178,7 @@ class _OppositeWordsGameState extends State<OppositeWordsGame> {
 class WordPair {
   final String word;
   String opposite;
+  bool isMatched; // Flag to indicate if the word is matched
 
-  WordPair(this.word, this.opposite);
+  WordPair(this.word, this.opposite) : isMatched = false;
 }

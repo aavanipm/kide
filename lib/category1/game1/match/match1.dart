@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/match/match2.dart';
-import 'package:game/category1/home1.dart';
 
 class Match1 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
-  const Match1({Key? key, required this.username, required this.email, required this.age}) : super(key: key);
+  final String subscribedCategory;
+
+  const Match1({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _Match1State createState() => _Match1State();
@@ -51,19 +53,11 @@ class _Match1State extends State<Match1> {
         actions: [
           IconButton(onPressed: (){
             Navigator.push(
-                context, MaterialPageRoute(builder: (context)=>Home1(
-                username: widget.username, email: widget.email, age: widget.age))
+                context, MaterialPageRoute(builder: (context)=>Match(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            ))
             );
           }, icon: Icon(Icons.home)),
-          // IconButton(
-          //   icon: const Icon(Icons.refresh),
-          //   onPressed: () {
-          //     setState(() {
-          //       shuffledNames.shuffle(); // Shuffle names only
-          //       answerStatus.clear(); // Reset answer status on shuffle
-          //     });
-          //   },
-          // ),
           IconButton(
             icon: const Icon(Icons.star),
             onPressed: () {
@@ -76,6 +70,12 @@ class _Match1State extends State<Match1> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
+            SizedBox(height: 10,),
+            Text(
+              'Drag a name and match with their correct image.',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10,),
             Expanded(
               child: ListView.builder(
                 itemCount: currentAnimals.length,
@@ -243,8 +243,8 @@ class _Match1State extends State<Match1> {
 
 
   void _proceedToNextLevel() {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>Match2(
-      username: widget.username, email: widget.email, age: widget.age,
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Match2(
+      username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
     )));
   }
 
