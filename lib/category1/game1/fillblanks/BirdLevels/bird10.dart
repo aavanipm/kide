@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game/auth/subscription.dart';
-import 'package:game/category1/game1/fillblanks/BirdLevels/Bird10.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/Bird11.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/BirdLevel.dart';
 
@@ -243,34 +243,42 @@ class _Bird10State extends State<Bird10> {
     );
   }
 
+
   void _updateScoreInFirebase() async {
-    // Only update score if level is completed
     if (score == 10) {
       await Firebase.initializeApp();
-      final DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(widget.username)
-          .doc('fillblanks');
-
-      // Create a new document or update the existing one
-      await userDocRef.set({
-        'bird': {'score': score}, // Nested data for bird category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'fillblanksbird': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('fillblanks');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for fillblanksbird game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
 
-    final DocumentSnapshot snapshot = await userDocRef.get();
-    if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('bird')) {
-        setState(() {
-          score = data['bird']['score'];
-        });
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+            String,
+            dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('fillblanksbird')) {
+            score = gameScores['fillblanksbird']['score'] ??
+                0; // Default score to 0 if not found
+          }
+        }
       }
     }
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:game/learn/capital.dart';
 
 class CapitalLetter extends StatefulWidget {
   @override
@@ -10,6 +9,8 @@ class CapitalLetter extends StatefulWidget {
 class _CapitalLetterState extends State<CapitalLetter> {
   FlutterTts flutterTts = FlutterTts();
   int currentAlphabetIndex = 0;
+  bool autoPlayEnabled = false; // Variable to track automatic playback
+
 
   List<Capital> alphabetList = [
     Capital(name: "A", image: "assets/Alphabets/capital/A.png"),
@@ -44,6 +45,14 @@ class _CapitalLetterState extends State<CapitalLetter> {
 
   double speechRate = 0.2; // Adjust this value to control the speed (0.5 is slower, 1.0 is normal)
 
+  @override
+  void initState (){
+    super.initState();
+    if (autoPlayEnabled){
+      speakAlphabetName(alphabetList[currentAlphabetIndex].name);
+    }
+  }
+
   void speakAlphabetName(String alphabetName) async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setSpeechRate(speechRate); // Set the speech rate
@@ -53,6 +62,9 @@ class _CapitalLetterState extends State<CapitalLetter> {
   void nextAlphabet() {
     setState(() {
       currentAlphabetIndex = (currentAlphabetIndex + 1) % alphabetList.length;
+      if (autoPlayEnabled){
+        speakAlphabetName(alphabetList[currentAlphabetIndex].name);
+      }
     });
   }
 
@@ -60,6 +72,9 @@ class _CapitalLetterState extends State<CapitalLetter> {
     setState(() {
       currentAlphabetIndex =
           (currentAlphabetIndex - 1 + alphabetList.length) % alphabetList.length;
+      if (autoPlayEnabled){
+        speakAlphabetName(alphabetList[currentAlphabetIndex].name);
+      }
     });
   }
 
@@ -69,21 +84,49 @@ class _CapitalLetterState extends State<CapitalLetter> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Alphabet Page'),
+        title: Text('Capital Letters'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.start, // Align items with space between
               children: [
-                SizedBox(width: 300,),
-                IconButton(onPressed: (){
-                  speakAlphabetName(currentAlphabet.name);
-                }, icon: Icon(Icons.volume_up_sharp, size: 35,)
+                Row(
+                  children: [
+                    SizedBox(width: 15,),
+                    Text('Auto Play'),
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: autoPlayEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            autoPlayEnabled = value;
+                          });
+                          // Speak the colour name if auto play enabled
+                          if (autoPlayEnabled) {
+                            speakAlphabetName(currentAlphabet.name);
+                          }
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 200,),
+                    IconButton(
+                      onPressed: () {
+                        speakAlphabetName(currentAlphabet.name);
+                      },
+                      icon: Icon(
+                        Icons.volume_up_sharp,
+                        size: 35,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+
 
             SizedBox(height: 30,),
             Image.asset(currentAlphabet.image, height: 150, width: 150),

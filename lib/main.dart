@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        // home: Home1(username: "kk", email: "kkk", age: "2",),
+        // home: Home1(username: "kk", email: "kkk", age: "2", subscribedCategory: 'basic',),
         // home: Login(),
         home: AnimatedSplashScreen(
           duration: 3000,

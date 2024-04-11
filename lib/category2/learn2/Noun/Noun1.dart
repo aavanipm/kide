@@ -21,7 +21,7 @@ class _Noun1State extends State<Noun1> {
         backgroundColor: Colors.purple.shade100,
       ),
       body: Swiper(
-        itemCount: 4, // Changed itemCount to 4
+        itemCount: 6, // Changed itemCount to 4
         loop: false,
         itemBuilder: (BuildContext context, int index) {
           switch (index) {
@@ -30,9 +30,13 @@ class _Noun1State extends State<Noun1> {
             case 1:
               return NounDefinitionPage();
             case 2:
+              return NounExamplesPage();
+            case 3:
               return NounTypesDefinitionPage();
-            case 3: // Additional page
+            case 4:
               return NounFunFactsPage();
+            case 5:
+              return NounUsagePage();
             default:
               return Container();
           }
@@ -121,6 +125,123 @@ class NounDefinitionPage extends StatelessWidget {
                 SizedBox(height: 10),
                 Text(" - Happiness", style: TextStyle(fontSize: 20)),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NounExamplesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Examples of Nouns in Sentences",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Let's explore more examples of nouns used in sentences to deepen our understanding.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Here are some examples:",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 40),
+            Expanded(
+              child: Swiper(
+                itemCount: 4,
+                loop: false,
+                itemBuilder: (BuildContext context, int index) {
+                  switch (index) {
+                    case 0:
+                      return Column(
+                        children: [
+                          Text(
+                            "1. Sarah went to the park with her dog.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'Sarah' and 'dog' are nouns.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 1:
+                      return Column(
+                        children: [
+                          Text(
+                            "2. The Eiffel Tower is a famous landmark in Paris.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'Eiffel Tower', 'landmark', and 'Paris' are nouns.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 2:
+                      return Column(
+                        children: [
+                          Text(
+                            "3. My grandmother gave me a beautiful necklace for my birthday.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'grandmother', 'necklace', and 'birthday' are nouns.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 3:
+                      return Column(
+                        children: [
+                          Text(
+                            "4. The concept of time is fascinating.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'concept' and 'time' are nouns.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+                pagination: SwiperPagination(),
+                control: SwiperControl(),
+              ),
             ),
           ],
         ),
@@ -226,6 +347,8 @@ class NounTypesDefinitionPage extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/booktoy.png", height: 250, width: 250,),
                         ],
                       );
                     case 3:
@@ -272,20 +395,143 @@ class NounTypesDefinitionPage extends StatelessWidget {
   }
 }
 
-// Additional page for fun facts about nouns
 class NounFunFactsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.purple.shade50,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 20),
+              Text(
+                "Fun Facts About Nouns",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "1. Common Nouns:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Common nouns are general names for people, places, things, or ideas. Examples include 'teacher,' 'city,' and 'happiness.'",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "2. Proper Nouns:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Proper nouns are specific names for individual people, places, organizations, or things. They always begin with a capital letter. Examples include 'John,' 'Paris,' and 'Eiffel Tower.'",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "3. Abstract Nouns:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Abstract nouns represent ideas, qualities, or feelings that cannot be seen or touched. Examples include 'love,' 'courage,' and 'happiness.'",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "4. Singular and Plural Nouns:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Nouns can be singular (referring to one person, place, thing, or idea) or plural (referring to more than one).",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "5. Capitalization of Proper Nouns:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Proper nouns always begin with a capital letter. They name specific people, places, or things.",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Learning about nouns can help you become a better writer and communicator!",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontStyle: FontStyle.italic,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Example:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Sarah (proper noun) went to the beach (common noun) and built a sandcastle (common noun) while feeling joy (abstract noun).",
+                style: TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(height: 100), // Added extra space at the bottom for scrolling
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class NounUsagePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
           children: [
             SizedBox(height: 20),
             Text(
-              "Fun Facts About Nouns",
+              "Using Nouns in Sentences",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -294,48 +540,77 @@ class NounFunFactsPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              "1. There are many types of nouns, including common nouns, proper nouns, and abstract nouns.",
-              style: TextStyle(fontSize: 18.0),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "2. Nouns can be singular or plural. Singular nouns refer to one person, place, thing, or idea, while plural nouns refer to more than one.",
-              style: TextStyle(fontSize: 18.0),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "3. Proper nouns always begin with a capital letter. They name specific people, places, or things.",
-              style: TextStyle(fontSize: 18.0),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "4. Abstract nouns name ideas, qualities, or feelings that cannot be seen or touched, such as love, courage, or happiness.",
-              style: TextStyle(fontSize: 18.0),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 10),
-            Text(
-              "5. Learning about nouns can help you become a better writer and communicator!",
-              style: TextStyle(fontSize: 18.0),
+              "Nouns are essential building blocks in constructing sentences. They can serve as subjects, objects, or complements in a sentence.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
               textAlign: TextAlign.left,
             ),
             SizedBox(height: 20),
             Text(
-              "Example:",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
+              "Here are some examples:",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               textAlign: TextAlign.left,
             ),
-            SizedBox(height: 10),
-            Text(
-              "Sarah (proper noun) went to the beach (common noun) and built a sandcastle (common noun) while feeling joy (abstract noun).",
-              style: TextStyle(fontSize: 18.0),
-              textAlign: TextAlign.left,
+            SizedBox(height: 40),
+            Expanded(
+              child: Swiper(
+                itemCount: 4,
+                loop: false,
+                itemBuilder: (BuildContext context, int index) {
+                  switch (index) {
+                    case 0:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "1. Subject: Sarah loves to read books.",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
+                        ],
+                      );
+                    case 1:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text("2. Object: She bought a new car.",
+                              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
+                        ],
+                      );
+                    case 2:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "3. Complement: Happiness is contagious.",
+                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 50,),
+                          Image.asset("assets/learning/grammar/learn/booktoy.png", height: 250, width: 250,),
+                        ],
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+                pagination: SwiperPagination(),
+                control: SwiperControl(), // Add control for navigation icons
+              ),
             ),
           ],
         ),
@@ -343,3 +618,125 @@ class NounFunFactsPage extends StatelessWidget {
     );
   }
 }
+
+class NounTypesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Noun Types Examples'),
+        backgroundColor: Colors.purple.shade100,
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Examples of Different Types of Nouns in Sentences",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Let's explore examples of various types of nouns used in sentences to deepen our understanding.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Here are some examples:",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 40),
+            Expanded(
+              child: Swiper(
+                itemCount: 4,
+                loop: false,
+                itemBuilder: (BuildContext context, int index) {
+                  switch (index) {
+                    case 0:
+                      return Column(
+                        children: [
+                          Text(
+                            "1. Sarah went to the park with her dog.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'Sarah' is a proper noun, 'park' is a common noun, and 'dog' is a common noun.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 1:
+                      return Column(
+                        children: [
+                          Text(
+                            "2. The Eiffel Tower is a famous landmark in Paris.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'Eiffel Tower' is a proper noun, 'landmark' is a common noun, and 'Paris' is a proper noun.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 2:
+                      return Column(
+                        children: [
+                          Text(
+                            "3. My grandmother gave me a beautiful necklace for my birthday.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'grandmother' is a common noun, 'necklace' is a common noun, and 'birthday' is a common noun.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    case 3:
+                      return Column(
+                        children: [
+                          Text(
+                            "4. The concept of time is fascinating.",
+                            style: TextStyle(fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "In this sentence, 'concept' is a common noun and 'time' is a common noun.",
+                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+                pagination: SwiperPagination(),
+                control: SwiperControl(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

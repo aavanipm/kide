@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -89,9 +90,17 @@ class _Bird1State extends State<Bird1> {
                           _selectOption('O');
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'O' ? Colors.black : Colors.grey),
-                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.lightGreen[300], // Adjust color based on _answeredCorrectly
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedOption == 'O'
+                                  ? Colors.black
+                                  : Colors.grey),
+                          backgroundColor: _answeredCorrectly
+                              ? Colors.grey[300]
+                              : Colors
+                              .lightGreen[300], // Adjust color based on _answeredCorrectly
                         ),
                         child: Text('O'),
                       ),
@@ -101,9 +110,17 @@ class _Bird1State extends State<Bird1> {
                           _selectOption('A');
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'A' ? Colors.black : Colors.grey),
-                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.lightGreen[300], // Adjust color based on _answeredCorrectly
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedOption == 'A'
+                                  ? Colors.black
+                                  : Colors.grey),
+                          backgroundColor: _answeredCorrectly
+                              ? Colors.grey[300]
+                              : Colors
+                              .lightGreen[300], // Adjust color based on _answeredCorrectly
                         ),
                         child: Text('A'),
                       ),
@@ -113,9 +130,17 @@ class _Bird1State extends State<Bird1> {
                           _selectOption('E');
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _selectedOption == 'E' ? Colors.black : Colors.grey),
-                          backgroundColor: _answeredCorrectly ? Colors.grey[300] : Colors.lightGreen[300], // Adjust color based on _answeredCorrectly
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          textStyle: TextStyle(fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: _selectedOption == 'E'
+                                  ? Colors.black
+                                  : Colors.grey),
+                          backgroundColor: _answeredCorrectly
+                              ? Colors.grey[300]
+                              : Colors
+                              .lightGreen[300], // Adjust color based on _answeredCorrectly
                         ),
                         child: Text('E'),
                       ),
@@ -128,12 +153,13 @@ class _Bird1State extends State<Bird1> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Bird2(
-                            username: widget.username,
-                            email: widget.email,
-                            age: widget.age,
-                            subscribedCategory: widget.subscribedCategory,
-                          ),
+                          builder: (context) =>
+                              Bird2(
+                                username: widget.username,
+                                email: widget.email,
+                                age: widget.age,
+                                subscribedCategory: widget.subscribedCategory,
+                              ),
                         ),
                       );
                     },
@@ -150,7 +176,8 @@ class _Bird1State extends State<Bird1> {
 
   void _selectOption(String option) {
     setState(() {
-      if (_answeredCorrectly) return; // If already answered correctly, do nothing
+      if (_answeredCorrectly)
+        return; // If already answered correctly, do nothing
       _selectedOption = option;
       _word = "H $_selectedOption N"; // Update the word with selected option
       if (_selectedOption == 'E') {
@@ -202,33 +229,37 @@ class _Bird1State extends State<Bird1> {
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level is completed
     if (score == 1) {
       await Firebase.initializeApp();
-      final DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(widget.username)
-          .doc('fillblanks');
-
-      // Create a new document or update the existing one
-      await userDocRef.set({
-        'bird': {'score': score}, // Nested data for bird category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'fillblanksbird': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('fillblanks');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for fillblanksbird game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
 
-    final DocumentSnapshot snapshot = await userDocRef.get();
-    if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('bird')) {
-        setState(() {
-          score = data['bird']['score'];
-        });
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('fillblanksbird')) {
+            score = gameScores['fillblanksbird']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
       }
     }
   }

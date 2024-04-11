@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,8 +22,6 @@ class GuessSpeakLevel extends StatefulWidget {
   const GuessSpeakLevel({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
-
-  @override
   State<GuessSpeakLevel> createState() => _GuessSpeakLevelState();
 }
 
@@ -37,15 +36,29 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('guessandspeak');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        setState(() { // Trigger UI rebuild
+          Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+              String,
+              dynamic>;
+          if (gameData.containsKey('gameData')) {
+            Map<String, dynamic> gameScores = gameData['gameData'];
+            if (gameScores.containsKey('speaking')) {
+              score = gameScores['speaking']['score']; // Default score to 0 if not found
+            }
+          }
+        });
+      }
     }
   }
+
 
   List<GuessSpeak> values = [
     GuessSpeak(name: "1"),
@@ -74,6 +87,7 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Levels"),
         actions: [
           IconButton(
             onPressed: () {
@@ -161,6 +175,7 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak8(
                   username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
+              break;
             //   break;
             // case '9':
             //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill9(

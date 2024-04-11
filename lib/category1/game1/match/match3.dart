@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/match/match4.dart';
-import 'package:game/category1/home1.dart';
 
 class Match3 extends StatefulWidget {
   final String username;
@@ -266,24 +266,38 @@ class _Match3State extends State<Match3> {
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level 1 is completed
-    if (score==12) {
+    if (score == 12) {
       await Firebase.initializeApp();
-      final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection(widget.username).doc('matching');
-      await documentReference.set({'score': score});
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'matching': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('matching');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for matching game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('matching')) {
+            score = gameScores['matching']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

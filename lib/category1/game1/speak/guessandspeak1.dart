@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,28 +46,38 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Text("Level 1"),
-            SizedBox(width: 120,),
-            IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
-                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
-            }, icon: Icon(Icons.home)),
-            Text("Score: $score"),
-          ],
-        ),
-        backgroundColor: Colors.blue.shade100,
+        title: const Text('Level 1'),
+        backgroundColor: Colors.blue.shade200,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              ))
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () {
+              _showTotalPoints(score);
+            },
+          ),
+        ],
       ),
 
       body: Column(
         children: [
           SizedBox(height: 30,),
-          Text("Press the mic button...and say", style: TextStyle(fontSize: 20),),
+          Text(
+            "Press the mic button...and say", style: TextStyle(fontSize: 20),),
           Text("Who is this?", style: TextStyle(fontSize: 25),),
           SizedBox(height: 150,),
           Center(
-            child: _buildAnimalCard(animals[0]), // Assuming you want the first animal in the list
+            child: _buildAnimalCard(
+                animals[0]), // Assuming you want the first animal in the list
           ),
           IconButton(
             onPressed: () => _startListening(),
@@ -87,6 +98,26 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
     );
   }
 
+  void _showTotalPoints(int points) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Total Points'),
+          content: Text("Your total points: $score"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _checkAnswer(String guessedAnimal) {
     String correctAnimalName = animals[0].name.toLowerCase();
     String spokenWordLower = guessedAnimal.toLowerCase();
@@ -95,7 +126,8 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
     guessedAnimal = guessedAnimal.trim();
     spokenWordLower = spokenWordLower.trim();
 
-    if (spokenWordLower == correctAnimalName || _isSimilar(spokenWordLower, correctAnimalName)) {
+    if (spokenWordLower == correctAnimalName ||
+        _isSimilar(spokenWordLower, correctAnimalName)) {
       setState(() {
         if (score == 0) {
           score = 1;
@@ -106,11 +138,15 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
 
       // Automatically navigate to level 2
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => GuessandSpeak2(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-            )));
+            MaterialPageRoute(builder: (context) =>
+                GuessandSpeak2(
+                  username: widget.username,
+                  email: widget.email,
+                  age: widget.age,
+                  subscribedCategory: widget.subscribedCategory,
+                )));
       });
     } else {
       _showSnackbar('Incorrect answer!', false);
@@ -122,7 +158,8 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
       SnackBar(
         content: Text(message),
         duration: Duration(milliseconds: 800), // Adjust the duration as needed
-        backgroundColor: isCorrect ? Colors.green : Colors.red, // Change color based on correctness
+        backgroundColor: isCorrect ? Colors.green : Colors
+            .red, // Change color based on correctness
       ),
     );
   }
@@ -139,31 +176,48 @@ class _GuessandSpeak1State extends State<GuessandSpeak1> {
           setState(() {
             spokenWord = result.recognizedWords;
           });
-          _checkAnswer(result.recognizedWords); // Move this line to _checkAnswer method
+          _checkAnswer(
+              result.recognizedWords); // Move this line to _checkAnswer method
         }
       },
     );
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level 1 is completed
-    if (score==1) {
+    if (score == 1) {
       await Firebase.initializeApp();
-      final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection(widget.username).doc('guessandspeak');
-      await documentReference.set({'score': score});
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'speaking': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('guessandspeak');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for speaking game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+            String,
+            dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('speaking')) {
+            score = gameScores['speaking']['score']; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

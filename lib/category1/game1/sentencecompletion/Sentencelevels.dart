@@ -21,7 +21,7 @@ class _SentenceLevelsState extends State<SentenceLevels> {
     Sentences(name: "1"),
     Sentences(name: "2"),
     Sentences(name: "3"),
-    Sentences(name: "4"),
+    // Sentences(name: "4"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -62,9 +62,9 @@ class _SentenceLevelsState extends State<SentenceLevels> {
             )));
             break;
 
-          case '4':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceCompletionScreen()));
-            break;
+          // case '4':
+          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceCompletionScreen()));
+          //   break;
 
 
           default:

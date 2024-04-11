@@ -37,7 +37,7 @@ class Save1 extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),
                 );
@@ -75,7 +75,7 @@ class Save1 extends StatelessWidget {
     switch (userage) {
       case '2':
       case '3':
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Home1(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
@@ -84,7 +84,7 @@ class Save1 extends StatelessWidget {
         break;
       case '4':
       case '5':
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Home2(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
@@ -96,7 +96,7 @@ class Save1 extends StatelessWidget {
       case '8':
       case '9':
       case '10':
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Home3(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),

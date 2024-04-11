@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:game/auth/subscription.dart';
-import 'package:game/category1/game1/game1.dart';
 import 'package:game/category1/game1/guess/Guessinggame10.dart';
 import 'package:game/category1/game1/guess/levelguess.dart';
-import 'package:game/category1/home1.dart';
 
 class GuessingGame9 extends StatefulWidget {
   final String username;
@@ -97,7 +96,7 @@ class _GuessingGame9State extends State<GuessingGame9> {
                 ElevatedButton(
                   onPressed: () {
                     if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'premium' || widget.subscribedCategory == 'standard') {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => GuessingGame10(
                           username: widget.username,
@@ -195,27 +194,38 @@ class _GuessingGame9State extends State<GuessingGame9> {
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level is completed
     if (score == 16) {
       await Firebase.initializeApp();
-      final DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(widget.username)
-          .doc('guessing');
-
-      // Create a new document or update the existing one
-      await userDocRef.set({'score': score}); // Change documentReference to userDocRef
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'guessing': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('guessing');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for guessing game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('guessing')) {
+            score = gameScores['guessing']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

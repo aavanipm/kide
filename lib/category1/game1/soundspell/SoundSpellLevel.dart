@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/soundspell/soundspell1.dart';
 import 'package:game/category1/game1/soundspell/soundspell2.dart';
 import 'package:game/category1/game1/soundspell/soundspell3.dart';
 import 'package:game/category1/game1/soundspell/soundspell4.dart';
+import 'package:game/category1/game1/soundspell/sounspell5.dart';
 import 'package:game/category1/home1.dart';
 
 class SoundSpellLevel extends StatefulWidget {
@@ -30,7 +34,28 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
   @override
   void initState() {
     super.initState();
-    // _getStoredScore();
+    _getStoredScore();
+  }
+
+  void _getStoredScore() async {
+    await Firebase.initializeApp();
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('spell')) {
+            score = gameScores['spell']['score'];
+          }
+        }
+      }
+    }
   }
 
   List<SoundSpell> values = [
@@ -47,6 +72,7 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Levels"),
         actions: [
           IconButton(
             onPressed: () {
@@ -57,17 +83,25 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: GridView.builder(shrinkWrap: true, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-            itemCount: values.length,
-            itemBuilder: (context, index){
-              return fillcard(context, values[index]);
-            }
-        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
+              itemCount: values.length,
+              itemBuilder: (context, index) {
+                return fillcard(context, values[index]);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
+
   Widget fillcard(BuildContext context,SoundSpell val){
 
     bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
@@ -112,11 +146,11 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
             )));
             break;
 
-          // case '5':
-          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>FlashCard5(
-          //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-          //   )));
-          //   break;
+          case '5':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SoundSpell5(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            )));
+            break;
           //
           // case '6':
           //   Navigator.push(context, MaterialPageRoute(builder: (context)=>FlashCard6(
@@ -177,7 +211,7 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
       },
       child: Card(
         elevation: 3,
-        color: cardColor,
+        color: cardColor, // Assigning the card color
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -189,9 +223,9 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
-                  color: isUnlocked ? Colors.black : Colors.grey,
+                  color: isUnlocked ? Colors.black : Colors.grey, // Text color based on unlocked status
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -199,6 +233,7 @@ class _SoundSpellLevelState extends State<SoundSpellLevel> {
     );
   }
 }
+
 
 class SoundSpell{
   final String name;

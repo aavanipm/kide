@@ -1,143 +1,89 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class Search1 extends StatefulWidget {
-  const Search1({Key? key}) : super(key: key);
-
   @override
   _Search1State createState() => _Search1State();
 }
 
 class _Search1State extends State<Search1> {
-  final List<String> words = ['cat', 'dog', 'car', 'fan'];
-  List<List<String>> grid = [];
-  List<bool> foundWords = [];
-  List<bool> selectedLetters = [];
+  final List<String> wordsToFind = ['CAT', 'DOG', 'PEN', 'CAR'];
+  late List<List<String>> grid;
   int score = 0;
+  String currentWord = '';
+  Set<int> selectedIndices = {};
+  List<String> foundWords = []; // Stores found words
+  bool initialized = false;
 
   @override
   void initState() {
     super.initState();
-    _generateGrid();
-    _findWords();
-    selectedLetters = List<bool>.filled(grid.length * grid.length, false);
+    _initializeFirebase();
   }
 
-  void _generateGrid() {
-    final List<String> letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    grid = List.generate(8, (_) => List.generate(8, (_) => letters[Random().nextInt(letters.length)])); // Use random letters
-    for (int i = 0; i < words.length; i++) {
-      final word = words[i];
-      final rng = Random();
-      final row = rng.nextInt(8);
-      final col = rng.nextInt(8);
-      final isHorizontal = rng.nextBool();
-
-      if (isHorizontal) {
-        if (col + word.length < 8) {
-          for (int j = 0; j < word.length; j++) {
-            grid[row][col + j] = word[j];
-          }
-        }
-      } else {
-        if (row + word.length < 8) {
-          for (int j = 0; j < word.length; j++) {
-            grid[row + j][col] = word[j];
-          }
-        }
-      }
-    }
-  }
-
-  void _findWords() {
-    foundWords = List.generate(words.length, (_) => false);
-  }
-
-  void _checkWord(int wordIndex) {
+  Future<void> _initializeFirebase() async {
+    await Firebase.initializeApp();
     setState(() {
-      if (!foundWords[wordIndex]) {
-        score++;
-        foundWords[wordIndex] = true;
-      }
+      initialized = true;
     });
-  }
-
-  void _submit() {
-    setState(() {
-      bool wordFound = false;
-      for (int i = 0; i < words.length; i++) {
-        String word = words[i];
-        bool found = true;
-        for (int j = 0; j < word.length; j++) {
-          int index = grid.expand((row) => row).toList().indexOf(word[j]);
-          if (index == -1 || !selectedLetters[index]) {
-            found = false;
-            break;
-          }
-        }
-        if (found && !foundWords[i]) {
-          _checkWord(i);
-          wordFound = true;
-          break;
-        }
-      }
-      if (wordFound) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Score: $score'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('No new words found.'),
-          ),
-        );
-      }
-      selectedLetters = List<bool>.filled(grid.length * grid.length, false);
-    });
+    _getStoredScore();
+    grid = generateGrid(wordsToFind);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Word Search'),
+        title: Text('Level 1'),
         backgroundColor: Colors.blue.shade200,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: Text("Score: $score",
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: initialized
+          ? Padding(
+        padding: const EdgeInsets.all(12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-
-            Text("Find the words inside grid by tapping on the letters",style: TextStyle(
-                fontSize: 22
-            ),),
-            SizedBox(height: 60,),
+            SizedBox(height: 20,),
+            Text("Find these words by tapping the letters orderly",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            ),
+            SizedBox(height: 10,),
+            Text('${wordsToFind.join(', ')}',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.pinkAccent)
+            ),
+            SizedBox(height: 20,),
             Expanded(
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 8, // Adjust grid size here
-                  crossAxisSpacing: 4.0,
-                  mainAxisSpacing: 4.0,
-                ),
                 itemCount: grid.length * grid.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: grid.length,
+                ),
                 itemBuilder: (BuildContext context, int index) {
                   int row = index ~/ grid.length;
                   int col = index % grid.length;
                   return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        selectedLetters[index] = !selectedLetters[index];
-                      });
+                      _selectGridCell(row, col);
                     },
                     child: Container(
-                      color: selectedLetters[index] ? Colors.green : Colors.blue[100],
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        color: selectedIndices.contains(index) ? Colors.blue : Colors.white,
+                      ),
                       child: Center(
                         child: Text(
                           grid[row][col],
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 20.0),
                         ),
                       ),
                     ),
@@ -145,180 +91,187 @@ class _Search1State extends State<Search1> {
                 },
               ),
             ),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {
-                  _submit();
-                },
-                child: Text('Submit',style: TextStyle(
-                    fontSize: 20
-                ),),
-              ),
+            Text('$currentWord', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
+            SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _submitWord();
+                  },
+                  child: Text('Submit'),
+                ),
+                SizedBox(width: 30,),
+                ElevatedButton(
+                  onPressed: () {
+                    _clearWord();
+                  },
+                  child: Text('Clear'),
+                ),
+              ],
             ),
+            SizedBox(height: 70,),
           ],
         ),
-      ),
+      )
+          : Center(child: CircularProgressIndicator()),
     );
+  }
+
+  void _selectGridCell(int row, int col) {
+    setState(() {
+      int index = row * grid.length + col;
+      if (selectedIndices.contains(index)) {
+        selectedIndices.remove(index);
+        currentWord = currentWord.replaceAll(grid[row][col], '');
+      } else {
+        selectedIndices.add(index);
+        currentWord += grid[row][col];
+      }
+    });
+  }
+
+  void _submitWord() {
+    if (wordsToFind.contains(currentWord)) {
+      if (!foundWords.contains(currentWord)) {
+        setState(() {
+          score++;
+          foundWords.add(currentWord);
+          _updateScoreInFirebase();
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(currentWord+" already founded"),
+              duration: Duration(milliseconds: 600),
+            )
+        );
+      }
+      // wordsToFind.remove(currentWord);
+      currentWord = '';
+      selectedIndices.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(currentWord + "not in the list"),
+              duration: Duration(milliseconds: 600),
+          )
+      );
+    }
+  }
+
+  void _clearWord(){
+    setState(() {
+      currentWord = '';
+      selectedIndices.clear();
+    });
+  }
+
+  void _updateScoreInFirebase() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+        'gameData': {
+          'wordsearch': {'score': score, 'foundWords': foundWords},
+        },
+      }, SetOptions(merge: true));
+    }
+  }
+
+  void _getStoredScore() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('wordsearch')) {
+            setState(() {
+              score = gameScores['wordsearch']['score'] ?? 0;
+              foundWords = List<String>.from(gameScores['wordsearch']['foundWords'] ?? []);
+            });
+          }
+        }
+      }
+    }
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'dart:math';
-//
-// class Search1 extends StatefulWidget {
-//   const Search1({Key? key}) : super(key: key);
-//
-//   @override
-//   _Search1State createState() => _Search1State();
-// }
-//
-// class _Search1State extends State<Search1> {
-//   final List<String> words = ['cat', 'dog', 'car', 'fan'];
-//   List<List<String>> grid = [];
-//   List<bool> foundWords = [];
-//   List<bool> selectedLetters = [];
-//   int score = 0;
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _generateGrid();
-//     _findWords();
-//     selectedLetters = List.filled(64, false);
-//   }
-//
-//   void _generateGrid() {
-//     final letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//     final random = Random();
-//     grid = List.generate(8, (_) => List.generate(8, (_) => letters[random.nextInt(letters.length)]));
-//     for (final word in words) {
-//       bool wordPlaced = false;
-//       while (!wordPlaced) {
-//         final row = random.nextInt(8);
-//         final col = random.nextInt(8);
-//         final isHorizontal = random.nextBool();
-//
-//         if (isHorizontal) {
-//           if (col + word.length < 8 && grid[row].sublist(col, col + word.length).every((e) => e == null)) {
-//             for (int j = 0; j < word.length; j++) {
-//               grid[row][col + j] = word[j];
-//             }
-//             wordPlaced = true;
-//           }
-//         } else {
-//           if (row + word.length < 8 && List.generate(word.length, (index) => grid[row + index][col]).every((e) => e == null)) {
-//             for (int j = 0; j < word.length; j++) {
-//               grid[row + j][col] = word[j];
-//             }
-//             wordPlaced = true;
-//           }
-//         }
-//       }
-//     }
-//   }
-//
-//   void _findWords() {
-//     foundWords = List.generate(words.length, (_) => false);
-//   }
-//
-//   void _checkWord(int wordIndex) {
-//     setState(() {
-//       if (!foundWords[wordIndex]) {
-//         score++;
-//         foundWords[wordIndex] = true;
-//       }
-//     });
-//   }
-//
-//   void _submit() {
-//     setState(() {
-//       bool wordFound = false;
-//       for (int i = 0; i < words.length; i++) {
-//         String word = words[i];
-//         bool found = true;
-//         for (int j = 0; j < word.length; j++) {
-//           int index = grid.expand((row) => row).toList().indexOf(word[j]);
-//           if (index == -1 || !selectedLetters[index]) {
-//             found = false;
-//             break;
-//           }
-//         }
-//         if (found && !foundWords[i]) {
-//           _checkWord(i);
-//           wordFound = true;
-//           break;
-//         }
-//       }
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(
-//           content: Text(wordFound ? 'Score: $score' : 'No new words found.'),
-//         ),
-//       );
-//       selectedLetters = List.filled(64, false);
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Word Search'),
-//         backgroundColor: Colors.blue.shade200,
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Text(
-//               "Find the words inside grid by tapping on the letters",
-//               style: TextStyle(fontSize: 22),
-//             ),
-//             SizedBox(height: 60),
-//             Expanded(
-//               child: GridView.builder(
-//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                   crossAxisCount: 8,
-//                   crossAxisSpacing: 4.0,
-//                   mainAxisSpacing: 4.0,
-//                 ),
-//                 itemCount: grid.length * grid.length,
-//                 itemBuilder: (BuildContext context, int index) {
-//                   int row = index ~/ grid.length;
-//                   int col = index % grid.length;
-//                   return GestureDetector(
-//                     onTap: () {
-//                       setState(() {
-//                         selectedLetters[index] = !selectedLetters[index];
-//                       });
-//                     },
-//                     child: Container(
-//                       color: selectedLetters[index] ? Colors.green : Colors.blue[100],
-//                       child: Center(
-//                         child: Text(
-//                           grid[row][col] ?? '',
-//                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//                         ),
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ),
-//             SizedBox(
-//               width: 200,
-//               child: ElevatedButton(
-//                 onPressed: _submit,
-//                 child: Text(
-//                   'Submit',
-//                   style: TextStyle(fontSize: 20),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+List<List<String>> generateGrid(List<String> wordsToFind) {
+  final List<String> letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+  final Random random = Random();
+  final List<List<String>> grid = [];
+
+  // Initialize an empty grid
+  for (int i = 0; i < 8; i++) {
+    final List<String> row = [];
+    for (int j = 0; j < 8; j++) {
+      row.add('');
+    }
+    grid.add(row);
+  }
+
+  // Place words horizontally or vertically without overlap
+  for (final word in wordsToFind) {
+    bool placed = false;
+    while (!placed) {
+      final bool horizontal = random.nextBool();
+      int row, col;
+      if (horizontal) {
+        // Place horizontally
+        row = random.nextInt(8);
+        col = random.nextInt(8 - word.length + 1);
+        bool canPlace = true;
+        for (int i = 0; i < word.length; i++) {
+          if (grid[row][col + i] != '' && grid[row][col + i] != word[i]) {
+            canPlace = false;
+            break;
+          }
+        }
+        if (canPlace) {
+          for (int i = 0; i < word.length; i++) {
+            grid[row][col + i] = word[i];
+          }
+          placed = true;
+        }
+      } else {
+        // Place vertically
+        row = random.nextInt(8 - word.length + 1);
+        col = random.nextInt(8);
+        bool canPlace = true;
+        for (int i = 0; i < word.length; i++) {
+          if (grid[row + i][col] != '' && grid[row + i][col] != word[i]) {
+            canPlace = false;
+            break;
+          }
+        }
+        if (canPlace) {
+          for (int i = 0; i < word.length; i++) {
+            grid[row + i][col] = word[i];
+          }
+          placed = true;
+        }
+      }
+    }
+  }
+
+  // Fill empty spaces with random letters
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      if (grid[i][j] == '') {
+        final randomIndex = random.nextInt(letters.length);
+        grid[i][j] = letters[randomIndex];
+      }
+    }
+  }
+  return grid;
+}
+
+

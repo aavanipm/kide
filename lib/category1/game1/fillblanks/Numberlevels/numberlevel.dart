@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,16 +32,24 @@ class _NumberLevelState extends State<NumberLevel> {
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('fillblanks');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
 
-    final DocumentSnapshot snapshot = await userDocRef.get();
-    if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('number')) {
-        setState(() {
-          score = data['number']['score'];
+      if (documentSnapshot.exists) {
+        setState(() { // Trigger UI rebuild
+          Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+              String,
+              dynamic>;
+          if (gameData.containsKey('gameData')) {
+            Map<String, dynamic> gameScores = gameData['gameData'];
+            if (gameScores.containsKey('fillblanksnumber')) {
+              score = gameScores['fillblanksnumber']['score']; // Default score to 0 if not found
+            }
+          }
         });
       }
     }
@@ -73,6 +82,7 @@ class _NumberLevelState extends State<NumberLevel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Levels"),
         actions: [
           IconButton(
             onPressed: () {

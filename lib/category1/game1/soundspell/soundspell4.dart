@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,8 @@ class _SoundSpell4State extends State<SoundSpell4> {
   final FlutterTts flutterTts = FlutterTts();
   List<Flashcard> flashcards = [
     Flashcard(
-      word: 'Crow',
-      image: "assets/Birds/hen.png",
+      word: 'Apple',
+      image: "assets/Fruits/apple.png",
     ),
   ];
 
@@ -46,21 +47,26 @@ class _SoundSpell4State extends State<SoundSpell4> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Text("Level 4"),
-            SizedBox(width: 120,),
-            IconButton(onPressed: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
+        title: const Text('Level 4'),
+        backgroundColor: Colors.blue.shade200,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
                 username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-              )));
-            }, icon: Icon(Icons.home)),
-            Text("Score: $score",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.green.shade200,
+              ))
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () {
+              _showTotalPoints(score);
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: flashcards.length,
@@ -87,8 +93,8 @@ class _SoundSpell4State extends State<SoundSpell4> {
 
         ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SOundSpell5(
-              // username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SoundSpell5(
+              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
             )));
           },
           child: Text('Next Level'),
@@ -181,25 +187,59 @@ class _SoundSpell4State extends State<SoundSpell4> {
     await flutterTts.speak(word);
   }
 
+  void _showTotalPoints(int points) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Total Points'),
+          content: Text("Your total points: $score"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _updateScoreInFirebase() async {
-    // Only update score if level 1 is completed
-    if (score==4) {
+    if (score == 4) {
       await Firebase.initializeApp();
-      final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection(widget.username).doc('soundspell');
-      await documentReference.set({'score': score});
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'spell': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('soundspell');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for matching game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('spell')) {
+            score = gameScores['spell']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

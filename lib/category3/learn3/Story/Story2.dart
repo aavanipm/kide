@@ -1,215 +1,318 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
-class SecondStory extends StatelessWidget {
-  const SecondStory({super.key});
+class SecondStory extends StatefulWidget {
+  @override
+  _SecondStoryState createState() => _SecondStoryState();
+}
+
+class _SecondStoryState extends State<SecondStory> {
+  final FlutterTts flutterTts = FlutterTts();
+  bool _playAudio = true; // Flag to control audio playback
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "The Proud Rose",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: Swiper(
-        itemCount: 7,
+        itemCount: 5,
         loop: false,
         itemBuilder: (BuildContext context, int index) {
-          switch (index){
+          switch (index) {
             case 0:
-              return SecondStory1();
+              return SecondStory1(flutterTts: flutterTts, playAudio: _playAudio);
             case 1:
-              return SecondStory2();
+              return SecondStory2(flutterTts: flutterTts, playAudio: _playAudio);
             case 2:
-              return SecondStory3();
+              return SecondStory3(flutterTts: flutterTts, playAudio: _playAudio);
             case 3:
-              return SecondStory4();
+              return SecondStory4(flutterTts: flutterTts, playAudio: _playAudio);
             case 4:
-              return SecondStory5();
+              return SecondStory5(flutterTts: flutterTts, playAudio: _playAudio);
             case 5:
-              return SecondStory6();
+              return SecondStory6(flutterTts: flutterTts, playAudio: _playAudio);
             case 6:
-              return SecondStoryMoral();
+              return SecondStoryMoral(flutterTts: flutterTts,);
             default:
               return Container();
           }
         },
         pagination: SwiperPagination(),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(_playAudio ? Icons.volume_up : Icons.volume_off),
+        onPressed: () {
+          setState(() {
+            _playAudio = !_playAudio;
+            // Stop any ongoing speech when switching audio mode
+            flutterTts.stop();
+          });
+        },
+      ),
     );
   }
 }
 
+
 class SecondStory1 extends StatelessWidget {
-  const SecondStory1({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
+
+  const SecondStory1({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                "Once upon a time, in a dry and sunny desert, there was a proud and beautiful rose and a sturdy cactus. "
-                    "The rose was very pretty but also quite mean.",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              )
-            ],
-          ),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak(
+                    "Once upon a time, in a dry and sunny desert, there was a proud and beautiful rose and a sturdy cactus. "
+                        "The rose was very pretty but also quite mean.",
+                  );
+                },
+                child: Text('Click Here To Hear The Story'),
+              ),
+            SizedBox(height: 20),
+            Text(
+              "Once upon a time, in a dry and sunny desert, there was a proud and beautiful rose and a sturdy cactus. "
+                  "The rose was very pretty but also quite mean.",
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class SecondStory2 extends StatelessWidget {
-  const SecondStory2({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const SecondStory2({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                " It liked to tease the cactus because it didn't look as fancy. It was too busy admiring its own petals.",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              )
-            ],
-          ),
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak(" It liked to tease the cactus because it didn't look as fancy. It was too busy admiring its own petals."
+                    ,);
+                },
+                child: Text('Click Here To Hear The Story'),
+              ),
+            SizedBox(height: 20,),
+            Text(
+              "It liked to tease the cactus because it didn't look as fancy. It was too busy admiring its own petals.",
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
-class SecondStory3 extends StatelessWidget {
-  const SecondStory3({super.key});
 
+class SecondStory3 extends StatelessWidget {
+  final FlutterTts flutterTts;
+  final bool playAudio;
+
+  const SecondStory3({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                "One scorching summer, there was barely any water in the desert. "
-                    "The rose started to wilt and lose its beauty because it didn't have enough water to drink.",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("One scorching summer, there was barely any water in the desert. "
+                      "The rose started to wilt and lose its beauty because it didn't have enough water to drink.",
+                  );
+                },
+                child: Text('Click Here To Hear The Story'),
               ),
-            ],
-          ),
+            SizedBox(height: 20,),
+            Text(
+              "One scorching summer, there was barely any water in the desert. "
+                  "The rose started to wilt and lose its beauty because it didn't have enough water to drink.",
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class SecondStory4 extends StatelessWidget {
-  const SecondStory4({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const SecondStory4({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                "However, the cactus, despite not being as pretty, had stored water inside itself. "
-                    "It became a lifesaver for little sparrows who came to drink from it.",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("However, the cactus, despite not being as pretty, had stored water inside itself. "
+                      "It became a lifesaver for little sparrows who came to drink from it.",
+                  );
+                },
+                child: Text('Click Here To Hear The Story'),
               ),
-            ],
-          ),
+            SizedBox(height: 20,),
+            Text(
+              "However, the cactus, despite not being as pretty, had stored water inside itself. "
+                  "It became a lifesaver for little sparrows who came to drink from it.",
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
+
 
 class SecondStory5 extends StatelessWidget {
-  const SecondStory5({super.key});
+  final FlutterTts flutterTts;
+  final bool playAudio;
 
+  const SecondStory5({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                "Feeling weak and thirsty, the rose asked the cactus for some water. "
-                    "Surprisingly, the cactus gladly shared its water with the rose, even though the rose had been mean to it before. ",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              )
-            ],
-          ),
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("Feeling weak and thirsty, the rose asked the cactus for some water. "
+                      "Surprisingly, the cactus gladly shared its water with the rose, even though the rose had been mean to it before. ",
+                  );
+                },
+                child: Text('Click Here To Hear The Story'),
+              ),
+            SizedBox(height: 20,),
+            Text(
+              "Feeling weak and thirsty, the rose asked the cactus for some water. "
+                  "Surprisingly, the cactus gladly shared its water with the rose, even though the rose had been mean to it before. ",
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
-class SecondStory6 extends StatelessWidget {
-  const SecondStory6({super.key});
 
+class SecondStory6 extends StatelessWidget {
+  final FlutterTts flutterTts;
+  final bool playAudio;
+
+  const SecondStory6({Key? key, required this.flutterTts, required this.playAudio})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                "In the end, the rose and the cactus became friends, teaching that true beauty lies in kindness, not appearances.",
-                style: TextStyle(
-                  fontFamily: 'Balsamiq Sans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
+        padding: EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            if (playAudio)
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("In the end, the rose and the cactus became friends, teaching that true beauty lies in kindness, not appearances.",
+
+                  );
+                },
+                child: Text('Click Here To Hear The Story'),
               ),
-            ],
-          ),
+            SizedBox(height: 20,),
+            Text(
+              "In the end, the rose and the cactus became friends, teaching that true beauty lies in kindness, not appearances.",
+
+              style: TextStyle(
+                fontFamily: 'Balsamiq Sans',
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+          ],
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }
 
 class SecondStoryMoral extends StatelessWidget {
-  const SecondStoryMoral({super.key});
+  final FlutterTts flutterTts;
+
+  const SecondStoryMoral({Key? key, required this.flutterTts}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -218,8 +321,17 @@ class SecondStoryMoral extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center, // Align contents vertically at the center
             children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await flutterTts.setSpeechRate(0.3);
+                  await flutterTts.speak("Moral: Never judge someone based on their appearance.",
+                  );
+                },
+                child: Text('Click Here To Hear The Moral'),
+              ),
+              SizedBox(height: 20,),
               Text(
                 "Moral: Never judge someone based on their appearance.",
                 style: TextStyle(
@@ -228,16 +340,21 @@ class SecondStoryMoral extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               IconButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SecondQuestionsPage()));
-                  }, icon: Icon(Icons.question_answer, color: Colors.lightGreen,)
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SecondQuestionsPage()),
+                  );
+                },
+                icon: Icon(Icons.question_answer, color: Colors.lightGreen),
               ),
             ],
           ),
         ),
       ),
+      backgroundColor: Colors.green.shade200,
     );
   }
 }

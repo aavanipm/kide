@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/category1/game1/match/match.dart';
@@ -35,12 +36,14 @@ class _Match1State extends State<Match1> {
   Map<String, bool> answerStatus = {};
   bool gameCompleted = false; // Add this variable to track game completion status
   int score = 0;
+  String game_name = "matching";
 
   @override
   void initState() {
     super.initState();
     currentAnimals = animalSets[currentSetIndex];
-    shuffledNames = currentAnimals.map((animal) => animal.name).toList()..shuffle();
+    shuffledNames = currentAnimals.map((animal) => animal.name).toList()
+      ..shuffle();
     _getStoredScore();
   }
 
@@ -51,11 +54,15 @@ class _Match1State extends State<Match1> {
         title: const Text('Level 1'),
         backgroundColor: Colors.blue.shade200,
         actions: [
-          IconButton(onPressed: (){
+          IconButton(onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context)=>Match(
-                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-            ))
+                context, MaterialPageRoute(builder: (context) =>
+                Match(
+                  username: widget.username,
+                  email: widget.email,
+                  age: widget.age,
+                  subscribedCategory: widget.subscribedCategory,
+                ))
             );
           }, icon: Icon(Icons.home)),
           IconButton(
@@ -182,7 +189,11 @@ class _Match1State extends State<Match1> {
     // Iterate through each animal in the current set
     for (Animal animal in currentAnimals) {
       String animalName = animal.name;
-      String imageName = animal.imagePath.split('/').last.split('.').first;
+      String imageName = animal.imagePath
+          .split('/')
+          .last
+          .split('.')
+          .first;
 
       // Check if both the animal name and the image name are matched correctly
       if (answerStatus[animalName] == true && animalName == imageName) {
@@ -200,15 +211,15 @@ class _Match1State extends State<Match1> {
 
     // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
     if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
-      if (score == 0){
-        score = 4;// Set score to 3 directly
+      if (score == 0) {
+        score = 4; // Set score to 3 directly
         _updateScoreInFirebase(); // Update score in Firebase
       }
       gameCompleted = true; // Set gameCompleted flag to true
     }
 
     // If the game is completed, show the game completion dialog
-    if (gameCompleted){
+    if (gameCompleted) {
       _showGameCompletedDialog("Congratulations! You completed this level.");
     }
   }
@@ -243,9 +254,13 @@ class _Match1State extends State<Match1> {
 
 
   void _proceedToNextLevel() {
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Match2(
-      username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-    )));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+        Match2(
+          username: widget.username,
+          email: widget.email,
+          age: widget.age,
+          subscribedCategory: widget.subscribedCategory,
+        )));
   }
 
   void _showTotalPoints(int points) {
@@ -269,24 +284,38 @@ class _Match1State extends State<Match1> {
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level 1 is completed
-    if (score==4) {
+    if (score == 4) {
       await Firebase.initializeApp();
-      final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection(widget.username).doc('matching');
-      await documentReference.set({'score': score});
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'matching': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('matching');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for matching game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('matching')) {
+            score = gameScores['matching']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

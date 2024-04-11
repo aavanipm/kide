@@ -17,7 +17,7 @@ class LearnNames extends StatefulWidget {
 
 class _LearnNamesState extends State<LearnNames> {
   List<nameimage> values = [
-    nameimage(imagepath: "assets/images/kids.png", name: "Alphabets"),
+    nameimage(imagepath: "assets/learning/alphabets.png", name: "Alphabets"),
     nameimage(imagepath: "assets/learning/animals.png", name: "Animals"),
     nameimage(imagepath: "assets/learning/birds.png", name: "Birds"),
     nameimage(imagepath: "assets/learning/fruits.png", name: "Fruits"),

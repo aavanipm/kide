@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/fillblanks/AnimalLevels/levelsfill.dart';
 import 'package:game/category1/game1/fillblanks/BirdLevels/BirdLevel.dart';
 import 'package:game/category1/game1/fillblanks/FruitLevels/FruitLEvel.dart';
@@ -28,8 +29,8 @@ class _FillsState extends State<Fills> {
     Fill(name: "ANIMALS"),
     Fill(name: "BIRDS"),
     Fill(name: "FRUITS"),
-    Fill(name: "VEGETABLES"),
     Fill(name: "NUMBERS"),
+    Fill(name: "VEGETABLES"),
   ];
 
   @override
@@ -67,6 +68,15 @@ class _FillsState extends State<Fills> {
                 title: Text("Premium Feature"),
                 content: Text("Unlock this feature by becoming a premium subscriber."),
                 actions: <Widget>[
+                  TextButton(onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                      username: widget.username,
+                      email: widget.email,
+                      age: widget.age,
+                      subscribedCategory: widget.subscribedCategory,
+                    )));
+                  }, child: Text("Subscribe")),
+
                   TextButton(
                     onPressed: () => Navigator.pop(context),
                     child: Text('OK'),

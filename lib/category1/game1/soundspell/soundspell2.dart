@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,21 +47,26 @@ class _SoundSpell2State extends State<SoundSpell2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            Text("Level 2"),
-            SizedBox(width: 120,),
-            IconButton(onPressed: (){
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
+        title: const Text('Level 2'),
+        backgroundColor: Colors.blue.shade200,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.home),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
                 username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-              )));
-            }, icon: Icon(Icons.home)),
-            Text("Score: $score",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.green.shade200,
+              ))
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.star),
+            onPressed: () {
+              _showTotalPoints(score);
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: flashcards.length,
@@ -87,9 +93,14 @@ class _SoundSpell2State extends State<SoundSpell2> {
 
         ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SoundSpell3(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-            )));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) =>
+                SoundSpell3(
+                  username: widget.username,
+                  email: widget.email,
+                  age: widget.age,
+                  subscribedCategory: widget.subscribedCategory,
+                )));
           },
           child: Text('Next Level'),
         ),
@@ -102,7 +113,8 @@ class _SoundSpell2State extends State<SoundSpell2> {
 
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus(); // Dismiss the keyboard when the user taps outside the text field
+        FocusScope.of(context)
+            .unfocus(); // Dismiss the keyboard when the user taps outside the text field
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -119,7 +131,8 @@ class _SoundSpell2State extends State<SoundSpell2> {
             SizedBox(height: 40),
             ElevatedButton(
               onPressed: () async {
-                await _speakWord(flashcard.word, speed: 0.3); // Example usage with speed set to 0.5
+                await _speakWord(flashcard.word,
+                    speed: 0.3); // Example usage with speed set to 0.5
               },
               child: Text('Click here to Hear...'),
             ),
@@ -128,7 +141,8 @@ class _SoundSpell2State extends State<SoundSpell2> {
               width: 300,
               child: TextField(
                 controller: _textEditingController,
-                enabled: !answeredCorrectly, // Disable the text field if the word has been correctly answered
+                enabled: !answeredCorrectly,
+                // Disable the text field if the word has been correctly answered
                 decoration: InputDecoration(
                   hintText: 'Type the word you heard',
                   border: OutlineInputBorder(
@@ -141,16 +155,18 @@ class _SoundSpell2State extends State<SoundSpell2> {
             if (!answeredCorrectly) // Render the submit button only if the answer is not correct
               ElevatedButton(
                 onPressed: () {
-                  String typedWord = _textEditingController.text.trim().toLowerCase();
+                  String typedWord = _textEditingController.text.trim()
+                      .toLowerCase();
                   String correctWord = flashcard.word.toLowerCase();
                   if (typedWord == correctWord) {
                     setState(() {
-                      if(score == 1) {
+                      if (score == 1) {
                         score++;
                         _updateScoreInFirebase();
                       }
                       answeredCorrectly = true;
-                      FocusScope.of(context).unfocus(); // Dismiss the keyboard when the user answers correctly
+                      FocusScope.of(context)
+                          .unfocus(); // Dismiss the keyboard when the user answers correctly
                     });
                   }
                   else {
@@ -181,25 +197,62 @@ class _SoundSpell2State extends State<SoundSpell2> {
     await flutterTts.speak(word);
   }
 
+  void _showTotalPoints(int points) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Total Points'),
+          content: Text("Your total points: $score"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _updateScoreInFirebase() async {
-    // Only update score if level 1 is completed
-    if (score==2) {
+    if (score == 2) {
       await Firebase.initializeApp();
-      final DocumentReference documentReference =
-      FirebaseFirestore.instance.collection(widget.username).doc('soundspell');
-      await documentReference.set({'score': score});
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'spell': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('soundspell');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for matching game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+            String,
+            dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('spell')) {
+            score = gameScores['spell']['score'] ??
+                0; // Default score to 0 if not found
+          }
+        }
+      }
     }
   }
 }

@@ -12,7 +12,7 @@ class Adjective1 extends StatelessWidget {
         backgroundColor: Colors.orange.shade100,
       ),
       body: Swiper(
-        itemCount: 7,
+        itemCount: 4,
         itemBuilder: (BuildContext context, int index) {
           switch (index){
             case 0:
@@ -23,12 +23,6 @@ class Adjective1 extends StatelessWidget {
               return AdjectiveExample1();
             case 3:
               return AdjectiveExample2();
-            case 4:
-              return AdjectiveExample3();
-            case 5:
-              return AdjectiveExample4();
-            case 6:
-              return AdjectiveExample5();
             default:
               return Container();
           }
@@ -204,25 +198,12 @@ class AdjectiveExample1 extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             Text("The red apple.",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AdjectiveExample2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 50,),
+            Image.asset("assets/learning/grammar/learn/bigapple.png", height: 110, width: 110,),
+            SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -246,106 +227,226 @@ class AdjectiveExample2 extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             Text("The large elephant.",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Add these classes along with the existing ones
-
-class AdjectiveExample3 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 50,),
+            Image.asset("assets/learning/grammar/learn/bigelephant.png", height: 110, width: 110,),
+            SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Comparative Form: ",
+                Text("Shape: ",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                 ),
-                Text("bigger",
+                Text("round , ",
+                  style: TextStyle(fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.red),
+                ),
+                Text("square , ",
                   style: TextStyle(fontSize: 25,
                       fontWeight: FontWeight.w500,
                       color: Colors.blue),
                 ),
-              ],
-            ),
-            SizedBox(height: 20,),
-            Text("The bigger balloon.",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class AdjectiveExample4 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 50,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Demonstrative Form: ",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                ),
-                Text("this",
+                Text("oval ",
                   style: TextStyle(fontSize: 25,
                       fontWeight: FontWeight.w500,
                       color: Colors.green),
                 ),
               ],
             ),
-            SizedBox(height: 20,),
-            Text("This beautiful flower.",
+            SizedBox(height: 10,),
+            Text("The square box.",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
             ),
+            SizedBox(height: 10,),
+            Image.asset("assets/learning/grammar/learn/squarebox.png", width: 110, height: 110,),
           ],
         ),
       ),
     );
   }
 }
-class AdjectiveExample5 extends StatelessWidget {
+
+class AdjectiveExample2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
           children: [
-            SizedBox(height: 50,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Possessive Form: ",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+            SizedBox(height: 20),
+            Text("Adjective Forms",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
                 ),
-                Text("my",
-                  style: TextStyle(fontSize: 25,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.purple),
-                ),
-              ],
             ),
-            SizedBox(height: 20,),
-            Text("My favorite toy.",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            SizedBox(height: 20),
+            Expanded(
+              child: Swiper(
+                itemCount: 5,
+                loop: false,
+                itemBuilder: (BuildContext context, int index) {
+                  switch (index) {
+                    case 0:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Positive Form: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "big",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.red),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "The house is big.", // Example sentence
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The positive form of an adjective is the simplest form and is used to describe a noun without comparison",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 40,),
+                          Image.asset("assets/learning/grammar/learn/bighouse.png", height: 250, width: 250,),
+                        ],
+                      );
+
+                    case 1:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Comparative Form: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "bigger",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "The elephant is bigger than the mouse.", // Example sentence
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The comparative form of an adjective is used to compare two things. It typically ends with '-er' or uses the word 'more'. For example, 'bigger' is used to compare the size of two balloons.",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 40,),
+                          Image.asset("assets/learning/grammar/learn/ratele.png", height: 250, width: 250,),
+                        ],
+                      );
+
+                    case 2:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Superlative Form: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "biggest",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.green),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "Mount Everest is the highest mountain in the world.", // Example sentence
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The superlative form of an adjective is used to compare three or more things and shows the highest degree. It typically ends with '-es",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 40,),
+                          Image.asset("assets/learning/grammar/learn/mounteverest.png", height: 250, width: 250,),
+                        ],
+                      );
+
+                    case 3:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Demonstrative Form: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "this",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.blue),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "This beautiful flower.",
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The demonstrative form of an adjective is used to indicate specific nouns that are near or close by. It helps us identify or point out things. For example, 'this' is used to talk about something close to us.",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(height: 40,),
+                          Image.asset("assets/learning/grammar/learn/redrose.png", height: 250, width: 250,),
+                        ],
+                      );
+
+                    case 4:
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Possessive Form: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "my",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.green),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "My favorite toy.",
+                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "The possessive form of an adjective shows ownership or possession. It tells us that something belongs to someone. For example, 'my' is used to show that the toy belongs to the speaker.",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      );
+                    default:
+                      return Container();
+                  }
+                },
+                pagination: SwiperPagination(),
+                control: SwiperControl(), // Add control for navigation icons
+              ),
             ),
           ],
         ),

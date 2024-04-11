@@ -15,7 +15,7 @@ class AgePage extends StatefulWidget {
     required this.username,
     required this.email,
     required this.age,
-    required this.subscribedCategory
+    required this.subscribedCategory,
   }) : super(key: key);
 
   @override
@@ -24,7 +24,6 @@ class AgePage extends StatefulWidget {
 
 class _AgePageState extends State<AgePage> {
   late String _selectedAgeCategory;
-
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class _AgePageState extends State<AgePage> {
         DocumentReference userDocRef = querySnapshot.docs.first.reference;
 
         await userDocRef.update({
-          'selectedAgeCategory': _selectedAgeCategory, // Update 'age' field instead of 'selectedAgeCategory'
+          'selectedAgeCategory': _selectedAgeCategory,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Age updated successfully')));
@@ -62,56 +61,85 @@ class _AgePageState extends State<AgePage> {
         title: Text("Change Your Age"),
         backgroundColor: Colors.green.shade200,
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 30,),
-          DropdownButtonFormField<String>(
-            value: _selectedAgeCategory,
-            onChanged: (value) {
-              setState(() {
-                _selectedAgeCategory = value!;
-              });
-            },
-            decoration: InputDecoration(
-              labelText: 'Select Age Category',
-            ),
-            items: ['2', '3', '4', '5', '6', '7', '8', '9', '10']
-                .map<DropdownMenuItem<String>>(
-                  (value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
+      body: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 30),
+            DropdownButtonFormField<String>(
+              value: _selectedAgeCategory,
+              onChanged: (value) {
+                setState(() {
+                  _selectedAgeCategory = value!;
+                });
+              },
+              decoration: InputDecoration(
+                labelText: 'Select Age Category',
+                border: OutlineInputBorder(),
               ),
-            )
-                .toList(),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please select an age category';
-              }
-              return null;
-            },
-          ),
-          SizedBox(height: 20,),
-          ElevatedButton(
-            onPressed: () async {
-              _saveAgeToFirebase(); // Update age before navigating
+              items: ['2', '3', '4', '5', '6', '7', '8', '9', '10']
+                  .map<DropdownMenuItem<String>>(
+                    (value) => DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                ),
+              )
+                  .toList(),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select an age category';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                _saveAgeToFirebase();
 
-              if (_selectedAgeCategory == '2' || _selectedAgeCategory == '3') {
-                await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username, email: widget.email, age: _selectedAgeCategory, subscribedCategory: widget.subscribedCategory // Use updated age
-                )));
-              } else if (_selectedAgeCategory == '4' || _selectedAgeCategory == '5') {
-                await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home2(
-                    username: widget.username, email: widget.email, age: _selectedAgeCategory, subscribedCategory: widget.subscribedCategory // Use updated age
-                )));
-              } else {
-                await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home3(
-                    username: widget.username, email: widget.email, age: _selectedAgeCategory, subscribedCategory: widget.subscribedCategory // Use updated age
-                )));
-              }
-            },
-            child: Text('OK'),
-          ),
-        ],
+                if (_selectedAgeCategory == '2' || _selectedAgeCategory == '3') {
+                  await Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Home1(
+                        username: widget.username,
+                        email: widget.email,
+                        age: _selectedAgeCategory,
+                        subscribedCategory: widget.subscribedCategory,
+                      ),
+                    ),
+                  );
+                } else if (_selectedAgeCategory == '4' || _selectedAgeCategory == '5') {
+                  await Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Home2(
+                        username: widget.username,
+                        email: widget.email,
+                        age: _selectedAgeCategory,
+                        subscribedCategory: widget.subscribedCategory,
+                      ),
+                    ),
+                  );
+                } else {
+                  await Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Home3(
+                        username: widget.username,
+                        email: widget.email,
+                        age: _selectedAgeCategory,
+                        subscribedCategory: widget.subscribedCategory,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -107,7 +107,7 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             break;
 
           case 'synonym':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Synonymlevels(
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SynonymLevels(
                 username: username, email: email, age: age, subscribedCategory: subscribedCategory
             )));
             break;
@@ -125,7 +125,9 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             break;
 
           case 'Search':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel()));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
             break;
 
           default:

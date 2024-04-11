@@ -1,72 +1,90 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:game/auth/subscription.dart';
-import 'package:game/category1/game1/synonym/syndemo.dart';
+import 'package:game/category1/game1/synonym/Synonym5.dart';
+import 'package:game/category1/game1/synonym/synonym1.dart';
 import 'package:game/category1/game1/synonym/synonym2.dart';
+import 'package:game/category1/game1/synonym/synonym3.dart';
+import 'package:game/category1/game1/synonym/synonym4.dart';
+import 'package:game/category1/game1/synonym/synonym6.dart';
+import 'package:game/category1/game1/synonym/synonym7.dart';
+import 'package:game/category1/game1/synonym/synonym8.dart';
 import 'package:game/category1/home1.dart';
 
-class Synonymlevels extends StatefulWidget {
+class SynonymLevels extends StatefulWidget {
+
   final String username;
   final String email;
   final String age;
   final String subscribedCategory;
 
-  const Synonymlevels({Key? key, required this.username,
-    required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
+  const SynonymLevels({Key? key, required this.username, required this.email, required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
-  State<Synonymlevels> createState() => _SynonymlevelsState();
+  State<SynonymLevels> createState() => _SynonymLevelsState();
 }
 
-class _SynonymlevelsState extends State<Synonymlevels> {
+class _SynonymLevelsState extends State<SynonymLevels> {
   int score = 0;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     _getStoredScore();
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection(widget.username).doc('synonym');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+
+      if (documentSnapshot.exists) {
+        setState(() { // Trigger UI rebuild
+          Map<String, dynamic> gameData = documentSnapshot.data() as Map<
+              String,
+              dynamic>;
+          if (gameData.containsKey('gameData')) {
+            Map<String, dynamic> gameScores = gameData['gameData'];
+            if (gameScores.containsKey('synonym')) {
+              score = gameScores['synonym']['score']; // Default score to 0 if not found
+            }
+          }
+        });
+      }
     }
   }
 
-  List<Synonym> values = [
-    Synonym(name: "1"),
-    Synonym(name: "2"),
-    Synonym(name: "3"),
-    Synonym(name: "4"),
-    Synonym(name: "5"),
-    Synonym(name: "6"),
-    Synonym(name: "7"),
-    Synonym(name: "8"),
-    Synonym(name: "9"),
-    Synonym(name: "10"),
-    Synonym(name: "11"),
-    Synonym(name: "12"),
-    Synonym(name: "13"),
-    Synonym(name: "14"),
-    Synonym(name: "15"),
-    Synonym(name: "16"),
-    Synonym(name: "17"),
-    Synonym(name: "18"),
-    Synonym(name: "19"),
-    Synonym(name: "20"),
+  List<Matching> values = [
+    Matching(name: "1"),
+    Matching(name: "2"),
+    Matching(name: "3"),
+    Matching(name: "4"),
+    Matching(name: "5"),
+    Matching(name: "6"),
+    Matching(name: "7"),
+    Matching(name: "8"),
+    // Matching(name: "9"),
+    // Matching(name: "10"),
+    // Matching(name: "11"),
+    // Matching(name: "12"),
+    // Matching(name: "13"),
+    // Matching(name: "14"),
+    // Matching(name: "15"),
+    // Matching(name: "16"),
+    // Matching(name: "17"),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Levels"), backgroundColor: Colors.blue.shade100,
         actions: [
           IconButton(
             onPressed: () {
@@ -86,7 +104,7 @@ class _SynonymlevelsState extends State<Synonymlevels> {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
               itemCount: values.length,
               itemBuilder: (context, index){
-                return fillcard(context, values[index]);
+                return levelcard(context, values[index]);
               },
             ),
           ),
@@ -94,8 +112,20 @@ class _SynonymlevelsState extends State<Synonymlevels> {
       ),
     );
   }
+  Widget levelcard(BuildContext context, Matching val) {
+    // Define a map with level numbers as keys and required scores as values
+    Map<String, int> levelScores = {
+      "1": 0, // Score required for level 1
+      "2": 3, // Score required for level 2
+      "3": 6, // Score required for level 3
+      "4": 9, // Score required for level 4
+      "5": 12, // Score required for level 5
+      "6": 15, // Score required for level 6
+      "7": 18,
+      "8": 21,
+      "9": 24,
+    };
 
-  Widget fillcard(BuildContext context, Synonym val) {
     bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
     if (widget.subscribedCategory == "basic") {
       isUnlocked = int.parse(val.name) <= 10; // Unlock levels 1-10 for basic subscription
@@ -104,108 +134,125 @@ class _SynonymlevelsState extends State<Synonymlevels> {
     } else if (widget.subscribedCategory == "premium") {
       isUnlocked = int.parse(val.name) <= 20; // Unlock all levels for premium subscription
     }
-
-    // Check if the level is unlocked and the previous level is completed
-    bool canPlay = isUnlocked && (int.parse(val.name) == 1 || int.parse(val.name) <= score + 1);
+    // Check if the level is unlocked based on the current score
+    bool canPlay = isUnlocked && (int.parse(val.name) == 1 || score >= levelScores[val.name]!);
 
     Color? cardColor = canPlay ? Colors.blue.shade100 : Colors.grey.shade100;
 
     return GestureDetector(
       onTap: () {
         if (canPlay) {
-          // Navigate to the level screen based on val.name
+          // Navigation logic remains the same
           switch (val.name) {
             case '1':
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SynonymFinderScreen(
-                // username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym1(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
             case '2':
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Synonym2(
-                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym2(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
               break;
-            // case '3':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Synonym3(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
-            //   break;
-            // case '4':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill4(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
-            //   break;
-            // case '5':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill5(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,)));
-            //   break;
-            // case '6':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill6(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
-            // case '7':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill7(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
-            // case '8':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill8(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
+            case '3':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym3(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '4':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym4(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '5':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym5(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '6':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym6(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '7':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym7(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '8':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Synonym8(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
             // case '9':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill9(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => (
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '10':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill10(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match10(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '11':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill11(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match11(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '12':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill12(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match12(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '13':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill13(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match13(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '14':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill14(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match14(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '15':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill15(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match15(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
             // case '16':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill16(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match16(
+            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+            //   )));
             //   break;
-            // case '17':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill17(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
-            // case '18':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill18(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
-            // case '19':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill19(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
-            //   break;
-            // case '20':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill20(
-            //     username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,              )));
+            // case '15':
+            //   Navigator.push(
+            //       context, MaterialPageRoute(builder: (context) => Match17()));
             //   break;
             default:
               break;
           }
         } else {
-          // Show a dialog indicating the level is locked or subscription needed
           String message;
-          if (int.parse(val.name) > score + 1) {
-            message = 'Complete the previous level to unlock this one.';
-          } else {
+          if (score >= levelScores[val.name]!) {
             message = 'Subscribe to access more levels.';
+          } else {
+            message = 'Complete the previous level to unlock this one.';
           }
           showDialog(
             context: context,
@@ -214,14 +261,14 @@ class _SynonymlevelsState extends State<Synonymlevels> {
                 title: Text('Level Locked'),
                 content: Text(message),
                 actions: [
-                  if (int.parse(val.name) > score + 1)
+                  if (score >= levelScores[val.name]!)
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                       child: Text('OK'),
                     ),
-                  if (int.parse(val.name) <= score + 1)
+                  if (score <= levelScores[val.name]!)
                     TextButton(
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
@@ -245,7 +292,7 @@ class _SynonymlevelsState extends State<Synonymlevels> {
       },
       child: Card(
         elevation: 3,
-        color: cardColor, // Assigning the card color
+        color: cardColor,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -257,7 +304,7 @@ class _SynonymlevelsState extends State<Synonymlevels> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
-                  color: isUnlocked ? Colors.black : Colors.grey, // Text color based on unlocked status
+                  color: isUnlocked ? Colors.black : Colors.grey,
                 ),
               ),
             ],
@@ -268,8 +315,8 @@ class _SynonymlevelsState extends State<Synonymlevels> {
   }
 }
 
-class Synonym{
+class Matching{
   final String name;
 
-  Synonym({required this.name});
+  Matching({required this.name});
 }

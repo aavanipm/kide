@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -205,33 +206,37 @@ class _Veg4State extends State<Veg4> {
   }
 
   void _updateScoreInFirebase() async {
-    // Only update score if level is completed
     if (score == 4) {
       await Firebase.initializeApp();
-      final DocumentReference userDocRef = FirebaseFirestore.instance
-          .collection(widget.username)
-          .doc('fillblanks');
-
-      // Create a new document or update the existing one
-      await userDocRef.set({
-        'vegetables': {'score': score}, // Nested data for animal category and score
-      }, SetOptions(merge: true)); // Merge to avoid overwriting other data
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+          'gameData': {
+            'fillblanksvegetable': {'score': score},
+          },
+        }, SetOptions(merge: true));
+      }
     }
   }
 
   void _getStoredScore() async {
     await Firebase.initializeApp();
-    final DocumentReference userDocRef = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('fillblanks');
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      // Retrieve score for fillblanksvegetable game
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
 
-    final DocumentSnapshot snapshot = await userDocRef.get();
-    if (snapshot.exists) {
-      final Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      if (data.containsKey('vegetables')) {
-        setState(() {
-          score = data['vegetables']['score'];
-        });
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData = documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('fillblanksvegetable')) {
+            score = gameScores['fillblanksvegetable']['score'] ?? 0; // Default score to 0 if not found
+          }
+        }
       }
     }
   }

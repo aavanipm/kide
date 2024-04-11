@@ -42,7 +42,8 @@ class SubscriptionDemoPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(subscribedCategory),
+        title: Text("Subscription Page"),
+        backgroundColor: Colors.blue.shade200,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -51,7 +52,7 @@ class SubscriptionDemoPage extends StatelessWidget {
           children: [
             SubscriptionCard(
               title: 'Basic Plan',
-              price: '₹50',
+              price: '₹99',
               description: 'Access to basic features and levels',
               color: subscribedCategory == "basic" ? Colors.yellow.shade500 : (basicAvailable ? null : Colors.grey),
               onPressed: basicAvailable ? () {
@@ -66,7 +67,7 @@ class SubscriptionDemoPage extends StatelessWidget {
             SizedBox(height: 20),
             SubscriptionCard(
               title: 'Standard Plan',
-              price: '₹100',
+              price: '₹149',
               description: 'Access to standard features and levels',
               color: subscribedCategory == "standard" ? Colors.yellow.shade500 : (standardAvailable ? null : Colors.grey),
               onPressed: standardAvailable ? () {
@@ -81,7 +82,7 @@ class SubscriptionDemoPage extends StatelessWidget {
             SizedBox(height: 20),
             SubscriptionCard(
               title: 'Premium Plan',
-              price: '₹150',
+              price: '₹199',
               description: 'Access to premium features and all levels',
               color: subscribedCategory == "premium" ? Colors.yellow.shade500 : (premiumAvailable ? null : Colors.grey),
               onPressed: premiumAvailable ? () {
