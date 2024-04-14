@@ -15,14 +15,19 @@ class _FlowersState extends State<Flowers> {
 
     Flower(name: "ROSE", image: "assets/Flowers/rose.png"),
     Flower(name: "LOTUS", image: "assets/Flowers/lotus.png"),
+    Flower(name: "JASMINE", image: "assets/Flowers/jasmine.png"),
     Flower(name: "MARIGOLD", image: "assets/Flowers/marigold.png"),
+    Flower(name: "COSMOS", image: 'assets/Flowers/cosmos.png'),
     Flower(name: "ALLAMANDA", image: "assets/Flowers/allamanda.png"),
     Flower(name: "BOUGAINVILLEA", image: "assets/Flowers/bougainvillea.png"),
+    Flower(name: "SUNFLOWER", image: "assets/Flowers/sunflower.png"),
     Flower(name: "HIBISCUS", image: "assets/Flowers/hibiscus.png"),
     Flower(name: "LAVENDER", image: "assets/Flowers/lavender.png"),
+    Flower(name: "DAHLIA", image: "assets/Flowers/dahlia.png"),
+    Flower(name: "DAISY", image: "assets/Flowers/daisy.png"),
     Flower(name: "LILY", image: "assets/Flowers/lily.png"),
     Flower(name: "TULIP", image: "assets/Flowers/tulip.png"),
-    Flower(name: "JASMINE", image: "assets/Flowers/jasmine.png"),
+    Flower(name: "OLEANDER", image: "assets/Flowers/oleander.png"),
     // Add more flowers as needed
   ];
 

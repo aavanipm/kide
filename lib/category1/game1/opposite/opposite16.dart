@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:game/auth/subscription.dart';
-import 'package:game/category1/game1/opposite/opposite17.dart';
+import 'package:game/category1/game1/opposite/oppolast.dart';
 import 'package:game/category1/game1/opposite/oppositelevels.dart';
 
 class Opposite16 extends StatefulWidget {
@@ -63,11 +63,11 @@ class _Opposite16State extends State<Opposite16> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Opposite17(
-            // username: widget.username,
-            // email: widget.email,
-            // age: widget.age,
-            // subscribedCategory: widget.subscribedCategory,
+          builder: (context) => OppositeLast(
+            username: widget.username,
+            email: widget.email,
+            age: widget.age,
+            subscribedCategory: widget.subscribedCategory,
           ),
         ),
       );
@@ -111,11 +111,11 @@ class _Opposite16State extends State<Opposite16> {
               Row(
                 children: [
                   _buildDraggableWord('POSITIVE'),
-                  SizedBox(width: 30),
+                  SizedBox(width: 10),
                   _buildDraggableWord('SLOW'),
-                  SizedBox(width: 30),
+                  SizedBox(width: 10),
                   _buildDraggableWord('FINISH'),
-                  SizedBox(width: 30),
+                  SizedBox(width: 10),
                   _buildDraggableWord('RIGHT'),
                 ],
               ),
@@ -249,7 +249,7 @@ class _Opposite16State extends State<Opposite16> {
   Widget _buildWordBox(String word) {
     return Container(
       height: 60,
-      width: 65,
+      width: 80,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue),
         borderRadius: BorderRadius.circular(10),

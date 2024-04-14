@@ -46,6 +46,9 @@ dependencies:
   audioplayers: ^6.0.0
   animated_splash_screen: ^1.3.0
   firebase_storage: ^11.7.1
+  fluttertoast: ^8.2.4
+  provider: ^6.1.2
+  foundation: ^0.0.5
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +80,7 @@ flutter:
     - assets/Fruits/
     - assets/Flowers/
     - assets/Birds/
+    - assets/colour/
     - assets/Vegetables/
     - assets/home/
     - assets/learning/
@@ -91,8 +95,12 @@ flutter:
     - assets/Alphabets/letters/capital/
     - assets/game/
     - assets/story/
+    - assets/story/story1/
+    - assets/story/story2/
+    - assets/story/story3/
     - assets/audio/
     - assets/opposite/
+    - assets/spell/
 
   #   - images/a_dot_ham.jpeg
 

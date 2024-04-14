@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class NounQuestionsPage extends StatefulWidget {
   final String username;
@@ -27,7 +27,6 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
   bool _allCorrect = false; // Flag to track if all questions are answered correctly
   int score = 0;
   List<bool> _answeredQuestions = List.filled(20, false); // Track answered questions
-
 
   List<Map<String, dynamic>> _questions = [
     {
@@ -172,17 +171,21 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
     }
 
     if (_answeredQuestions[_currentQuestionIndex]) {
-      // Question already answered correctly, don't increment score
-      setState(() {
-        _currentQuestionIndex++; // Move to the next question
-        _selectedOption = null;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Question already answered.'),
+          duration: Duration(milliseconds: 500),
+        ),
+      );
       return;
     }
 
-    // Increment score if the answer is correct
+    // Check if the selected option is correct
     if (_selectedOption == _questions[_currentQuestionIndex]['correctAnswer']) {
       setState(() {
+        score++; // Increment score
+        _updateScoreInFirebase();
+        _answeredQuestions[_currentQuestionIndex] = true; // Mark question as answered
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Correct!'),
@@ -190,17 +193,10 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
             duration: Duration(milliseconds: 500),
           ),
         );
-
-        score++; // Increment score
-        _updateScoreInFirebase();
-        _answeredQuestions[_currentQuestionIndex] = true; // Mark question as answered
-
+        // Move to the next question if available
         if (_currentQuestionIndex < _questions.length - 1) {
           _currentQuestionIndex++;
           _selectedOption = null;
-        } else {
-          _allCorrect = true; // Set flag to true when all questions are answered correctly
-          // Update score in Firestore
         }
       });
     } else {
@@ -215,35 +211,54 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
   }
 
   void _updateScoreInFirebase() async {
-    // Update score and current question number in Firestore
     await Firebase.initializeApp();
-    final DocumentReference documentReference = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('noun');
-    await documentReference.set({
-      'score': score.toInt(), // Cast score to int before setting
-      'currentQuestion': _currentQuestionIndex,
-    });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
+        'gameData': {
+          'noun': {'score': score}, // Use a different key for verb scores
+        },
+      }, SetOptions(merge: true));
+    }
   }
 
   void _getStoredData() async {
-    // Retrieve score and current question number from Firestore
     await Firebase.initializeApp();
-    final DocumentReference documentReference = FirebaseFirestore.instance
-        .collection(widget.username)
-        .doc('noun');
-    final DocumentSnapshot snapshot = await documentReference.get();
-    if (snapshot.exists) {
-      setState(() {
-        score = (snapshot.data() as Map<String, dynamic>)['score'];
-        _currentQuestionIndex =
-        (snapshot.data() as Map<String, dynamic>)['currentQuestion'];
-        _answeredQuestions = List.generate(
-          _questions.length,
-              (index) => index <= _currentQuestionIndex,
-        );
-      });
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('games')
+          .doc(user.uid)
+          .get();
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> gameData =
+        documentSnapshot.data() as Map<String, dynamic>;
+        if (gameData.containsKey('gameData')) {
+          Map<String, dynamic> gameScores = gameData['gameData'];
+          if (gameScores.containsKey('noun')) {
+            setState(() {
+              score = gameScores['noun']['score'] ?? 0; // Default score to 0 if not found
+              _currentQuestionIndex = score;  // Use score to determine current question index
+              _answeredQuestions = List.generate(
+                _questions.length,
+                    (index) => index < score,
+              );
+            });
+          }
+        }
+      }
     }
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _currentQuestionIndex = 0;
+      _allCorrect = false;
+      score = 0;
+      _selectedOption = null;
+      // Update initialization of _answeredQuestions
+      _answeredQuestions = List.filled(20, false);
+    });
   }
 
   @override
@@ -256,52 +271,24 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Nouns"),
+        title: Text("Noun"),
         actions: [
-          Text("Score: $score"),
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: Text(
+              "Score: $score",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            ),
+          ),
         ],
+        backgroundColor: Colors.lime.shade200,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: _allCorrect
-            ? Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Congratulations! You answered all questions correctly!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Reset the quiz after completing
-                setState(() {
-                  _currentQuestionIndex = 0;
-                  _allCorrect = false;
-                  score = 0;
-                  _selectedOption = null;
-                  _updateScoreInFirebase(); // Reset score in Firestore
-                  _answeredQuestions = List.filled(3, false); // Reset answered questions
-                });
-              },
-              child: Text('Restart Quiz'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context); // Navigate back to home screen
-              },
-              child: Text('OK'),
-            ),
-          ],
-        )
-            : Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 20),
             // Display all question numbers
             // Wrap the row of numbers with a SingleChildScrollView
             SingleChildScrollView(
@@ -338,7 +325,7 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 50),
             // Display the question
             Text(
               _questions[_currentQuestionIndex]['question'],
@@ -346,8 +333,7 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
             ),
             SizedBox(height: 10.0),
             // Display options
-            for (String option
-            in _questions[_currentQuestionIndex]['options'])
+            for (String option in _questions[_currentQuestionIndex]['options'])
               RadioListTile(
                 title: Text(option),
                 value: option,
@@ -358,7 +344,17 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
                   });
                 },
               ),
-            SizedBox(height: 10.0),
+            SizedBox(height: 30),
+
+            // Conditionally show "Restart Quiz" button
+            Visibility(
+              visible: _allCorrect || score == _questions.length,
+              child: ElevatedButton(
+                onPressed: _resetQuiz,
+                child: Text('Restart Game'),
+              ),
+            ),
+
             ElevatedButton(
               onPressed: _submitAnswer,
               child: Text('Submit'),

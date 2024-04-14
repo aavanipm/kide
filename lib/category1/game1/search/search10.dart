@@ -3,8 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/search/searchlast.dart';
 
 class Search10 extends StatefulWidget {
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Search10({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
   @override
   _Search10State createState() => _Search10State();
 }
@@ -111,11 +125,73 @@ class _Search10State extends State<Search10> {
                 ),
               ],
             ),
-            SizedBox(height: 70,),
+            if (score==44)
+              if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'standard' || widget.subscribedCategory == 'premium')
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to the next level
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SearchLast(
+                          username: widget.username,
+                          email: widget.email,
+                          age: widget.age,
+                          subscribedCategory: widget.subscribedCategory,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Next Level'),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () {
+                    _showSubscribeMessage();
+                  },
+                  child: Text('Subscribe'),
+                ),
           ],
         ),
       )
           : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SubscriptionDemoPage(
+                      username: widget.username,
+                      email: widget.email,
+                      age: widget.age,
+                      subscribedCategory: widget.subscribedCategory,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -210,9 +286,9 @@ List<List<String>> generateGrid(List<String> wordsToFind) {
   final List<List<String>> grid = [];
 
   // Initialize an empty grid
-  for (int i = 0; i < 8; i++) {
+  for (int i = 0; i < 9; i++) {
     final List<String> row = [];
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < 9; j++) {
       row.add('');
     }
     grid.add(row);
@@ -226,8 +302,8 @@ List<List<String>> generateGrid(List<String> wordsToFind) {
       int row, col;
       if (horizontal) {
         // Place horizontally
-        row = random.nextInt(8);
-        col = random.nextInt(8 - word.length + 1);
+        row = random.nextInt(9);
+        col = random.nextInt(9 - word.length + 1);
         bool canPlace = true;
         for (int i = 0; i < word.length; i++) {
           if (grid[row][col + i] != '' && grid[row][col + i] != word[i]) {
@@ -243,8 +319,8 @@ List<List<String>> generateGrid(List<String> wordsToFind) {
         }
       } else {
         // Place vertically
-        row = random.nextInt(8 - word.length + 1);
-        col = random.nextInt(8);
+        row = random.nextInt(9 - word.length + 1);
+        col = random.nextInt(9);
         bool canPlace = true;
         for (int i = 0; i < word.length; i++) {
           if (grid[row + i][col] != '' && grid[row + i][col] != word[i]) {
@@ -263,8 +339,8 @@ List<List<String>> generateGrid(List<String> wordsToFind) {
   }
 
   // Fill empty spaces with random letters
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
+  for (int i = 0; i < 9; i++) {
+    for (int j = 0; j < 9; j++) {
       if (grid[i][j] == '') {
         final randomIndex = random.nextInt(letters.length);
         grid[i][j] = letters[randomIndex];

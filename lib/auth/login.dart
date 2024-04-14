@@ -6,7 +6,6 @@ import 'package:game/auth/register.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
-import 'package:game/category3/home3.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -62,22 +61,16 @@ class _LoginState extends State<Login> {
                 String subscribedCategory = userData["subscribedCategory"];
 
                 late Widget homePage;
-                if (selectedAge == '2' || selectedAge == '3') {
+                if (selectedAge == '2' || selectedAge == '3' || selectedAge == '4' || selectedAge == '5') {
                   homePage = Home1(
                     username: userDoc['username'],
                     email: userEmail,
                     age: selectedAge,
                     subscribedCategory: subscribedCategory,
                   );
-                } else if (selectedAge == '4' || selectedAge == '5') {
-                  homePage = Home2(
-                    username: userDoc['username'],
-                    email: userEmail,
-                    age: selectedAge,
-                    subscribedCategory: subscribedCategory,
-                  );
+
                 } else {
-                  homePage = Home3(
+                  homePage = Home2(
                     username: userDoc['username'],
                     email: userEmail,
                     age: selectedAge,

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/opposite/opposite16.dart';
 import 'package:game/category1/game1/opposite/oppositelevels.dart';
 
 class Opposite15 extends StatefulWidget {
@@ -62,7 +63,7 @@ class _Opposite15State extends State<Opposite15> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Opposite15(
+          builder: (context) => Opposite16(
             username: widget.username,
             email: widget.email,
             age: widget.age,

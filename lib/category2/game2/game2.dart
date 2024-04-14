@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/fillblanks/Fills.dart';
-import 'package:game/category1/game1/guess/levelguess.dart';
+import 'package:game/category2/game2/adjective.dart';
+import 'package:game/category2/game2/adverb.dart';
 import 'package:game/category2/game2/noun.dart';
+import 'package:game/category2/game2/preposistion.dart';
+import 'package:game/category2/game2/pronoun.dart';
+import 'package:game/category2/game2/verb.dart';
 
 class Game2 extends StatefulWidget {
   final String username;
@@ -14,8 +17,12 @@ class Game2 extends StatefulWidget {
   @override
   State<Game2> createState() => _Game2State();
   List<Games> values = [
-    Games(imagepath: "assets/game/fill.png", name: "Noun"),
-    // Games(imagepath: "assets/game/guess.png", name: "Guess"),
+    Games(imagepath: "assets/learning/grammar/noungame.png", name: "Noun"),
+    Games(imagepath: "assets/learning/grammar/verbgame.png", name: "Verb"),
+    Games(imagepath: "assets/learning/grammar/adjgame.png", name: "Adjective"),
+    Games(imagepath: "assets/learning/grammar/pregame.png", name: "Preposition"),
+    Games(imagepath: "assets/learning/grammar/adverbgame.png", name: "Adverb"),
+    Games(imagepath: "assets/learning/grammar/pronoungame.png", name: "Pronoun"),
   ];
 }
 
@@ -56,8 +63,32 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             )));
             break;
 
-          case 'Guess':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>LevelGuess(
+          case 'Verb':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>VerbQuestionsPage(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
+          case 'Adverb':
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AdverbQuestionsPage(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
+          case 'Adjective':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>AdjectiveQuestionsPage(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
+          case 'Pronoun':
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PronounQuestionsPage(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
+          case 'Preposition':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>PrepositionQuestionsPage(
               username: username, email: email, age: age, subscribedCategory: subscribedCategory,
             )));
             break;
@@ -71,7 +102,7 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
         child: Column(
           children: [
             Image.asset(val.imagepath, height: 150, width: 150,),
-            // Text(val.name)
+            Text(val.name),
           ],
         ),
       )

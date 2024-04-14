@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
-import 'package:game/category3/home3.dart';
 
 class AgePage extends StatefulWidget {
   final String username;
@@ -98,7 +97,7 @@ class _AgePageState extends State<AgePage> {
               onPressed: () async {
                 _saveAgeToFirebase();
 
-                if (_selectedAgeCategory == '2' || _selectedAgeCategory == '3') {
+                if (_selectedAgeCategory == '2' || _selectedAgeCategory == '3' || _selectedAgeCategory == '4' || _selectedAgeCategory == '5') {
                   await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -110,23 +109,11 @@ class _AgePageState extends State<AgePage> {
                       ),
                     ),
                   );
-                } else if (_selectedAgeCategory == '4' || _selectedAgeCategory == '5') {
+                }  else {
                   await Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Home2(
-                        username: widget.username,
-                        email: widget.email,
-                        age: _selectedAgeCategory,
-                        subscribedCategory: widget.subscribedCategory,
-                      ),
-                    ),
-                  );
-                } else {
-                  await Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Home3(
                         username: widget.username,
                         email: widget.email,
                         age: _selectedAgeCategory,

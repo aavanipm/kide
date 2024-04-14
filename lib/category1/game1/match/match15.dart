@@ -24,10 +24,10 @@ class _Match15State extends State<Match15> {
   List<List<Animal>> animalSets = [
     [
       Animal(name: 'ostrich', imagePath: 'assets/Birds/ostrich.png'),
-      Animal(name: 'owl', imagePath: 'assets/Birds/owl.png'),
-      Animal(name: 'turkey', imagePath: 'assets/Birds/turkey.png'),
       Animal(name: 'swan', imagePath: 'assets/Birds/swan.png'),
       Animal(name: 'woodpecker', imagePath: 'assets/Birds/woodpecker.png'),
+      Animal(name: 'turkey', imagePath: 'assets/Birds/turkey.png'),
+
     ],
   ];
 
@@ -201,8 +201,8 @@ class _Match15State extends State<Match15> {
 
     // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
     if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
-      if (score==60){
-        score = 65;
+      if (score==59){
+        score = 63;
         _updateScoreInFirebase();
       }
       gameCompleted = true; // Set gameCompleted flag to true
@@ -306,7 +306,7 @@ class _Match15State extends State<Match15> {
   }
 
   void _updateScoreInFirebase() async {
-    if (score == 65) {
+    if (score == 63) {
       await Firebase.initializeApp();
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {

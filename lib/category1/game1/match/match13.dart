@@ -24,11 +24,10 @@ class _Match13State extends State<Match13> {
   List<List<Animal>> animalSets = [
     [
       Animal(name: 'peacock', imagePath: 'assets/Birds/peacock.png'),
-      Animal(name: 'penguin', imagePath: 'assets/Birds/penguin.png'),
       Animal(name: 'rooster', imagePath: 'assets/Birds/rooster.png'),
-      Animal(name: 'flamingo', imagePath: 'assets/Birds/flamingo.png'),
-      Animal(name: 'kingfisher', imagePath: 'assets/Birds/kingfisher.png'),
-
+      Animal(name: 'daisy', imagePath: 'assets/Flowers/daisy.png'),
+      Animal(name: 'cauliflower', imagePath: 'assets/Vegetables/cauliflower.png'),
+      Animal(name: 'lavender', imagePath: 'assets/Flowers/lavender.png'),
     ],
   ];
 

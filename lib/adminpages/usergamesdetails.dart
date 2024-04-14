@@ -11,7 +11,9 @@ class UserGamesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('User Games for $userId'), // Display user ID in title
+        title: Text('Games Played'), // Display user ID in title
+        backgroundColor: Colors.deepPurple.shade100,
+
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance

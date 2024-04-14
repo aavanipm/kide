@@ -3,8 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/search/search8.dart';
 
 class Search7 extends StatefulWidget {
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Search7({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
   @override
   _Search7State createState() => _Search7State();
 }
@@ -111,11 +125,75 @@ class _Search7State extends State<Search7> {
                 ),
               ],
             ),
-            SizedBox(height: 70,),
+            // Render button to go to next level if all words are found
+            SizedBox(height: 20,),
+            if (score==29)
+              if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'standard' || widget.subscribedCategory == 'premium')
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to the next level
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Search8(
+                          username: widget.username,
+                          email: widget.email,
+                          age: widget.age,
+                          subscribedCategory: widget.subscribedCategory,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Next Level'),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () {
+                    _showSubscribeMessage();
+                  },
+                  child: Text('Subscribe'),
+                ),
           ],
         ),
       )
           : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SubscriptionDemoPage(
+                      username: widget.username,
+                      email: widget.email,
+                      age: widget.age,
+                      subscribedCategory: widget.subscribedCategory,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 

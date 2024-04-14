@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/fillblanks/VegetableLevels/Vegelevel.dart';
+import 'package:game/category1/game1/fillblanks/VegetableLevels/VegetableLast.dart';
 import 'package:game/category1/game1/fillblanks/VegetableLevels/veg12.dart';
 
 class Veg11 extends StatefulWidget {
@@ -145,8 +146,8 @@ class _Veg11State extends State<Veg11> {
                       if (widget.subscribedCategory == 'premium' || widget.subscribedCategory == 'standard') {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context)=> Veg12(
-                            // username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+                          MaterialPageRoute(builder: (context)=> VegeLast(
+                            username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
                           ),
                           ),
                         );

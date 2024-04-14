@@ -3,8 +3,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/search/Search5.dart';
 
 class Search4 extends StatefulWidget {
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Search4({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
   @override
   _Search4State createState() => _Search4State();
 }
@@ -111,6 +124,24 @@ class _Search4State extends State<Search4> {
                 ),
               ],
             ),
+            // Render button to go to next level if all words are found
+            SizedBox(height: 20,),
+            if (score==16)
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to the next level
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Search5(
+                      username: widget.username,
+                      email: widget.email,
+                      age: widget.age,
+                      subscribedCategory: widget.subscribedCategory,
+                    )),
+                  );
+                },
+                child: Text('Next Level'),
+              ),
             SizedBox(height: 70,),
           ],
         ),

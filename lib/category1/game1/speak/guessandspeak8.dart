@@ -3,33 +3,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
+import 'package:game/category1/game1/speak/guessandspeak10.dart';
 import 'package:game/category1/game1/speak/guessandspeak9.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class GuessandSpeak8 extends StatefulWidget {
+
   final String username;
   final String email;
   final String age;
   final String subscribedCategory;
 
-  const GuessandSpeak8(
-      {Key? key,
-        required this.username,
-        required this.email,
-        required this.age,
-        required this.subscribedCategory,
-      })
-      : super(key: key);
+  const GuessandSpeak8({Key? key, required this.username, required this.email,
+    required this.age, required this.subscribedCategory}) : super(key: key);
 
   @override
   _GuessandSpeak8State createState() => _GuessandSpeak8State();
 }
 
 class _GuessandSpeak8State extends State<GuessandSpeak8> {
+  final List<AnimalItem> animals = [
+    AnimalItem(name: 'carrot', imagePath: 'assets/Vegetables/carrot.png'),
+  ];
+
+  int score = 0;
   late stt.SpeechToText _speech;
   String spokenWord = '';
-  int score = 0;
 
   @override
   void initState() {
@@ -47,7 +48,7 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Level 1'),
+        title: const Text('Level 8'),
         backgroundColor: Colors.blue.shade200,
         actions: [
           IconButton(
@@ -69,16 +70,15 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
         ],
       ),
 
-      body: Column( // Wrap with Stack instead of Column
+      body: Column(
         children: [
           SizedBox(height: 30,),
-          Text("Press the mic button...", style: TextStyle(fontSize: 20),),
-          Text("Read this", style: TextStyle(fontSize: 25),),
+          Text("Press the mic button...and say", style: TextStyle(fontSize: 20),),
+          Text("What is this?", style: TextStyle(fontSize: 25),),
           SizedBox(height: 150,),
           Center(
-            child: Text("THE SKY IS BLUE", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
+            child: _buildAnimalCard(animals[0]), // Assuming you want the first animal in the list
           ),
-          SizedBox(height: 20,),
           IconButton(
             onPressed: () => _startListening(),
             icon: Icon(Icons.mic, size: 30,),
@@ -108,12 +108,25 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
     );
   }
 
-  void _checkAnswer(String spokenPhrase) {
-    String correctPhrase = "THE SKY IS BLUE".toLowerCase(); // Concatenate "My name is" with the username
+  Widget _buildAnimalCard(AnimalItem animal) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset(animal.imagePath, height: 200, width: 170),
+      ],
+    );
+  }
 
-    spokenPhrase = spokenPhrase.toLowerCase().trim();
+  void _checkAnswer(String guessedAnimal) {
+    String correctAnimalName = animals[0].name.toLowerCase();
+    String spokenWordLower = guessedAnimal.toLowerCase();
 
-    if (spokenPhrase.startsWith(correctPhrase)) { // Check if the spoken phrase starts with the correct phrase
+    // Remove any leading or trailing whitespace
+    guessedAnimal = guessedAnimal.trim();
+    spokenWordLower = spokenWordLower.trim();
+
+    if (spokenWordLower == correctAnimalName || _isSimilar(spokenWordLower, correctAnimalName)) {
       setState(() {
         if (score == 7) {
           score = 8;
@@ -121,30 +134,70 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
         }
       });
       _showSnackbar('Correct answer!', true);
+
+      // Automatically navigate to level 2
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => GuessandSpeak9(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)),
-        );
+        if (widget.subscribedCategory == 'basic' ||
+            widget.subscribedCategory == 'premium' ||
+            widget.subscribedCategory == 'standard') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GuessandSpeak9(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              ),
+            ),
+          );
+        } else {
+          _showSubscribeMessage(); // Shows subscribe message if conditions not met
+        }
       });
     } else {
       _showSnackbar('Incorrect answer!', false);
     }
   }
 
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showSnackbar(String message, bool isCorrect) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: Duration(milliseconds: 800),
-        backgroundColor: isCorrect ? Colors.green : Colors.red,
+        duration: Duration(milliseconds: 800), // Adjust the duration as needed
+        backgroundColor: isCorrect ? Colors.green : Colors.red, // Change color based on correctness
       ),
     );
   }
 
   bool _isSimilar(String a, String b) {
-    return a.length == b.length || a.contains(b) || b.contains(a);
+    return a.contains(b) || b.contains(a);
   }
 
   void _startListening() {
@@ -155,7 +208,7 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
           setState(() {
             spokenWord = result.recognizedWords;
           });
-          _checkAnswer(result.recognizedWords);
+          _checkAnswer(result.recognizedWords); // Move this line to _checkAnswer method
         }
       },
     );
@@ -199,3 +252,12 @@ class _GuessandSpeak8State extends State<GuessandSpeak8> {
     }
   }
 }
+
+class AnimalItem {
+  final String name;
+  final String imagePath;
+
+  AnimalItem({required this.name, required this.imagePath});
+}
+
+

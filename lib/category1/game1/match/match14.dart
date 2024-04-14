@@ -26,9 +26,8 @@ class _Match14State extends State<Match14> {
     [
       Animal(name: 'cucumber', imagePath: 'assets/Vegetables/cucumber.png'),
       Animal(name: 'broccoli', imagePath: 'assets/Vegetables/broccoli.png'),
-      Animal(name: 'cauliflower', imagePath: 'assets/Vegetables/cauliflower.png'),
       Animal(name: 'beetroot', imagePath: 'assets/Vegetables/beetroot.png'),
-      Animal(name: 'bitter gourd', imagePath: 'assets/Vegetables/bitter gourd.png'),
+      Animal(name: 'bittergourd', imagePath: 'assets/Vegetables/bittergourd.png'),
     ],
   ];
 
@@ -203,7 +202,7 @@ class _Match14State extends State<Match14> {
     // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
     if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
       if (score==55){
-        score = 60;
+        score = 59;
         _updateScoreInFirebase();
       }
       gameCompleted = true; // Set gameCompleted flag to true
@@ -308,7 +307,7 @@ class _Match14State extends State<Match14> {
   }
 
   void _updateScoreInFirebase() async {
-    if (score == 60) {
+    if (score == 59) {
       await Firebase.initializeApp();
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {

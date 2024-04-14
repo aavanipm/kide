@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category1/game1/speak/guessandspeak10.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -46,7 +47,7 @@ class _GuessandSpeak9State extends State<GuessandSpeak9> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Level 1'),
+        title: const Text('Level 9'),
         backgroundColor: Colors.blue.shade200,
         actions: [
           IconButton(
@@ -135,15 +136,53 @@ class _GuessandSpeak9State extends State<GuessandSpeak9> {
 
       // Automatically navigate to level 2
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.pushReplacement(
+        if (widget.subscribedCategory == 'basic' ||
+            widget.subscribedCategory == 'premium' ||
+            widget.subscribedCategory == 'standard') {
+          Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => GuessandSpeak10(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-            )));
+            MaterialPageRoute(
+              builder: (context) => GuessandSpeak10(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              ),
+            ),
+          );
+        } else {
+          _showSubscribeMessage(); // Shows subscribe message if conditions not met
+        }
       });
     } else {
-      _showSnackbar('Incorrect answer!', false); // This line ensures displaying snackbar for incorrect answer
+      _showSnackbar('Incorrect answer!', false);
     }
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showSnackbar(String message, bool isCorrect) {
@@ -157,7 +196,7 @@ class _GuessandSpeak9State extends State<GuessandSpeak9> {
   }
 
   bool _isSimilar(String a, String b) {
-    return a.length == b.length || a.contains(b) || b.contains(a);
+    return a.contains(b) || b.contains(a);
   }
 
   void _startListening() {

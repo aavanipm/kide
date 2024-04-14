@@ -70,6 +70,7 @@ class FirstStory1 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
@@ -87,10 +88,11 @@ class FirstStory1 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story1/pic1.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
     );
   }
 }
@@ -109,26 +111,30 @@ class FirstStory2 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
+              SizedBox(height: 20),
               ElevatedButton(
               onPressed: () async {
                 await flutterTts.setSpeechRate(0.3);
-                await flutterTts.speak("Then, he came across a farmer's wall where he saw some big, purple, juicy grapes hanging.",);
+                await flutterTts.speak("Then he came across a tall tree, its branches adorned with a vine hanging heavily with big,"
+                    " purple, juicy grapes, just out of reach.",);
               },
               child: Text('Click Here To Hear The Story'),
             ),
             SizedBox(height: 20,),
             Text(
-              "Then, he came across a farmer's wall where he saw some big, purple, juicy grapes hanging.",
+              "Then he came across a tall tree, its branches adorned with a vine hanging heavily with big, purple, juicy grapes, "
+                  "just out of reach.",
               style: TextStyle(
                 fontFamily: 'Balsamiq Sans',
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story1/pic2.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
     );
   }
 }
@@ -147,6 +153,7 @@ class FirstStory3 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
+              SizedBox(height: 20),
               ElevatedButton(
               onPressed: () async {
                 await flutterTts.setSpeechRate(0.3);
@@ -164,10 +171,11 @@ class FirstStory3 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story1/pic3.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
     );
   }
 }
@@ -186,6 +194,7 @@ class FirstStory4 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
+              SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 await flutterTts.setSpeechRate(0.3);
@@ -203,10 +212,11 @@ class FirstStory4 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story1/pic4.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
     );
   }
 }
@@ -223,8 +233,8 @@ class FirstStoryMoral extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Align contents vertically at the center
             children: [
+              SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
@@ -242,6 +252,14 @@ class FirstStoryMoral extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
+              SizedBox(height: 90),
+              Text(
+                "try to answer the questions by clicking on this",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
               SizedBox(height: 20),
               IconButton(
                 onPressed: () {
@@ -250,13 +268,12 @@ class FirstStoryMoral extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => FirstQuestionsPage()),
                   );
                 },
-                icon: Icon(Icons.question_answer, color: Colors.lightGreen),
+                icon: Icon(Icons.question_answer, color: Colors.lightBlue,size: 40,),
               ),
             ],
           ),
         ),
       ),
-      backgroundColor: Colors.green.shade200,
     );
   }
 }
@@ -279,8 +296,8 @@ class _FirstQuestionsPageState extends State<FirstQuestionsPage> {
     },
     {
       'question': 'Where did the fox find the grapes?',
-      'options': ['In the forest', 'At the farmer\'s wall', 'In a cave', 'In a river'],
-      'correctAnswer': 'At the farmer\'s wall',
+      'options': ['At the farmer\'s wall', 'In a cave', 'In a river', 'In the tree',],
+      'correctAnswer': 'In the tree',
     },
     {
       'question': 'Why couldn\'t the fox reach the grapes?',
@@ -364,9 +381,10 @@ class _FirstQuestionsPageState extends State<FirstQuestionsPage> {
             : Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 30,),
             Text(
               _questions[_currentQuestionIndex]['question'],
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
             ),
             SizedBox(height: 10.0),
             for (String option in _questions[_currentQuestionIndex]['options'])

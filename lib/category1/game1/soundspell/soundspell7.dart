@@ -4,15 +4,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/soundspell/SoundSpellLevel.dart';
+import 'package:game/category1/game1/soundspell/soundspell8.dart';
 
-class SoundSpell5 extends StatefulWidget {
+class SoundSpell7 extends StatefulWidget {
   final String username;
   final String email;
   final String age;
   final String subscribedCategory;
 
-  const SoundSpell5({
+  const SoundSpell7({
     Key? key,
     required this.username,
     required this.email,
@@ -21,15 +23,15 @@ class SoundSpell5 extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SoundSpell5State createState() => _SoundSpell5State();
+  _SoundSpell7State createState() => _SoundSpell7State();
 }
 
-class _SoundSpell5State extends State<SoundSpell5> {
+class _SoundSpell7State extends State<SoundSpell7> {
   final FlutterTts flutterTts = FlutterTts();
   List<Flashcard> flashcards = [
     Flashcard(
-      word: 'beans',
-      image: "assets/Vegetables/beans.png",
+      word: 'black',
+      image: "assets/colour/black.png",
     ),
   ];
 
@@ -46,7 +48,7 @@ class _SoundSpell5State extends State<SoundSpell5> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Level 5'),
+        title: const Text('Level 7'),
         backgroundColor: Colors.blue.shade200,
         actions: [
           IconButton(
@@ -92,9 +94,20 @@ class _SoundSpell5State extends State<SoundSpell5> {
 
         ElevatedButton(
           onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SoundSpell5(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
-            )));
+            if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'premium' || widget.subscribedCategory == 'standard') {
+              Navigator.pushReplacement(
+                context, MaterialPageRoute(
+                builder: (context) => SoundSpell8(
+                  username: widget.username,
+                  email: widget.email,
+                  age: widget.age,
+                  subscribedCategory: widget.subscribedCategory,
+                ),
+              ),
+              );
+            } else {
+              _showSubscribeMessage();
+            }
           },
           child: Text('Next Level'),
         ),
@@ -150,7 +163,7 @@ class _SoundSpell5State extends State<SoundSpell5> {
                   String correctWord = flashcard.word.toLowerCase();
                   if (typedWord == correctWord) {
                     setState(() {
-                      if(score == 4) {
+                      if(score == 6) {
                         score++;
                         _updateScoreInFirebase();
                       }
@@ -186,6 +199,35 @@ class _SoundSpell5State extends State<SoundSpell5> {
     await flutterTts.speak(word);
   }
 
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                    username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+                // Navigate to subscription page
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showTotalPoints(int points) {
     showDialog(
       context: context,
@@ -207,7 +249,7 @@ class _SoundSpell5State extends State<SoundSpell5> {
   }
 
   void _updateScoreInFirebase() async {
-    if (score == 5) {
+    if (score == 7) {
       await Firebase.initializeApp();
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {

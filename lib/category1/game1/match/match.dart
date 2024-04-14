@@ -12,7 +12,10 @@ import 'package:game/category1/game1/match/match14.dart';
 import 'package:game/category1/game1/match/match15.dart';
 import 'package:game/category1/game1/match/match16.dart';
 import 'package:game/category1/game1/match/match17.dart';
+import 'package:game/category1/game1/match/match18.dart';
+import 'package:game/category1/game1/match/match19.dart';
 import 'package:game/category1/game1/match/match2.dart';
+import 'package:game/category1/game1/match/match20.dart';
 import 'package:game/category1/game1/match/match3.dart';
 import 'package:game/category1/game1/match/match4.dart';
 import 'package:game/category1/game1/match/match5.dart';
@@ -87,6 +90,9 @@ class _MatchState extends State<Match> {
     Matching(name: "15"),
     Matching(name: "16"),
     Matching(name: "17"),
+    Matching(name: "18"),
+    Matching(name: "19"),
+    Matching(name: "20"),
   ];
 
   @override
@@ -138,9 +144,12 @@ class _MatchState extends State<Match> {
       "12": 45,
       "13": 50,
       "14": 55,
-      "15": 60,
-      "16": 65,
-      "17": 70,
+      "15": 59,
+      "16": 63,
+      "17": 68,
+      "18": 72,
+      "19": 76,
+      "20": 80,
     };
 
     bool isUnlocked = int.parse(val.name) <= 5; // Default only levels 1-5 unlocked
@@ -257,9 +266,29 @@ class _MatchState extends State<Match> {
                 username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
-            case '15':
+            case '17':
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Match17()));
+                  context, MaterialPageRoute(builder: (context) =>  Match17(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '18':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Match18(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '19':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Match19(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '20':
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Match20(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
               break;
             default:
               break;

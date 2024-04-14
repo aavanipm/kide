@@ -201,7 +201,7 @@ class _Opposite8State extends State<Opposite8> {
                 ),
               ),
               SizedBox(height: 70,),
-              // Image.asset("assets/opposite/lightdark.png", height: 300, width: 300,),
+              Image.asset("assets/opposite/openclose.png", height: 300, width: 300,),
             ],
           ),
         ),

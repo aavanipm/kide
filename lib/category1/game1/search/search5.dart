@@ -3,8 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:game/auth/subscription.dart';
+import 'package:game/category1/game1/search/Search6.dart';
 
 class Search5 extends StatefulWidget {
+  final String username;
+  final String email;
+  final String age;
+  final String subscribedCategory;
+
+  const Search5({
+    Key? key,
+    required this.username,
+    required this.email,
+    required this.age,
+    required this.subscribedCategory,
+  }) : super(key: key);
   @override
   _Search5State createState() => _Search5State();
 }
@@ -42,7 +56,8 @@ class _Search5State extends State<Search5> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 30),
-            child: Text("Score: $score",
+            child: Text(
+              "Score: $score",
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
             ),
           ),
@@ -54,12 +69,14 @@ class _Search5State extends State<Search5> {
         child: Column(
           children: [
             SizedBox(height: 20,),
-            Text("Find these words by tapping the letters orderly",
+            Text(
+              "Find these words by tapping the letters orderly",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
             ),
             SizedBox(height: 10,),
-            Text('${wordsToFind.join(', ')}',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.pinkAccent)
+            Text(
+              '${wordsToFind.join(', ')}',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.pinkAccent),
             ),
             SizedBox(height: 20,),
             Expanded(
@@ -111,11 +128,75 @@ class _Search5State extends State<Search5> {
                 ),
               ],
             ),
-            SizedBox(height: 70,),
+            // Render button to go to next level if all words are found
+            SizedBox(height: 20,),
+            if (score==20)
+              if (widget.subscribedCategory == 'basic' || widget.subscribedCategory == 'standard' || widget.subscribedCategory == 'premium')
+                ElevatedButton(
+                  onPressed: () {
+                    // Navigate to the next level
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Search6(
+                          username: widget.username,
+                          email: widget.email,
+                          age: widget.age,
+                          subscribedCategory: widget.subscribedCategory,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text('Next Level'),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () {
+                    _showSubscribeMessage();
+                  },
+                  child: Text('Subscribe'),
+                ),
           ],
         ),
       )
           : Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  void _showSubscribeMessage() {
+    String message = 'Subscribe to access more levels.';
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Subscription Required'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SubscriptionDemoPage(
+                      username: widget.username,
+                      email: widget.email,
+                      age: widget.age,
+                      subscribedCategory: widget.subscribedCategory,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Subscribe'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -142,26 +223,25 @@ class _Search5State extends State<Search5> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(currentWord+" already founded"),
-              duration: Duration(milliseconds: 600),
-            )
+          SnackBar(
+            content: Text(currentWord + " already founded"),
+            duration: Duration(milliseconds: 600),
+          ),
         );
       }
-      // wordsToFind.remove(currentWord);
       currentWord = '';
       selectedIndices.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(currentWord + "not in the list"),
-            duration: Duration(milliseconds: 600),
-          )
+        SnackBar(
+          content: Text(currentWord + " not in the list"),
+          duration: Duration(milliseconds: 600),
+        ),
       );
     }
   }
 
-  void _clearWord(){
+  void _clearWord() {
     setState(() {
       currentWord = '';
       selectedIndices.clear();
@@ -171,11 +251,14 @@ class _Search5State extends State<Search5> {
   void _updateScoreInFirebase() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance.collection('games').doc(user.uid).set({
-        'gameData': {
-          'wordsearch': {'score': score, 'foundWords': foundWords},
+      await FirebaseFirestore.instance.collection('games').doc(user.uid).set(
+        {
+          'gameData': {
+            'wordsearch': {'score': score, 'foundWords': foundWords},
+          },
         },
-      }, SetOptions(merge: true));
+        SetOptions(merge: true),
+      );
     }
   }
 
@@ -273,5 +356,3 @@ List<List<String>> generateGrid(List<String> wordsToFind) {
   }
   return grid;
 }
-
-

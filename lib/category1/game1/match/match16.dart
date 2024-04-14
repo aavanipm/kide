@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/match/match.dart';
+import 'package:game/category1/game1/match/match17.dart';
 import 'package:game/category1/game1/match/matchlast.dart';
 
 class Match16 extends StatefulWidget {
@@ -24,10 +25,10 @@ class _Match16State extends State<Match16> {
   List<List<Animal>> animalSets = [
     [
       Animal(name: 'capsicum', imagePath: 'assets/Fruits/capsicum.png'),
+      Animal(name: 'oleander', imagePath: 'assets/Flowers/oleander.png'),
       Animal(name: 'cabbage', imagePath: 'assets/Vegetables/cabbage.png'),
       Animal(name: 'ladyfinger', imagePath: 'assets/Vegetables/ladyfinger.png'),
       Animal(name: 'wren', imagePath: 'assets/Birds/wren.png'),
-      Animal(name: 'robin', imagePath: 'assets/Birds/robin.png'),
     ],
   ];
 
@@ -201,8 +202,8 @@ class _Match16State extends State<Match16> {
 
     // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
     if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
-      if (score==65){
-        score = 70;
+      if (score==63){
+        score = 68;
         _updateScoreInFirebase();
       }
       gameCompleted = true; // Set gameCompleted flag to true
@@ -213,7 +214,6 @@ class _Match16State extends State<Match16> {
       _showGameCompletedDialog("Congratulations! You completed this level.");
     }
   }
-
 
   void _showGameCompletedDialog(String message) {
     showDialog(
@@ -244,10 +244,9 @@ class _Match16State extends State<Match16> {
 
   void _proceedToNextLevel() {
     if (widget.subscribedCategory == 'premium') {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-          MatchLast(
-              username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
-          )
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Match17(
+        username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory
+      )
       ));
     } else {
       _showSubscribeMessage(); // Shows subscribe message if conditions not met
@@ -304,7 +303,7 @@ class _Match16State extends State<Match16> {
   }
 
   void _updateScoreInFirebase() async {
-    if (score == 70) {
+    if (score == 68) {
       await Firebase.initializeApp();
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {

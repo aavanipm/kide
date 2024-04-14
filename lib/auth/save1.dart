@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:game/auth/login.dart';
 import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
-import 'package:game/category3/home3.dart';
 
 class Save1 extends StatelessWidget {
   final String username;
@@ -75,6 +74,8 @@ class Save1 extends StatelessWidget {
     switch (userage) {
       case '2':
       case '3':
+      case '4':
+      case '5':
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -82,15 +83,7 @@ class Save1 extends StatelessWidget {
           ),
         );
         break;
-      case '4':
-      case '5':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Home2(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
-          ),
-        );
-        break;
+
       case '6':
       case '7':
       case '8':
@@ -99,10 +92,11 @@ class Save1 extends StatelessWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Home3(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
+            builder: (context) => Home2(username: username, email: useremail, age: userage, subscribedCategory: subscribedCategory,),
           ),
         );
         break;
+
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Invalid age category")),

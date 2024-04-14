@@ -14,10 +14,20 @@ class _ColoursState extends State<Colours> {
   bool autoPlayEnabled = false; // Variable to track automatic playback
 
   List<Colour> colourList = [
-    Colour(name: "APPLE", image: "assets/Fruits/apple.png"),
-    Colour(name: "APRICOT", image: "assets/Fruits/apricot.png"),
-    Colour(name: "BANANA", image: "assets/Fruits/banana.png"),
-    // Add more fruits as needed
+    Colour(name: "BLACK", backgroundColor: Colors.black),
+    Colour(name: "BLUE", backgroundColor: Colors.blue),
+    Colour(name: "GREEN", backgroundColor: Colors.green),
+    Colour(name: "PINK", backgroundColor: Colors.pink),
+    Colour(name: "WHITE", backgroundColor: Colors.white),
+    Colour(name: "BROWN", backgroundColor: Colors.brown),
+    Colour(name: "RED", backgroundColor: Colors.red),
+    Colour(name: "YELLOW", backgroundColor: Colors.yellow),
+    Colour(name: "ORANGE", backgroundColor: Colors.orange),
+    Colour(name: "GREY", backgroundColor: Colors.grey),
+    Colour(name: "INDIGO", backgroundColor: Colors.indigo),
+    Colour(name: "PURPLE", backgroundColor: Colors.purple),
+
+    // Add more colours as needed
   ];
 
   double speechRate = 0.2;
@@ -69,11 +79,11 @@ class _ColoursState extends State<Colours> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start, // Align items with space between
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    SizedBox(width: 15,),
+                    SizedBox(width: 15),
                     Text('Auto Play'),
                     Transform.scale(
                       scale: 0.8,
@@ -90,37 +100,32 @@ class _ColoursState extends State<Colours> {
                         },
                       ),
                     ),
-                    SizedBox(width: 200,),
-                    IconButton(
-                      onPressed: () {
-                        speakColourName(currentColour.name);
-                      },
-                      icon: Icon(
-                        Icons.volume_up_sharp,
-                        size: 35,
-                      ),
-                    ),
                   ],
                 ),
-              ],
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Image.asset(currentColour.image, height: 280, width: 280),
-            SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  currentColour.name,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+                IconButton(
+                  onPressed: () {
+                    speakColourName(currentColour.name);
+                  },
+                  icon: Icon(
+                    Icons.volume_up_sharp,
+                    size: 35,
                   ),
                 ),
               ],
+            ),
+            SizedBox(height: 30),
+            Container(
+              height: 200,
+              width: 200,
+              color: currentColour.backgroundColor,
+            ),
+            SizedBox(height: 30),
+            Text(
+              currentColour.name,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 20),
             Row(
@@ -130,15 +135,10 @@ class _ColoursState extends State<Colours> {
                   onPressed: previousColour,
                   icon: Icon(Icons.arrow_circle_left_outlined, size: 60),
                 ),
-                SizedBox(
-                  width: 20,
-                ),
+                SizedBox(width: 20),
                 IconButton(
                   onPressed: nextColour,
-                  icon: Icon(
-                    Icons.arrow_circle_right_outlined,
-                    size: 60,
-                  ),
+                  icon: Icon(Icons.arrow_circle_right_outlined, size: 60),
                 ),
               ],
             ),
@@ -151,7 +151,7 @@ class _ColoursState extends State<Colours> {
 
 class Colour {
   final String name;
-  final String image;
+  final Color? backgroundColor; // Option for background color
 
-  Colour({required this.name, required this.image});
+  Colour({required this.name, required this.backgroundColor});
 }

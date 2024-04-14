@@ -94,7 +94,6 @@ class _BirdLevelState extends State<BirdLevel> {
     Bird(name: "18"),
     Bird(name: "19"),
     Bird(name: "20"),
-    Bird(name: "21"),
   ];
 
   @override
@@ -246,8 +245,6 @@ class _BirdLevelState extends State<BirdLevel> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => Bird20(
                 username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
-            case '21':
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Bird21()));
               break;
             default:
               break;

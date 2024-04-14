@@ -201,7 +201,7 @@ class _Opposite12State extends State<Opposite12> {
                 ),
               ),
               SizedBox(height: 70,),
-              // Image.asset("assets/opposite/lightdark.png", height: 300, width: 300,),
+              Image.asset("assets/opposite/daynight.png", height: 300, width: 300,),
             ],
           ),
         ),

@@ -157,7 +157,7 @@ class _GuessandSpeak2State extends State<GuessandSpeak2> {
   }
 
   bool _isSimilar(String a, String b) {
-    return a.length == b.length || a.contains(b) || b.contains(a);
+    return a.contains(b) || b.contains(a);
   }
 
   void _startListening() {

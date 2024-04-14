@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:game/auth/subscription.dart';
 import 'package:game/category1/home1.dart';
+import 'package:game/category2/home2.dart';
 
 class PremiumPlan extends StatefulWidget {
   final String username;
@@ -116,7 +118,7 @@ class _PremiumPlanState extends State<PremiumPlan> {
                       _showPaymentConfirmation();
                     }
                   },
-                  child: Text('Pay 50'),
+                  child: Text('Pay 199'),
                 ),
               ),
             ],
@@ -161,17 +163,11 @@ class _PremiumPlanState extends State<PremiumPlan> {
                 try {
                   await FirebaseFirestore.instance
                       .collection('users')
-                      .doc(widget.username) // Assuming username is unique
+                      .doc(widget.email) // Assuming email is unique
                       .update({
                     'subscribedCategory': 'premium', // Update subscribed category
                   });
-                  Navigator.pop(context); // Close dialog
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home1(
-                    username: widget.username,
-                    email: widget.email,
-                    age: widget.age,
-                    subscribedCategory: 'premium', // Update subscribed category
-                  ))); // Navigate to subscription page, replacing the current one
+                  _navigate(widget.age);
                 } catch (e) {
                   print('Error updating plan type and subscribed category: $e');
                 }
@@ -183,4 +179,34 @@ class _PremiumPlanState extends State<PremiumPlan> {
       },
     );
   }
+  Future<void> _navigate(String age) async {
+    int ageInt = int.tryParse(age) ?? 0; // Convert age to an integer
+
+    if (ageInt == 2 || ageInt == 3 || ageInt == 4 || ageInt == 5) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home1(
+            username: widget.username,
+            email: widget.email,
+            age: widget.age,
+            subscribedCategory: 'premium', // Update subscribed category
+          ),
+        ),
+      );
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home2(
+            username: widget.username,
+            email: widget.email,
+            age: widget.age,
+            subscribedCategory: 'premium', // Update subscribed category
+          ),
+        ),
+      );
+    }
+  }
+
 }

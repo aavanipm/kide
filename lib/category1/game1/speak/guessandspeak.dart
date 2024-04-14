@@ -4,14 +4,27 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/speak/guessandspeak1.dart';
+import 'package:game/category1/game1/speak/guessandspeak10.dart';
+import 'package:game/category1/game1/speak/guessandspeak11.dart';
+import 'package:game/category1/game1/speak/guessandspeak12.dart';
+import 'package:game/category1/game1/speak/guessandspeak13.dart';
+import 'package:game/category1/game1/speak/guessandspeak14.dart';
+import 'package:game/category1/game1/speak/guessandspeak15.dart';
+import 'package:game/category1/game1/speak/guessandspeak16.dart';
+import 'package:game/category1/game1/speak/guessandspeak17.dart';
+import 'package:game/category1/game1/speak/guessandspeak18.dart';
+import 'package:game/category1/game1/speak/guessandspeak19.dart';
 import 'package:game/category1/game1/speak/guessandspeak2.dart';
+import 'package:game/category1/game1/speak/guessandspeak20.dart';
 import 'package:game/category1/game1/speak/guessandspeak3.dart';
 import 'package:game/category1/game1/speak/guessandspeak4.dart';
 import 'package:game/category1/game1/speak/guessandspeak5.dart';
 import 'package:game/category1/game1/speak/guessandspeak6.dart';
 import 'package:game/category1/game1/speak/guessandspeak7.dart';
 import 'package:game/category1/game1/speak/guessandspeak8.dart';
+import 'package:game/category1/game1/speak/guessandspeak9.dart';
 import 'package:game/category1/home1.dart';
+import 'package:game/category2/home2.dart';
 
 class GuessSpeakLevel extends StatefulWidget {
   final String username;
@@ -70,17 +83,17 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
     GuessSpeak(name: "7"),
     GuessSpeak(name: "8"),
     GuessSpeak(name: "9"),
-    // GuessSpeak(name: "10"),
-    // GuessSpeak(name: "11"),
-    // GuessSpeak(name: "12"),
-    // GuessSpeak(name: "13"),
-    // GuessSpeak(name: "14"),
-    // GuessSpeak(name: "15"),
-    // GuessSpeak(name: "16"),
-    // GuessSpeak(name: "17"),
-    // GuessSpeak(name: "18"),
-    // GuessSpeak(name: "19"),
-    // GuessSpeak(name: "20"),
+    GuessSpeak(name: "10"),
+    GuessSpeak(name: "11"),
+    GuessSpeak(name: "12"),
+    GuessSpeak(name: "13"),
+    GuessSpeak(name: "14"),
+    GuessSpeak(name: "15"),
+    GuessSpeak(name: "16"),
+    GuessSpeak(name: "17"),
+    GuessSpeak(name: "18"),
+    GuessSpeak(name: "19"),
+    GuessSpeak(name: "20"),
   ];
 
   @override
@@ -91,8 +104,7 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Home1(
-                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory)));
+              _navigate(widget.age);
             },
             icon: Icon(Icons.home), // Home button on the right side
           ),
@@ -114,6 +126,36 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
         ],
       ),
     );
+  }
+
+  Future<void> _navigate(String age) async {
+    int ageInt = int.tryParse(age) ?? 0; // Convert age to an integer
+
+    if (ageInt == 2 || ageInt == 3 || ageInt == 4 || ageInt == 5) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home1(
+            username: widget.username,
+            email: widget.email,
+            age: widget.age,
+            subscribedCategory: widget.subscribedCategory, // Update subscribed category
+          ),
+        ),
+      );
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home2(
+            username: widget.username,
+            email: widget.email,
+            age: widget.age,
+            subscribedCategory: widget.subscribedCategory, // Update subscribed category
+          ),
+        ),
+      );
+    }
   }
 
   Widget fillcard(BuildContext context, GuessSpeak val) {
@@ -176,67 +218,66 @@ class _GuessSpeakLevelState extends State<GuessSpeakLevel> {
                   username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
               )));
               break;
-            //   break;
-            // case '9':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill9(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '10':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill10(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '11':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill11(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '12':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill12(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '13':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill13(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '14':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill14(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '15':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill15(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '16':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill16(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '17':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill17(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '18':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill18(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '19':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill19(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
-            // case '20':
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => Fill20(
-            //       username: widget.username, email: widget.email, age: widget.age
-            //   )));
-            //   break;
+            case '9':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak9(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '10':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak10(
+                  username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '11':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak11(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '12':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak12(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '13':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak13(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '14':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak14(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '15':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak15(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '16':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak16(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '17':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak17(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '18':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak18(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '19':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak19(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
+            case '20':
+              Navigator.push(context, MaterialPageRoute(builder: (context) => GuessandSpeak17(
+                username: widget.username, email: widget.email, age: widget.age, subscribedCategory: widget.subscribedCategory,
+              )));
+              break;
             default:
               break;
           }

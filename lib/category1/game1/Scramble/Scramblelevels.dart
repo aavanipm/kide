@@ -9,6 +9,7 @@ import 'package:game/category1/game1/Scramble/scarmble1.dart';
 import 'package:game/category1/game1/Scramble/scramble4.dart';
 import 'package:game/category1/game1/Scramble/scrambles.dart';
 import 'package:game/category1/home1.dart';
+import 'package:game/category2/home2.dart';
 
 class ScrambleLevel extends StatefulWidget {
   final String username;
@@ -51,7 +52,7 @@ class _ScrambleLevelState extends State<ScrambleLevel> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Home1(
+                  builder: (context) => Home2(
                     username: widget.username,
                     email: widget.email,
                     age: widget.age,

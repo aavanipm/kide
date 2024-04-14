@@ -41,7 +41,7 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Admin Home"),
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.deepPurple.shade100,
       ),
       body: _users.isEmpty
           ? Center(child: CircularProgressIndicator()) // Show loading indicator

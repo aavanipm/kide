@@ -21,7 +21,7 @@ class _SecondStoryState extends State<SecondStory> {
         ),
       ),
       body: Swiper(
-        itemCount: 5,
+        itemCount: 7,
         loop: false,
         itemBuilder: (BuildContext context, int index) {
           switch (index) {
@@ -75,7 +75,8 @@ class SecondStory1 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak(
@@ -95,10 +96,12 @@ class SecondStory1 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 60),
+            Image.asset("assets/story/story2/pic1.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -117,7 +120,8 @@ class SecondStory2 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak(" It liked to tease the cactus because it didn't look as fancy. It was too busy admiring its own petals."
@@ -134,10 +138,12 @@ class SecondStory2 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story2/pic2.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -157,7 +163,8 @@ class SecondStory3 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak("One scorching summer, there was barely any water in the desert. "
@@ -176,10 +183,12 @@ class SecondStory3 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 60),
+            Image.asset("assets/story/story2/pic3.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -198,7 +207,8 @@ class SecondStory4 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak("However, the cactus, despite not being as pretty, had stored water inside itself. "
@@ -217,10 +227,12 @@ class SecondStory4 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 70),
+            Image.asset("assets/story/story2/pic4.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -240,7 +252,8 @@ class SecondStory5 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak("Feeling weak and thirsty, the rose asked the cactus for some water. "
@@ -259,10 +272,12 @@ class SecondStory5 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 70),
+            Image.asset("assets/story/story2/pic5.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -282,7 +297,8 @@ class SecondStory6 extends StatelessWidget {
         child: Column(
           children: [
             if (playAudio)
-              ElevatedButton(
+              SizedBox(height: 20,),
+            ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
                   await flutterTts.speak("In the end, the rose and the cactus became friends, teaching that true beauty lies in kindness, not appearances.",
@@ -301,10 +317,12 @@ class SecondStory6 extends StatelessWidget {
                 fontSize: 30,
               ),
             ),
+            SizedBox(height: 80),
+            Image.asset("assets/story/story2/pic6.png", height: 230, width: 230,),
           ],
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -321,8 +339,8 @@ class SecondStoryMoral extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center, // Align contents vertically at the center
             children: [
+              SizedBox(height: 20,),
               ElevatedButton(
                 onPressed: () async {
                   await flutterTts.setSpeechRate(0.3);
@@ -340,6 +358,14 @@ class SecondStoryMoral extends StatelessWidget {
                   fontSize: 30,
                 ),
               ),
+              SizedBox(height: 70),
+              Text(
+                "try to answer the questions by clicking on this",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
               SizedBox(height: 20),
               IconButton(
                 onPressed: () {
@@ -348,13 +374,13 @@ class SecondStoryMoral extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => SecondQuestionsPage()),
                   );
                 },
-                icon: Icon(Icons.question_answer, color: Colors.lightGreen),
+                icon: Icon(Icons.question_answer_rounded, color: Colors.lightGreen, size: 40,),
               ),
             ],
           ),
         ),
       ),
-      backgroundColor: Colors.green.shade200,
+      backgroundColor: Colors.teal.shade50,
     );
   }
 }
@@ -482,9 +508,10 @@ class _SecondQuestionsPageState extends State<SecondQuestionsPage> {
             : Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 30,),
             Text(
               _questions[_currentQuestionIndex]['question'],
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21),
             ),
             SizedBox(height: 10.0),
             for (String option in _questions[_currentQuestionIndex]['options'])
