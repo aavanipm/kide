@@ -25,7 +25,7 @@ class _LoginState extends State<Login> {
     if (formkey.currentState!.validate()) {
       try {
         // Check if the user is an admin
-        if (email.text == 'admin' && password.text == '1234') {
+        if (email.text == 'admin@gmail.com' && password.text == '123456') {
           // Admin login
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminMainPage()));
         } else {

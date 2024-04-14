@@ -21,7 +21,7 @@ class _Noun1State extends State<Noun1> {
         backgroundColor: Colors.purple.shade100,
       ),
       body: Swiper(
-        itemCount: 6, // Changed itemCount to 4
+        itemCount: 5, // Changed itemCount to 4
         loop: false,
         itemBuilder: (BuildContext context, int index) {
           switch (index) {
@@ -30,12 +30,10 @@ class _Noun1State extends State<Noun1> {
             case 1:
               return NounDefinitionPage();
             case 2:
-              return NounExamplesPage();
-            case 3:
               return NounTypesDefinitionPage();
-            case 4:
+            case 3:
               return NounFunFactsPage();
-            case 5:
+            case 4:
               return NounUsagePage();
             default:
               return Container();
@@ -125,123 +123,6 @@ class NounDefinitionPage extends StatelessWidget {
                 SizedBox(height: 10),
                 Text(" - Happiness", style: TextStyle(fontSize: 20)),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class NounExamplesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            Text(
-              "Examples of Nouns in Sentences",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Let's explore more examples of nouns used in sentences to deepen our understanding.",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Here are some examples:",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(height: 40),
-            Expanded(
-              child: Swiper(
-                itemCount: 4,
-                loop: false,
-                itemBuilder: (BuildContext context, int index) {
-                  switch (index) {
-                    case 0:
-                      return Column(
-                        children: [
-                          Text(
-                            "1. Sarah went to the park with her dog.",
-                            style: TextStyle(fontSize: 20.0),
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "In this sentence, 'Sarah' and 'dog' are nouns.",
-                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      );
-                    case 1:
-                      return Column(
-                        children: [
-                          Text(
-                            "2. The Eiffel Tower is a famous landmark in Paris.",
-                            style: TextStyle(fontSize: 20.0),
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "In this sentence, 'Eiffel Tower', 'landmark', and 'Paris' are nouns.",
-                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      );
-                    case 2:
-                      return Column(
-                        children: [
-                          Text(
-                            "3. My grandmother gave me a beautiful necklace for my birthday.",
-                            style: TextStyle(fontSize: 20.0),
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "In this sentence, 'grandmother', 'necklace', and 'birthday' are nouns.",
-                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      );
-                    case 3:
-                      return Column(
-                        children: [
-                          Text(
-                            "4. The concept of time is fascinating.",
-                            style: TextStyle(fontSize: 20.0),
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "In this sentence, 'concept' and 'time' are nouns.",
-                            style: TextStyle(fontSize: 18.0, fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      );
-                    default:
-                      return Container();
-                  }
-                },
-                pagination: SwiperPagination(),
-                control: SwiperControl(),
-              ),
             ),
           ],
         ),
@@ -342,7 +223,7 @@ class NounTypesDefinitionPage extends StatelessWidget {
                               ),
                               Text(
                                 "book, toy, car",
-                                style: TextStyle(fontSize: 20.0),
+                                style: TextStyle(fontSize: 20.0, color: Colors.brown),
                                 textAlign: TextAlign.left,
                               ),
                             ],
@@ -363,21 +244,12 @@ class NounTypesDefinitionPage extends StatelessWidget {
                               ),
                               Text(
                                 "happiness, courage",
-                                style: TextStyle(fontSize: 20.0),
+                                style: TextStyle(fontSize: 20.0, color: Colors.redAccent),
                                 textAlign: TextAlign.left,
                               ),
                             ],
                           ),
                           SizedBox(height: 20),
-                          Text(
-                            "Do you know?",
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "Nouns help us understand the world around us! They can be fun to learn and use in sentences.",
-                            style: TextStyle(fontSize: 18.0),
-                          ),
                         ],
                       );
                     default:
@@ -551,67 +423,20 @@ class NounUsagePage extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
             SizedBox(height: 40),
-            Expanded(
-              child: Swiper(
-                itemCount: 4,
-                loop: false,
-                itemBuilder: (BuildContext context, int index) {
-                  switch (index) {
-                    case 0:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "1. Subject: Sarah loves to read books.",
-                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.left,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
-                        ],
-                      );
-                    case 1:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text("2. Object: She bought a new car.",
-                              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.left,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
-                        ],
-                      );
-                    case 2:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "3. Complement: Happiness is contagious.",
-                                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
-                                textAlign: TextAlign.left,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/booktoy.png", height: 250, width: 250,),
-                        ],
-                      );
-                    default:
-                      return Container();
-                  }
-                },
-                pagination: SwiperPagination(),
-                control: SwiperControl(), // Add control for navigation icons
-              ),
+            Text("1. Subject: Sarah loves to read books.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500), textAlign: TextAlign.left,
             ),
+            SizedBox(height: 40,),
+            Text("2. Object: She bought a new car.",
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 40,),
+            Text("3. Complement: Happiness is contagious.",
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.left,
+            ),
+
           ],
         ),
       ),

@@ -173,6 +173,8 @@ class PrepositionExamplesPage extends StatelessWidget {
                               Text("We will meet at the park.", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),),
                             ],
                           ),
+                          SizedBox(height: 110,),
+                          Image.asset("assets/learning/grammar/learn/park.png", height: 250, width: 250,),
                         ],
                       );
                     case 3:
@@ -184,6 +186,8 @@ class PrepositionExamplesPage extends StatelessWidget {
                               Text("This book is for reading.", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),),
                             ],
                           ),
+                          SizedBox(height: 120,),
+                          Image.asset("assets/learning/grammar/learn/book.png",  height: 250, width: 250,),
                         ],
                       );
                     case 4:
@@ -195,7 +199,7 @@ class PrepositionExamplesPage extends StatelessWidget {
                               Text("I went to the store.", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),),
                             ],
                           ),
-                          SizedBox(height: 120,),
+                          SizedBox(height: 130,),
                           Image.asset("assets/learning/grammar/learn/store.png", width: 250, height: 250,),
                         ],
                       );

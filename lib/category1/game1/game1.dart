@@ -25,14 +25,12 @@ class Game1 extends StatefulWidget {
     Games(imagepath: "assets/game/guess.png", name: "Guess"),
     Games(imagepath: "assets/game/match.png", name: "Match"),
     Games(imagepath: "assets/game/say.png", name: "Speak"),
-    Games(imagepath: "assets/game/scramble.png", name: "scramble"),
+    // Games(imagepath: "assets/game/scramble.png", name: "scramble"),
     Games(imagepath: "assets/game/pair.png", name: "opposite"),
     Games(imagepath: "assets/game/synonym.png", name: "synonym"),
     Games(imagepath: "assets/game/spell.png", name: "flash"),
-    Games(imagepath: "assets/game/sentence.png", name: "sentence"),
+    // Games(imagepath: "assets/game/sentence.png", name: "sentence"),
     Games(imagepath: "assets/game/word.png", name: "Search"),
-    // Games(imagepath: "assets/images/img1.png", name: "SubDemo"),
-
     // Games(imagepath: "assets/images/img1.png", name: "past"),
   ];
 }
@@ -94,11 +92,11 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             )));
             break;
 
-          case 'scramble':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
-              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
-            )));
-            break;
+          // case 'scramble':
+          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
+          //     username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+          //   )));
+          //   break;
 
           case 'opposite':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>Oppositelevels(
@@ -118,11 +116,11 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             )));
             break;
 
-          case 'sentence':
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels(
-                username: username, email: email, age: age, subscribedCategory: subscribedCategory,
-            )));
-            break;
+          // case 'sentence':
+          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels(
+          //       username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+          //   )));
+          //   break;
 
           case 'Search':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel(

@@ -33,12 +33,6 @@ class _Home2State extends State<Home2> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Home"), backgroundColor: Colors.blue.shade100,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(Icons.notifications),
-            ),
-          ],
         ),
         drawer: Drawer(
           child: ListView(

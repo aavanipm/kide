@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
+import 'package:game/category1/game1/soundspell/SoundSpellLevel.dart';
+import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category2/game2/adjective.dart';
 import 'package:game/category2/game2/adverb.dart';
 import 'package:game/category2/game2/noun.dart';
@@ -17,11 +20,14 @@ class Game2 extends StatefulWidget {
   @override
   State<Game2> createState() => _Game2State();
   List<Games> values = [
+    Games(imagepath: "assets/game/scramble.png", name: "Scramble"),
+    Games(imagepath: "assets/game/say.png", name: "Speak it"),
+    Games(imagepath: "assets/game/spell.png", name: "Spell it"),
     Games(imagepath: "assets/learning/grammar/noungame.png", name: "Noun"),
     Games(imagepath: "assets/learning/grammar/verbgame.png", name: "Verb"),
-    Games(imagepath: "assets/learning/grammar/adjgame.png", name: "Adjective"),
+    Games(imagepath: "assets/learning/grammar/adjectivegame.png", name: "Adjective"),
     Games(imagepath: "assets/learning/grammar/pregame.png", name: "Preposition"),
-    Games(imagepath: "assets/learning/grammar/adverbgame.png", name: "Adverb"),
+    // Games(imagepath: "assets/learning/grammar/adverbgame.png", name: "Adverb"),
     Games(imagepath: "assets/learning/grammar/pronoungame.png", name: "Pronoun"),
   ];
 }
@@ -57,6 +63,24 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
   return GestureDetector(
       onTap: (){
         switch(val.name){
+          case 'Speak it':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>GuessSpeakLevel(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
+        case 'Scramble':
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ScrambleLevel(
+            username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+          )));
+          break;
+
+          case 'Spell it':
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SoundSpellLevel(
+              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+            )));
+            break;
+
           case 'Noun':
             Navigator.push(context, MaterialPageRoute(builder: (context) => NounQuestionsPage(
               username: username, email: email, age: age, subscribedCategory: subscribedCategory,
@@ -69,11 +93,11 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
             )));
             break;
 
-          case 'Adverb':
-            Navigator.push(context, MaterialPageRoute(builder: (context) => AdverbQuestionsPage(
-              username: username, email: email, age: age, subscribedCategory: subscribedCategory,
-            )));
-            break;
+          // case 'Adverb':
+          //   Navigator.push(context, MaterialPageRoute(builder: (context) => AdverbQuestionsPage(
+          //     username: username, email: email, age: age, subscribedCategory: subscribedCategory,
+          //   )));
+          //   break;
 
           case 'Adjective':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>AdjectiveQuestionsPage(
@@ -102,7 +126,7 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
         child: Column(
           children: [
             Image.asset(val.imagepath, height: 150, width: 150,),
-            Text(val.name),
+            Text(val.name, style: TextStyle(fontWeight: FontWeight.bold),),
           ],
         ),
       )

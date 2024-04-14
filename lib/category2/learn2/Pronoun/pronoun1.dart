@@ -20,7 +20,7 @@ class _Pronoun1State extends State<Pronoun1> {
         backgroundColor: Colors.purple.shade100,
       ),
       body: Swiper(
-        itemCount: 4,
+        itemCount: 6,
         loop: false,
         itemBuilder: (BuildContext context, int index) {
           switch (index) {
@@ -36,8 +36,6 @@ class _Pronoun1State extends State<Pronoun1> {
               return PronounType3();
             case 5:
               return PronounType4();
-            case 6:
-              return PronounUsagePage();
             default:
               return Container();
           }
@@ -333,8 +331,8 @@ class PronounType2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
+                          SizedBox(height: 130,),
+                          Image.asset("assets/learning/grammar/learn/mine.png", height: 250, width: 250,),
                         ],
                       );
                     case 1:
@@ -346,14 +344,23 @@ class PronounType2 extends StatelessWidget {
                                 "Yours: ",
                                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "The red hat is mine, and the blue one is yours.",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "The red hat is mine,",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Text(
+                                    " and the blue one is yours.",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
+                          SizedBox(height: 100,),
+                          Image.asset("assets/learning/grammar/learn/hat.png", height: 250, width: 250,),
                         ],
                       );
                     case 2:
@@ -365,12 +372,23 @@ class PronounType2 extends StatelessWidget {
                                 "His: ",
                                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "David has a new phone. His camera is amazing.",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "David has a new phone.",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Text(
+                                    " His camera is amazing.",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          SizedBox(height: 100,),
+                          Image.asset("assets/learning/grammar/learn/phone.png", height: 250, width: 250,),
                         ],
                       );
                     case 3:
@@ -382,12 +400,24 @@ class PronounType2 extends StatelessWidget {
                                 "Her: ",
                                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "Sarah baked a delicious cake. Her frosting is the best!",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                              Column(
+                                children: [
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    "Sarah baked a delicious cake. ",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Text(
+                                    "Her frosting is the best!",
+                                    style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          SizedBox(height: 90,),
+                          Image.asset("assets/learning/grammar/learn/cake.png", height: 300, width: 300,),
                         ],
                       );
                     case 4:
@@ -405,8 +435,8 @@ class PronounType2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
+                          SizedBox(height: 120,),
+                          Image.asset("assets/learning/grammar/learn/catlick.png", height: 250, width: 250,),
                         ],
                       );
                     case 5:
@@ -424,8 +454,8 @@ class PronounType2 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
+                          SizedBox(height: 120,),
+                          Image.asset("assets/learning/grammar/learn/home.png", height: 250, width: 250,),
                         ],
                       );
                     case 6:
@@ -443,6 +473,8 @@ class PronounType2 extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(height: 100,),
+                          Image.asset("assets/learning/grammar/learn/bikes.png", height: 250, width: 250,),
                         ],
                       );
                     default:
@@ -501,8 +533,8 @@ class PronounType3 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
+                          SizedBox(height: 110,),
+                          Image.asset("assets/learning/grammar/learn/newbook.png", height: 250, width: 250,),
                         ],
                       );
                     case 1:
@@ -520,8 +552,8 @@ class PronounType3 extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
+                          SizedBox(height: 110,),
+                          Image.asset("assets/learning/grammar/learn/dogbark.png", height: 250, width: 250,),
                         ],
                       );
                     case 2:
@@ -539,6 +571,8 @@ class PronounType3 extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(height: 100,),
+                          Image.asset("assets/learning/grammar/learn/cookie.png", height: 250, width: 250,),
                         ],
                       );
                     case 3:
@@ -556,6 +590,8 @@ class PronounType3 extends StatelessWidget {
                               ),
                             ],
                           ),
+                          SizedBox(height: 110,),
+                          Image.asset("assets/learning/grammar/learn/flowers.png", height: 250, width: 250,),
                         ],
                       );
                     default:
@@ -593,197 +629,41 @@ class PronounType4 extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
             SizedBox(height: 40),
-            Expanded(
-              child: Swiper(
-                itemCount: 4,
-                loop: false,
-                itemBuilder: (BuildContext context, int index) {
-                  switch (index) {
-                    case 0:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Who: ",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Who is coming to the party tonight?",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sara.png", height: 250, width: 250,),
-                        ],
-                      );
-                    case 1:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Whom: ",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Whom did you invite to the event?",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 50,),
-                          Image.asset("assets/learning/grammar/learn/sea.png", height: 250, width: 250,),
-                        ],
-                      );
-                    case 2:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Whose: ",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Whose book is this on the table?",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    case 3:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Which: ",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Which dress should I wear to the party?",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    case 4:
-                      return Column(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "What: ",
-                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "What is your favorite color?",
-                                style: TextStyle(fontSize: 23, fontWeight: FontWeight.w400 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    default:
-                      return Container();
-                  }
-                },
-                pagination: SwiperPagination(),
-                control: SwiperControl(), // Add control for navigation icons
-              ),
+            Text("Who: ",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+            Text("Who is coming to the party tonight?",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400 ),
+            ),
+            SizedBox(height: 20,),
+            Text("Whom: ",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
+            ),
+            Text("Whom did you invite to the event?",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400 ),
+            ),
+            SizedBox(height: 20,),
 
-class PronounUsagePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            Text(
-              "Using Pronouns",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-              ),
-              textAlign: TextAlign.left,
+            Text("Whose: ",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 20),
-            Text(
-              "Pronouns help us avoid repeating nouns in sentences.",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w400),
-              textAlign: TextAlign.left,
+            Text("Whose book is this on the table?",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400 ),
             ),
-            SizedBox(height: 20),
-            Text(
-              "Examples of Using Pronouns",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.left,
+            SizedBox(height: 20,),
+
+            Text("Which: ",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 40),
-            Expanded(
-              child: Swiper(
-                itemCount: 2,
-                loop: false,
-                itemBuilder: (BuildContext context, int index) {
-                  switch (index) {
-                    case 0:
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Example 1:",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "John is a good boy. He helps his mother.",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      );
-                    case 1:
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Example 2:",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Text(
-                            "The cat is sleeping. It is cute.",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ],
-                      );
-                    default:
-                      return Container();
-                  }
-                },
-                pagination: SwiperPagination(),
-                control: SwiperControl(),
-              ),
+            Text("Which dress should I wear to the party?",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400 ),
+            ),
+            SizedBox(height: 20,),
+            Text("What: ",
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+            ),
+            Text("What is your favorite color?",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400 ),
             ),
           ],
         ),

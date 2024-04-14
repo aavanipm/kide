@@ -256,7 +256,6 @@ class _NounQuestionsPageState extends State<NounQuestionsPage> {
       _allCorrect = false;
       score = 0;
       _selectedOption = null;
-      // Update initialization of _answeredQuestions
       _answeredQuestions = List.filled(20, false);
     });
   }

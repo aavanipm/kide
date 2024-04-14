@@ -202,7 +202,7 @@ class _Match19State extends State<Match19> {
     // If all answers are correct and the game is not completed yet, set score to 3 and mark game as completed
     if (correctAnswers == totalCorrectAnswers && !gameCompleted) {
       if (score==76){
-        score = 75;
+        score = 80;
         _updateScoreInFirebase();
       }
       gameCompleted = true; // Set gameCompleted flag to true
