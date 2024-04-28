@@ -9,7 +9,7 @@ class ThirdStory extends StatefulWidget {
 
 class _ThirdStoryState extends State<ThirdStory> {
   final FlutterTts flutterTts = FlutterTts();
-  bool _playAudio = true; // Flag to control audio playback
+  bool _playAudio = true;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,6 @@ class _ThirdStoryState extends State<ThirdStory> {
         onPressed: () {
           setState(() {
             _playAudio = !_playAudio;
-            // Stop any ongoing speech when switching audio mode
             flutterTts.stop();
           });
         },
@@ -58,7 +57,6 @@ class _ThirdStoryState extends State<ThirdStory> {
     );
   }
 }
-
 
 class ThirdStory1 extends StatelessWidget {
   final FlutterTts flutterTts;
@@ -476,7 +474,7 @@ class _ThirdQuestionsPageState extends State<ThirdQuestionsPage> {
           _currentQuestionIndex++;
           _selectedOption = null;
         } else {
-          _allCorrect = true; // Set flag to true when all questions are answered correctly
+          _allCorrect = true;
         }
       });
     } else {

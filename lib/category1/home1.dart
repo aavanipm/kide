@@ -5,10 +5,10 @@ import 'package:game/auth/save1.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category1/game1/game1.dart';
 import 'package:game/category1/learn1/learn1.dart';
-import 'package:game/category3/learn3/Story/Story1.dart';
-import 'package:game/category3/learn3/Story/Story2.dart';
+import 'package:game/learn/Stories/Story1.dart';
 import 'package:game/learn/Numbers.dart';
 import 'package:game/learn//flowers.dart';
+import 'package:game/learn/Stories/Story2.dart';
 import 'package:game/learn/Stories/storysection.dart';
 import 'package:game/learn/capital.dart';
 import 'package:game/learn/small.dart';
@@ -41,19 +41,19 @@ class _Home1State extends State<Home1> {
               UserAccountsDrawerHeader(accountName: Text(widget.username), accountEmail: Text(widget.email),
                 decoration: BoxDecoration(color: Colors.lightBlue),),
               ListTile(
-                  title: Text("Home"),leading: Icon(Icons.home),
-                  onTap: (){
-                    Navigator.of(context).pop();
-                  }
+                title: Text("Home"),leading: Icon(Icons.home),
+                onTap: (){
+                  Navigator.of(context).pop();
+                }
               ),
 
               ListTile(
-                  title: Text("Subscription"),leading: Icon(Icons.subscriptions),
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
-                        username: widget.username, email: widget.email,
-                      age: widget.age, subscribedCategory: widget.subscribedCategory,)));
-                  }
+                title: Text("Subscription"),leading: Icon(Icons.subscriptions),
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SubscriptionDemoPage(
+                      username: widget.username, email: widget.email,
+                    age: widget.age, subscribedCategory: widget.subscribedCategory,)));
+                }
               ),
 
               ListTile(
@@ -68,10 +68,9 @@ class _Home1State extends State<Home1> {
               ListTile(
                 title: Text("Logout"), leading: Icon(Icons.logout),
                 onTap: (){
-                  //
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>Save1(
                       username: widget.username, useremail: widget.email, userage: widget.age, subscribedCategory: widget.subscribedCategory,)
-                  )
+                    )
                   );
                 },
               ),
@@ -113,38 +112,6 @@ class _Home1State extends State<Home1> {
                   ),
                 ),
 
-                // card
-                // CarouselSlider(items: [
-                //   Card(
-                //     child: GestureDetector(
-                //       onTap: (){
-                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>CapitalLetter()));
-                //       },
-                //       child: Column(
-                //         children: [
-                //           Image.asset("assets/home/capital.png",height: 212.90, width: 300,),
-                //         ],
-                //       ),
-                //     ),
-                //   ),
-                //
-                //   Card(
-                //     child: GestureDetector(
-                //       onTap: (){
-                //         Navigator.push(context, MaterialPageRoute(builder: (context)=>SmallLetter()));
-                //       },
-                //       child: Column(
-                //         children: [
-                //           Image.asset("assets/home/small.png", height: 212.90, width: 300,),
-                //         ],
-                //       ),
-                //     ),
-                //     //child: Image.asset("assets/images/img1.png", ),
-                //   ),
-                // ], options: CarouselOptions(autoPlay: true, viewportFraction: 16/9)
-                // ),
-
-
                 CarouselSlider(
                   items: [
                     GestureDetector(
@@ -154,10 +121,7 @@ class _Home1State extends State<Home1> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.asset(
-                          "assets/home/capital.png",
-                          // height: 212.90,
-                          // width: 300,
-                          fit: BoxFit.cover,
+                          "assets/home/capital.png", fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -168,10 +132,7 @@ class _Home1State extends State<Home1> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Image.asset(
-                          "assets/home/small.png",
-                          // height: 212.90,
-                          // width: 300,
-                          fit: BoxFit.cover,
+                          "assets/home/small.png", fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -181,10 +142,7 @@ class _Home1State extends State<Home1> {
                     viewportFraction: 1, // Adjust this value to fit your layout
                   ),
                 ),
-
-
                 SizedBox(height: 50,),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -200,7 +158,6 @@ class _Home1State extends State<Home1> {
                       ),
                     ),
                     SizedBox(width: 40,),
-
                     GestureDetector(
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>Game1(
@@ -216,7 +173,6 @@ class _Home1State extends State<Home1> {
                     ),
                   ],
                 ),
-
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

@@ -9,9 +9,7 @@ class CapitalLetter extends StatefulWidget {
 class _CapitalLetterState extends State<CapitalLetter> {
   FlutterTts flutterTts = FlutterTts();
   int currentAlphabetIndex = 0;
-  bool autoPlayEnabled = false; // Variable to track automatic playback
-
-
+  bool autoPlayEnabled = false;
   List<Capital> alphabetList = [
     Capital(name: "A", image: "assets/Alphabets/capital/A.png"),
     Capital(name: "B", image: "assets/Alphabets/capital/B.png"),
@@ -39,11 +37,9 @@ class _CapitalLetterState extends State<CapitalLetter> {
     Capital(name: "X", image: "assets/Alphabets/capital/X.png"),
     Capital(name: "Y", image: "assets/Alphabets/capital/Y.png"),
     Capital(name: "Z", image: "assets/Alphabets/capital/Z.png"),
-
-    // Add more alphabets as needed
   ];
 
-  double speechRate = 0.2; // Adjust this value to control the speed (0.5 is slower, 1.0 is normal)
+  double speechRate = 0.2;
 
   @override
   void initState (){
@@ -105,7 +101,6 @@ class _CapitalLetterState extends State<CapitalLetter> {
                           setState(() {
                             autoPlayEnabled = value;
                           });
-                          // Speak the colour name if auto play enabled
                           if (autoPlayEnabled) {
                             speakAlphabetName(currentAlphabet.name);
                           }
@@ -127,17 +122,13 @@ class _CapitalLetterState extends State<CapitalLetter> {
               ],
             ),
 
-
             SizedBox(height: 30,),
             Image.asset(currentAlphabet.image, height: 150, width: 150),
             SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Text(
-                //   currentAlphabet.name,
-                //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,),
-                // ),
+
               ],
             ),
 

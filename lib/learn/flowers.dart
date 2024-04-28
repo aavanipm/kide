@@ -10,9 +10,7 @@ class _FlowersState extends State<Flowers> {
   FlutterTts flutterTts = FlutterTts();
   int currentFlowerIndex = 0;
   bool autoPlayEnabled = false; // Variable to track automatic playback
-
   List<Flower> flowerList = [
-
     Flower(name: "ROSE", image: "assets/Flowers/rose.png"),
     Flower(name: "LOTUS", image: "assets/Flowers/lotus.png"),
     Flower(name: "JASMINE", image: "assets/Flowers/jasmine.png"),

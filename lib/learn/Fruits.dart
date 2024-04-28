@@ -9,8 +9,7 @@ class Fruits extends StatefulWidget {
 class _FruitsState extends State<Fruits> {
   FlutterTts flutterTts = FlutterTts();
   int currentFruitIndex = 0;
-  bool autoPlayEnabled = false; // Variable to track automatic playback
-
+  bool autoPlayEnabled = false;
   List<Fruit> fruitList = [
     Fruit(name: "APPLE", image: "assets/Fruits/apple.png"),
     Fruit(name: "APRICOT", image: "assets/Fruits/apricot.png"),
@@ -68,7 +67,6 @@ class _FruitsState extends State<Fruits> {
   @override
   Widget build(BuildContext context) {
     Fruit currentFruit = fruitList[currentFruitIndex];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Fruits Page'),

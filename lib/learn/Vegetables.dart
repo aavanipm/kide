@@ -24,8 +24,6 @@ class _VegetablesState extends State<Vegetables> {
     Vegetable(name: "CABBAGE", image: "assets/Vegetables/cabbage.png"),
     Vegetable(name: "LADYFINGER", image: "assets/Vegetables/ladyfinger.png"),
     Vegetable(name: "BITTER GOURD", image: "assets/Vegetables/bittergourd.png"),
-
-    // Add more birds as needed
   ];
 
   double speechRate = 0.2;
@@ -66,7 +64,6 @@ class _VegetablesState extends State<Vegetables> {
   @override
   Widget build(BuildContext context) {
     Vegetable currentVegetable = vegetableList[currentVegetableIndex];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Vegetable Page'),

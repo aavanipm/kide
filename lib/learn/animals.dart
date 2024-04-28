@@ -9,7 +9,7 @@ class Animals extends StatefulWidget {
 class _AnimalsState extends State<Animals> {
   FlutterTts flutterTts = FlutterTts();
   int currentAnimalIndex = 0;
-  bool autoPlayEnabled = false; // Variable to track automatic playback
+  bool autoPlayEnabled = false;
 
   List<Animal> animalList = [
     Animal(name: "BEAR", image: "assets/animals/bear.png"),
@@ -28,16 +28,13 @@ class _AnimalsState extends State<Animals> {
     Animal(name: "LION", image: "assets/animals/lion.png"),
     Animal(name: "MONKEY", image: "assets/animals/monkey.png"),
     Animal(name: "PIG", image: "assets/animals/pig.png"),
-    // Animal(name: "RABBIT", image: "assets/animals/rabbit.png"),
     Animal(name: "SHEEP", image: "assets/animals/sheep.png"),
     Animal(name: "SQUIRREL", image: "assets/animals/squirrel.png"),
     Animal(name: "TIGER", image: "assets/animals/tiger.png"),
     Animal(name: "YAK", image: "assets/animals/yak.png"),
-    // Animal(name: "ZEBRA", image: "assets/animals/zebra.png"),
-    // Add more animals as needed
   ];
 
-  double speechRate = 0.2; // Adjust this value to control the speed (0.5 is slower, 1.0 is normal)
+  double speechRate = 0.2;
 
   @override
   void initState (){
@@ -85,7 +82,7 @@ class _AnimalsState extends State<Animals> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start, // Align items with space between
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -99,7 +96,6 @@ class _AnimalsState extends State<Animals> {
                           setState(() {
                             autoPlayEnabled = value;
                           });
-                          // Speak the colour name if auto play enabled
                           if (autoPlayEnabled) {
                             speakAnimalName(currentAnimal.name);
                           }
@@ -131,19 +127,9 @@ class _AnimalsState extends State<Animals> {
                   currentAnimal.name,
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,),
                 ),
-               // SizedBox(width: 20,),
               ],
             ),
-
             SizedBox(height: 20),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     speakAnimalName(currentAnimal.name);
-            //   },
-            //   child: Text('Speak Animal Name'),
-            // ),
-            // SizedBox(height: 20),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

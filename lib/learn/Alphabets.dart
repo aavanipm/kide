@@ -38,10 +38,9 @@ class _AlphabetsState extends State<Alphabets> {
     Alphabet(name: "X", capital: "assets/Alphabets/letters/capital/X.png", small: "assets/Alphabets/letters/small/x.png"),
     Alphabet(name: "Y", capital: "assets/Alphabets/letters/capital/Y.png", small: "assets/Alphabets/letters/small/y.png"),
     Alphabet(name: "Z", capital: "assets/Alphabets/letters/capital/Z.png", small: "assets/Alphabets/letters/small/z.png"),
-    // Add more alphabets as needed
   ];
 
-  double speechRate = 0.2; // Adjust this value to control the speed (0.5 is slower, 1.0 is normal)
+  double speechRate = 0.2;
 
   @override
   void initState (){
@@ -89,7 +88,7 @@ class _AlphabetsState extends State<Alphabets> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start, // Align items with space between
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   children: [
@@ -103,7 +102,6 @@ class _AlphabetsState extends State<Alphabets> {
                           setState(() {
                             autoPlayEnabled = value;
                           });
-                          // Speak the colour name if auto play enabled
                           if (autoPlayEnabled) {
                             speakAlphabetName(currentAlphabet.name);
                           }
@@ -133,11 +131,6 @@ class _AlphabetsState extends State<Alphabets> {
               children: [
                 SizedBox(width: 180,),
                 Image.asset(currentAlphabet.small, height: 100, width: 100),
-                // SizedBox(height: 50),
-                // Text(
-                //   currentAlphabet.name,
-                //   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,),
-                // ),
               ],
             ),
 

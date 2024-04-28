@@ -10,8 +10,6 @@ class _SmallLetterState extends State<SmallLetter> {
   FlutterTts flutterTts = FlutterTts();
   int currentAlphabetIndex = 0;
   bool autoPlayEnabled = false; // Variable to track automatic playback
-
-
   List<Small> alphabetList = [
     Small(name: "a", image: "assets/Alphabets/small/a.png"),
     Small(name: "b", image: "assets/Alphabets/small/b.png",),
@@ -39,8 +37,6 @@ class _SmallLetterState extends State<SmallLetter> {
     Small(name: "x", image: "assets/Alphabets/small/x.png"),
     Small(name: "y", image: "assets/Alphabets/small/y.png"),
     Small(name: "z", image: "assets/Alphabets/small/z.png"),
-
-    // Add more alphabets as needed
   ];
 
   double speechRate = 0.2; // Adjust this value to control the speed (0.5 is slower, 1.0 is normal)

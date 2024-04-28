@@ -1,8 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:game/Home/home.dart';
-import 'package:game/category1/home1.dart';
 import 'package:game/firebase_options.dart';
 import 'package:game/auth/login.dart';
 
@@ -27,7 +25,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
           useMaterial3: true,
         ),
-        // home: Home1(username: "kk", email: "kkk", age: "2", subscribedCategory: 'basic',),
         // home: Login(),
         home: AnimatedSplashScreen(
           duration: 3000,

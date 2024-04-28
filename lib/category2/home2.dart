@@ -5,12 +5,10 @@ import 'package:game/auth/save1.dart';
 import 'package:game/auth/subscription.dart';
 import 'package:game/category2/game2/game2.dart';
 import 'package:game/category2/learn2/learn2.dart';
-import 'package:game/category3/learn3/Story/Story1.dart';
-import 'package:game/category3/learn3/Story/Story2.dart';
+import 'package:game/learn/Stories/Story1.dart';
 import 'package:game/learn/Numbers.dart';
 import 'package:game/learn//flowers.dart';
-import 'dart:io';
-
+import 'package:game/learn/Stories/Story2.dart';
 import 'package:game/learn/Stories/storysection.dart';
 
 class Home2 extends StatefulWidget {
@@ -26,13 +24,12 @@ class Home2 extends StatefulWidget {
 }
 
 class _Home2State extends State<Home2> {
-  int currentindex = 0;
-  List myPages = [Flowers(), Numbers()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Home"), backgroundColor: Colors.blue.shade100,
+          title: Text("Home"),
+          backgroundColor: Colors.blue.shade100,
         ),
         drawer: Drawer(
           child: ListView(
@@ -61,7 +58,6 @@ class _Home2State extends State<Home2> {
                       age: widget.age, subscribedCategory: widget.subscribedCategory,)));
                   }
                 ),
-
               ListTile(
                 title: Text("Logout"), leading: Icon(Icons.logout),
                 onTap: (){

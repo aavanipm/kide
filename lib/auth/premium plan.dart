@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:game/auth/subscription.dart';
 import 'package:game/category1/home1.dart';
 import 'package:game/category2/home2.dart';
 

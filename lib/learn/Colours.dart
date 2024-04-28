@@ -12,7 +12,6 @@ class _ColoursState extends State<Colours> {
   FlutterTts flutterTts = FlutterTts();
   int currentColourIndex = 0;
   bool autoPlayEnabled = false; // Variable to track automatic playback
-
   List<Colour> colourList = [
     Colour(name: "BLACK", backgroundColor: Colors.black),
     Colour(name: "BLUE", backgroundColor: Colors.blue),
@@ -26,7 +25,6 @@ class _ColoursState extends State<Colours> {
     Colour(name: "GREY", backgroundColor: Colors.grey),
     Colour(name: "INDIGO", backgroundColor: Colors.indigo),
     Colour(name: "PURPLE", backgroundColor: Colors.purple),
-
     // Add more colours as needed
   ];
 
@@ -35,7 +33,6 @@ class _ColoursState extends State<Colours> {
   @override
   void initState() {
     super.initState();
-    // Play sound automatically if enabled
     if (autoPlayEnabled) {
       speakColourName(colourList[currentColourIndex].name);
     }
@@ -69,7 +66,6 @@ class _ColoursState extends State<Colours> {
   @override
   Widget build(BuildContext context) {
     Colour currentColour = colourList[currentColourIndex];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Colours Page'),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:game/category3/learn3/Story/Story1.dart';
-import 'package:game/category3/learn3/Story/Story2.dart';
-import 'package:game/category3/learn3/Story/Story3.dart';
+import 'package:game/learn/Stories/Story1.dart';
+import 'package:game/learn/Stories/Story2.dart';
+import 'package:game/learn/Stories/Story3.dart';
 
 class StorySection extends StatefulWidget {
   const StorySection({super.key});
@@ -20,7 +20,7 @@ class _StorySectionState extends State<StorySection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+        title: Text("Story Page"),
       ),
       backgroundColor: Colors.blue.shade50,
       body: Padding(
@@ -54,26 +54,6 @@ Widget categorycard(BuildContext context, Story val){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>ThirdStory()));
             break;
 
-        // case 'Fruits':
-        //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Fruits()));
-        //   break;
-        //
-        // case 'Numbers':
-        //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Numbers()));
-        //   break;
-        //
-        // case 'Colours':
-        //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Colours()));
-        //   break;
-        //
-        // case 'Flowers':
-        //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Flowers()));
-        //   break;
-        //
-        // case 'Vegetables':
-        //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Vegetables()));
-        //   break;
-
           default:
             break;
         }
@@ -92,6 +72,7 @@ Widget categorycard(BuildContext context, Story val){
       )
   );
 }
+
 class Story {
   final String imagepath;
   final String name;

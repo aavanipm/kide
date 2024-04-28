@@ -41,7 +41,6 @@ class _NumbersState extends State<Numbers> {
     Number(name: "EIGHTY", image: "assets/Numbers/80.png"),
     Number(name: "NINETY", image: "assets/Numbers/90.png"),
     Number(name: "HUNDRED", image: "assets/Numbers/100.png"),
-
     // Add more numbers as needed
   ];
 

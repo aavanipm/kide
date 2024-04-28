@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game/category1/game1/Scramble/Scramblelevels.dart';
 import 'package:game/category1/game1/fillblanks/Fills.dart';
 import 'package:game/category1/game1/guess/levelguess.dart';
 import 'package:game/category1/game1/match/match.dart';
 import 'package:game/category1/game1/opposite/oppositelevels.dart';
 import 'package:game/category1/game1/search/searchlevels.dart';
-import 'package:game/category1/game1/sentencecompletion/Sentencelevels.dart';
 import 'package:game/category1/game1/soundspell/SoundSpellLevel.dart';
 import 'package:game/category1/game1/speak/guessandspeak.dart';
 import 'package:game/category1/game1/synonym/Synonymlevels.dart';
@@ -25,13 +23,10 @@ class Game1 extends StatefulWidget {
     Games(imagepath: "assets/game/guess.png", name: "Guess"),
     Games(imagepath: "assets/game/match.png", name: "Match"),
     Games(imagepath: "assets/game/say.png", name: "Speak"),
-    // Games(imagepath: "assets/game/scramble.png", name: "scramble"),
     Games(imagepath: "assets/game/pair.png", name: "opposite"),
     Games(imagepath: "assets/game/synonym.png", name: "synonym"),
     Games(imagepath: "assets/game/spell.png", name: "flash"),
-    // Games(imagepath: "assets/game/sentence.png", name: "sentence"),
     Games(imagepath: "assets/game/word.png", name: "Search"),
-    // Games(imagepath: "assets/images/img1.png", name: "past"),
   ];
 }
 
@@ -115,12 +110,6 @@ Widget gamecard(BuildContext context, Games val, String username, String email, 
               username: username, email: email, age: age, subscribedCategory: subscribedCategory,
             )));
             break;
-
-          // case 'sentence':
-          //   Navigator.push(context, MaterialPageRoute(builder: (context)=>SentenceLevels(
-          //       username: username, email: email, age: age, subscribedCategory: subscribedCategory,
-          //   )));
-          //   break;
 
           case 'Search':
             Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchLevel(
