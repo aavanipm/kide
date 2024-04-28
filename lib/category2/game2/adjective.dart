@@ -165,13 +165,31 @@ class _AdjectiveQuestionsPageState extends State<AdjectiveQuestionsPage> {
     }
 
     if (_answeredQuestions[_currentQuestionIndex]) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Question already answered.'),
-          duration: Duration(milliseconds: 500),
-        ),
-      );
-      return;
+      if (_selectedOption == _questions[_currentQuestionIndex]['correctAnswer']) {
+        setState(() {
+          _answeredQuestions[_currentQuestionIndex] = true; // Mark question as answered
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Correct!'),
+              backgroundColor: Colors.green,
+              duration: Duration(milliseconds: 500),
+            ),
+          );
+          // Move to the next question if available
+          if (_currentQuestionIndex < _questions.length - 1) {
+            _currentQuestionIndex++;
+            _selectedOption = null;
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Incorrect!'),
+            backgroundColor: Colors.red,
+            duration: Duration(milliseconds: 500),
+          ),
+        );
+      }
     }
 
     // Check if the selected option is correct
